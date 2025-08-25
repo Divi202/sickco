@@ -1,24 +1,68 @@
-// src/components/SymptomInput.tsx
+/**
+ * SymptomInput Component
+ * 
+ * The main input interface for users to describe their health symptoms and receive
+ * AI-powered analysis. This component handles user input, API communication, and
+ * displays the AI response with proper loading and error states.
+ * 
+ * Features:
+ * - Large textarea for symptom description
+ * - Real-time input validation
+ * - Loading states during API calls
+ * - Error handling and display
+ * - AI response visualization
+ * - Example suggestions for user guidance
+ * - Keyboard shortcuts (Cmd/Ctrl + Enter to submit)
+ * - Smooth animations using Framer Motion
+ * 
+ * @component
+ */
 
-// ... (existing imports)
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
-import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse'; // Import AI response type
+import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse';
 
+/**
+ * SymptomInput Component
+ * 
+ * Main component for symptom input and AI analysis display. Manages the entire
+ * user flow from symptom description to AI response visualization.
+ * 
+ * @returns {JSX.Element} The rendered symptom input interface
+ */
 export default function SymptomInput() {
+  // State for user input
   const [symptoms, setSymptoms] = useState('');
+  // Loading state for API calls
   const [isLoading, setIsLoading] = useState(false);
+  // Error state for displaying error messages
   const [error, setError] = useState<string | null>(null);
-  const [aiResponse, setAiResponse] = useState<AIAnalysisResponse | null>(null); // New state for AI response
+  // AI response state for displaying analysis results
+  const [aiResponse, setAiResponse] = useState<AIAnalysisResponse | null>(null);
 
+  /**
+   * Handles clicking on example suggestions
+   * Populates the textarea with the selected example text
+   * 
+   * @param {string} example - The example text to populate in the input
+   */
   const handleExampleClick = (example: string) => {
     setSymptoms(example);
   };
 
+  /**
+   * Handles form submission and API communication
+   * 
+   * Validates input, sends symptoms to the API, and handles the response.
+   * Manages loading states and error handling throughout the process.
+   * 
+   * @async
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async () => {
     if (!symptoms.trim()) {
       setError('Please describe your symptoms.');
@@ -27,7 +71,7 @@ export default function SymptomInput() {
 
     setIsLoading(true);
     setError(null);
-    setAiResponse(null); // Clear previous AI response
+    setAiResponse(null);
 
     try {
       const response = await fetch('/api/health/symptoms', {
@@ -45,8 +89,8 @@ export default function SymptomInput() {
 
       const result = await response.json();
       console.log('Symptoms submitted successfully:', result);
-      setAiResponse(result.aiAnalysis); // Set the AI response
-      setSymptoms(''); // Clear the input field
+      setAiResponse(result.aiAnalysis);
+      setSymptoms('');
     } catch (err: any) {
       console.error('Error submitting symptoms:', err);
       setError(err.message || 'An unexpected error occurred.');
@@ -55,6 +99,12 @@ export default function SymptomInput() {
     }
   };
 
+  /**
+   * Handles keyboard shortcuts for form submission
+   * Allows users to submit using Cmd+Enter or Ctrl+Enter
+   * 
+   * @param {React.KeyboardEvent} e - The keyboard event
+   */
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       handleSubmit();
