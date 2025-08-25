@@ -8,11 +8,7 @@ import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
 
-interface SymptomInputProps {
-  // onSubmit?: (symptoms: string) => void; // This prop will no longer be directly used for submission
-}
-
-export default function SymptomInput({}: SymptomInputProps) {
+export default function SymptomInput() {
   // Removed onSubmit prop
   const [symptoms, setSymptoms] = useState('');
   const [isLoading, setIsLoading] = useState(false);
