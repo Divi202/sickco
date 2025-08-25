@@ -72,7 +72,7 @@ export const llmClient = {
 
       // Make API call to OpenRouter using OpenAI SDK
       const chatCompletion = await openai.chat.completions.create({
-        model: 'gpt-os-20lb', // Free model from OpenRouter
+        model: 'openai/gpt-oss-20b:free', // Free model from OpenRouter
         messages: [
           {
             role: 'system',
