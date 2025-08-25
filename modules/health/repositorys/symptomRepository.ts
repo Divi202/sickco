@@ -1,14 +1,6 @@
-// src/domains/health/repositories/symptomRepository.ts
-
-import { createClient } from '@supabase/supabase-js';
+// app/module/health/repositorys/symptomRepository.ts
 import { SymptomEntry, CreateSymptomEntryDTO } from '../models/SymptomEntry';
-
-// Initialize Supabase client (replace with your actual Supabase URL and anon key)
-// In a real application, these would come from environment variables.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { SupabaseClient } from '@supabase/supabase-js'; // Import SupabaseClient type
 
 /**
  * Repository for managing SymptomEntry data in Supabase.
@@ -17,10 +9,11 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const symptomRepository = {
   /**
    * Inserts a new symptom entry into the database.
+   * @param supabase The Supabase client instance.
    * @param data The data for the new symptom entry.
    * @returns The created SymptomEntry, including its generated ID and createdAt timestamp.
    */
-  async create(data: CreateSymptomEntryDTO): Promise<SymptomEntry> {
+  async create(supabase: SupabaseClient, data: CreateSymptomEntryDTO): Promise<SymptomEntry> {
     const { data: newEntry, error } = await supabase
       .from('symptom_entries') // This will be your Supabase table name
       .insert({ symptoms: data.symptoms })
@@ -42,10 +35,11 @@ export const symptomRepository = {
 
   /**
    * Retrieves a symptom entry by its ID.
+   * @param supabase The Supabase client instance.
    * @param id The ID of the symptom entry to retrieve.
    * @returns The SymptomEntry if found, otherwise null.
    */
-  async getById(id: string): Promise<SymptomEntry | null> {
+  async getById(supabase: SupabaseClient, id: string): Promise<SymptomEntry | null> {
     const { data, error } = await supabase
       .from('symptom_entries')
       .select('*')
