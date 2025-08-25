@@ -7,13 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
+import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse'; // Import AI response type
 
 export default function SymptomInput() {
-  // Removed onSubmit prop
   const [symptoms, setSymptoms] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [aiResponse, setAiResponse] = useState<AIAnalysisResponse | null>(null); // New state for AI response
 
   const handleExampleClick = (example: string) => {
     setSymptoms(example);
@@ -27,7 +27,7 @@ export default function SymptomInput() {
 
     setIsLoading(true);
     setError(null);
-    setSuccessMessage(null);
+    setAiResponse(null); // Clear previous AI response
 
     try {
       const response = await fetch('/api/health/symptoms', {
@@ -40,12 +40,12 @@ export default function SymptomInput() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to submit symptoms.');
+        throw new Error(errorData.error || 'Failed to submit symptoms.');
       }
 
       const result = await response.json();
       console.log('Symptoms submitted successfully:', result);
-      setSuccessMessage(`Symptoms submitted! Entry ID: ${result.id}`);
+      setAiResponse(result.aiAnalysis); // Set the AI response
       setSymptoms(''); // Clear the input field
     } catch (err: any) {
       console.error('Error submitting symptoms:', err);
@@ -101,8 +101,31 @@ export default function SymptomInput() {
           </motion.div>
         </div>
         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
-        {successMessage && <p className="text-green-400 mt-4 text-center">{successMessage}</p>}
       </div>
+
+      {/* Display AI Response */}
+      {aiResponse && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-2xl text-slate-200"
+        >
+          <h3 className="text-xl font-semibold mb-4 text-slate-100">AI Analysis:</h3>
+          <p className="mb-4">{aiResponse.analysis}</p>
+          {aiResponse.recommendations && aiResponse.recommendations.length > 0 && (
+            <>
+              <h4 className="text-lg font-medium mb-2 text-slate-300">Recommendations:</h4>
+              <ul className="list-disc list-inside pl-4">
+                {aiResponse.recommendations.map((rec, index) => (
+                  <li key={index} className="mb-1">{rec}</li>
+                ))}
+              </ul>
+            </>
+          )}
+          <p className="text-sm text-slate-400 mt-4">Urgency Level: <span className={`font-semibold ${aiResponse.urgencyLevel === 'emergency' ? 'text-red-500' : aiResponse.urgencyLevel === 'high' ? 'text-orange-400' : aiResponse.urgencyLevel === 'medium' ? 'text-yellow-300' : 'text-green-400'}`}>{aiResponse.urgencyLevel.toUpperCase()}</span></p>
+        </motion.div>
+      )}
 
       {/* Pass the example click handler */}
       <div className="mt-12">
