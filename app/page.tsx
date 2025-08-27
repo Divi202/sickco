@@ -3,19 +3,19 @@
 /**
  * Home Page Component
  *
- * The main landing page of the SickCo application that displays the health symptom 
- * input interface. This page serves as the primary entry point for users to describe 
+ * The main landing page of the SickCo application that displays the health symptom
+ * input interface. This page serves as the primary entry point for users to describe
  * their symptoms and receive AI-powered health analysis.
- * 
+ *
  * Features:
  * - Responsive design with gradient background
  * - Centered layout for optimal user experience
  * - Integration with SymptomInput component
- * 
+ *
  * @returns {JSX.Element} The rendered home page component
  */
 
-import SymptomInput from '@/components/SymptomInput';
+import SymptomInput from '@/components/home/SymptomInput';
 
 export default function Home() {
   return (

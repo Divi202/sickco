@@ -1,10 +1,10 @@
 /**
  * SymptomInput Component
- * 
+ *
  * The main input interface for users to describe their health symptoms and receive
  * AI-powered analysis. This component handles user input, API communication, and
  * displays the AI response with proper loading and error states.
- * 
+ *
  * Features:
  * - Large textarea for symptom description
  * - Real-time input validation
@@ -14,7 +14,7 @@
  * - Example suggestions for user guidance
  * - Keyboard shortcuts (Cmd/Ctrl + Enter to submit)
  * - Smooth animations using Framer Motion
- * 
+ *
  * @component
  */
 
@@ -28,10 +28,10 @@ import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse';
 
 /**
  * SymptomInput Component
- * 
+ *
  * Main component for symptom input and AI analysis display. Manages the entire
  * user flow from symptom description to AI response visualization.
- * 
+ *
  * @returns {JSX.Element} The rendered symptom input interface
  */
 export default function SymptomInput() {
@@ -47,7 +47,7 @@ export default function SymptomInput() {
   /**
    * Handles clicking on example suggestions
    * Populates the textarea with the selected example text
-   * 
+   *
    * @param {string} example - The example text to populate in the input
    */
   const handleExampleClick = (example: string) => {
@@ -56,10 +56,10 @@ export default function SymptomInput() {
 
   /**
    * Handles form submission and API communication
-   * 
+   *
    * Validates input, sends symptoms to the API, and handles the response.
    * Manages loading states and error handling throughout the process.
-   * 
+   *
    * @async
    * @returns {Promise<void>}
    */
@@ -102,7 +102,7 @@ export default function SymptomInput() {
   /**
    * Handles keyboard shortcuts for form submission
    * Allows users to submit using Cmd+Enter or Ctrl+Enter
-   * 
+   *
    * @param {React.KeyboardEvent} e - The keyboard event
    */
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -168,12 +168,21 @@ export default function SymptomInput() {
               <h4 className="text-lg font-medium mb-2 text-slate-300">Recommendations:</h4>
               <ul className="list-disc list-inside pl-4">
                 {aiResponse.recommendations.map((rec, index) => (
-                  <li key={index} className="mb-1">{rec}</li>
+                  <li key={index} className="mb-1">
+                    {rec}
+                  </li>
                 ))}
               </ul>
             </>
           )}
-          <p className="text-sm text-slate-400 mt-4">Urgency Level: <span className={`font-semibold ${aiResponse.urgencyLevel === 'emergency' ? 'text-red-500' : aiResponse.urgencyLevel === 'high' ? 'text-orange-400' : aiResponse.urgencyLevel === 'medium' ? 'text-yellow-300' : 'text-green-400'}`}>{aiResponse.urgencyLevel.toUpperCase()}</span></p>
+          <p className="text-sm text-slate-400 mt-4">
+            Urgency Level:{' '}
+            <span
+              className={`font-semibold ${aiResponse.urgencyLevel === 'emergency' ? 'text-red-500' : aiResponse.urgencyLevel === 'high' ? 'text-orange-400' : aiResponse.urgencyLevel === 'medium' ? 'text-yellow-300' : 'text-green-400'}`}
+            >
+              {aiResponse.urgencyLevel.toUpperCase()}
+            </span>
+          </p>
         </motion.div>
       )}
 
