@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
-import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 /**
  * SymptomInput Component
@@ -37,12 +37,12 @@ import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse';
 export default function SymptomInput() {
   // State for user input
   const [symptoms, setSymptoms] = useState('');
-  // Loading state for API calls
+  // Loading state for API calls (now for navigation)
   const [isLoading, setIsLoading] = useState(false);
   // Error state for displaying error messages
   const [error, setError] = useState<string | null>(null);
-  // AI response state for displaying analysis results
-  const [aiResponse, setAiResponse] = useState<AIAnalysisResponse | null>(null);
+
+  const router = useRouter(); // Initialize useRouter
 
   /**
    * Handles clicking on example suggestions
@@ -55,14 +55,14 @@ export default function SymptomInput() {
   };
 
   /**
-   * Handles form submission and API communication
+   * Handles form submission and navigation
    *
-   * Validates input, sends symptoms to the API, and handles the response.
-   * Manages loading states and error handling throughout the process.
+   * Validates input and navigates to the dashboard with symptoms as a query parameter.
    *
    * @async
    * @returns {Promise<void>}
    */
+
   const handleSubmit = async () => {
     if (!symptoms.trim()) {
       setError('Please describe your symptoms.');
@@ -71,29 +71,13 @@ export default function SymptomInput() {
 
     setIsLoading(true);
     setError(null);
-    setAiResponse(null);
 
     try {
-      const response = await fetch('/api/health/symptoms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ symptoms: symptoms.trim() }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit symptoms.');
-      }
-
-      const result = await response.json();
-      console.log('Symptoms submitted successfully:', result);
-      setAiResponse(result.aiAnalysis);
-      setSymptoms('');
+      // Redirect to dashboard with symptoms as a query parameter
+      router.push(`/dashboard?symptoms=${encodeURIComponent(symptoms.trim())}`);
     } catch (err: any) {
-      console.error('Error submitting symptoms:', err);
-      setError(err.message || 'An unexpected error occurred.');
+      console.error('Error navigating:', err);
+      setError(err.message || 'An unexpected error occurred during navigation.');
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +116,7 @@ export default function SymptomInput() {
             />
           </div>
 
-          {/* Generate Button */}
+          {/* Chat with Sicko Button */}
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={handleSubmit}
@@ -143,8 +127,8 @@ export default function SymptomInput() {
                 'Submitting...'
               ) : (
                 <>
-                  <Send className="w-4 h-4 mr-2" />
-                  Generate Plan
+                  <Send className="w-4 h-4" />
+                  Chat with Sickco
                 </>
               )}
             </Button>
@@ -153,38 +137,7 @@ export default function SymptomInput() {
         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
       </div>
 
-      {/* Display AI Response */}
-      {aiResponse && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-2xl text-slate-200"
-        >
-          <h3 className="text-xl font-semibold mb-4 text-slate-100">AI Analysis:</h3>
-          <p className="mb-4">{aiResponse.analysis}</p>
-          {aiResponse.recommendations && aiResponse.recommendations.length > 0 && (
-            <>
-              <h4 className="text-lg font-medium mb-2 text-slate-300">Recommendations:</h4>
-              <ul className="list-disc list-inside pl-4">
-                {aiResponse.recommendations.map((rec, index) => (
-                  <li key={index} className="mb-1">
-                    {rec}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-          <p className="text-sm text-slate-400 mt-4">
-            Urgency Level:{' '}
-            <span
-              className={`font-semibold ${aiResponse.urgencyLevel === 'emergency' ? 'text-red-500' : aiResponse.urgencyLevel === 'high' ? 'text-orange-400' : aiResponse.urgencyLevel === 'medium' ? 'text-yellow-300' : 'text-green-400'}`}
-            >
-              {aiResponse.urgencyLevel.toUpperCase()}
-            </span>
-          </p>
-        </motion.div>
-      )}
+      {/* Display AI Response - removed from here, now handle in chat.jsx*/}
 
       {/* Pass the example click handler */}
       <div className="mt-12">
