@@ -18,6 +18,7 @@
 
 import OpenAI from 'openai';
 import { AIAnalysisRequest, AIAnalysisResponse } from '../models/AIResponse';
+import { getSystemPrompt } from '../utils/promptReader';
 
 /**
  * LLM Client Object
@@ -77,7 +78,8 @@ export const llmClient = {
           {
             role: 'system',
             content:
-              "You are a helpful health assistant. Analyze the provided symptoms and give a concise analysis, a confidence score (0-1), a list of recommendations, and an urgency level (low, medium, high, emergency). Respond ONLY with a JSON object containing the keys: 'analysis' (string), 'confidence' (number), 'recommendations' (array of strings), and 'urgencyLevel' (string: 'low', 'medium', 'high', 'emergency'). Always include a disclaimer that this is not professional medical advice.",
+              (await getSystemPrompt()) ||
+              'You are a helpful sikcness comapnion that help users understand their symptoms and provide health advice.',
           },
           {
             role: 'user',
