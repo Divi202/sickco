@@ -15,12 +15,14 @@
  * @returns {JSX.Element} The rendered home page component
  */
 
-import SymptomInput from '@/components/home/SymptomInput';
+// import SymptomInput from '@/components/home/SymptomInput';
+import UserInput from '@/components/home/UserInput';
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-      <SymptomInput />
+      {/* <SymptomInput /> changed to user input  */}
+      <UserInput />
     </main>
   );
 }
