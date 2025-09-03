@@ -9,6 +9,7 @@ import ChatHeader from './chat/ChatHeader';
 import ChatMessages from './chat/ChatMessages';
 import AIResponse from './chat/AIResponse';
 import ChatInput from './chat/ChatInput';
+import axios from 'axios';
 
 interface ChatProps {
   onToggleMobileMenu: () => void;
@@ -69,21 +70,17 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
     // Call the API to chat with Sickco AI
     try {
-      const response = await fetch('/api/health/symptoms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      //Using axios
+      const response = await axios.post(
+        '/api/chat',
+        { symptoms: userMessageText },
+        {
+          headers: { 'Content-Type': 'application/json' },
         },
-        body: JSON.stringify({ symptoms: userMessageText }),
-      });
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit symptoms.');
-      }
+      const result = response.data;
 
-      const result = await response.json();
-      console.log('Symptoms submitted successfully:', result);
       setAiResponse(result.aiAnalysis);
 
       // Add AI response to chat messages
@@ -105,6 +102,25 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         {
           id: prev.length + 1,
           text: `Error: ${err.message || 'Failed to get AI analysis.'}`,
+          sender: 'sicko',
+          timestamp: new Date(),
+        },
+      ]);
+      // Extract a useful message from axios error shape if available
+      const apiMessage =
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'An unexpected error occurred.';
+
+      setError(apiMessage);
+      // Add an error message to the chat if the API call fails
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          text: `Error: ${apiMessage}`,
           sender: 'sicko',
           timestamp: new Date(),
         },
