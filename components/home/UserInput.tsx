@@ -57,7 +57,7 @@ export default function UserInput() {
   /**
    * Handles form submission and navigation
    *
-   * Validates input and navigates to the dashboard with symptoms as a query parameter.
+   * Validates input and navigates to the dashboard with userInput as a query parameter.
    *
    * @async
    * @returns {Promise<void>}
@@ -73,8 +73,8 @@ export default function UserInput() {
     setError(null);
 
     try {
-      // Redirect to dashboard with symptoms as a query parameter
-      router.push(`/dashboard?symptoms=${encodeURIComponent(userInput.trim())}`);
+      // Redirect to dashboard with userInput as a query parameter
+      router.push(`/dashboard?userInput=${encodeURIComponent(userInput.trim())}`);
     } catch (err: any) {
       console.error('Error navigating:', err);
       setError(err.message || 'An unexpected error occurred during navigation.');

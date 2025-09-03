@@ -21,7 +21,7 @@ const Dashboard = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const searchParams = useSearchParams(); // Initialize useSearchParams
-  const initialSymptoms = searchParams.get('symptoms'); // Get the 'symptoms' query parameter
+  const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
   const handleFeatureSelect = (featureId) => {
     setSelectedFeature(featureId);
