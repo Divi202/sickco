@@ -1,3 +1,4 @@
+// components/home/UserInput.tsx
 /**
  * UserInput Component
  *
@@ -24,13 +25,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
+import { UserInputSchema } from '@/lib/schemas/userInputSchema';
 
 /**
  * UserInput Component
  *
- * Main component for symptom input and AI analysis display. Manages the entire
- * user flow from symptom description to AI response visualization.
+ * Main component for user input of symptoms and interaction with Sickco AI.
  *
  * @returns {JSX.Element} The rendered symptom input interface
  */
@@ -64,13 +65,17 @@ export default function UserInput() {
    */
 
   const handleSubmit = async () => {
-    if (!userInput.trim()) {
-      setError('Please describe your symptoms.');
+    // if (isLoading) return; // Prevent multiple submissions
+    // Validate input using Zod schema
+    const validationResult = UserInputSchema.safeParse({ userInput });
+
+    if (!validationResult.success) {
+      setError(validationResult.error.errors[0].message);
       return;
     }
 
     setIsLoading(true);
-    setError(null);
+    setError(null); // Clear previous errors on successful validation
 
     try {
       // Redirect to dashboard with userInput as a query parameter
@@ -120,7 +125,7 @@ export default function UserInput() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={handleSubmit}
-              disabled={!userInput.trim() || isLoading}
+              disabled={isLoading} // The disabled state now relies solely on isLoading
               className="bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 px-6 py-3 h-auto rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
@@ -136,8 +141,6 @@ export default function UserInput() {
         </div>
         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
       </div>
-
-      {/* Display AI Response - removed from here, now handle in chat.jsx*/}
 
       {/* Pass the example click handler */}
       <div className="mt-12">

@@ -72,8 +72,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     try {
       //Using axios
       const response = await axios.post(
-        '/api/chat',
-        { symptoms: userMessageText },
+        '/api/v1/chat',
+        { userInput: userMessageText },
         {
           headers: { 'Content-Type': 'application/json' },
         },
