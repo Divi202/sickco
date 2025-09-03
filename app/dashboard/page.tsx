@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import Chat from '@/components/dashboard/Chat';
+import ChatV2 from '@/components/dashboard/ChatV2';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 
 // =============================================================================
@@ -43,8 +44,9 @@ const Dashboard = () => {
         isMobileMenuOpen={isMobileMenuOpen}
         onCloseMobile={handleCloseMobileMenu}
       />
-
-      <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} />
+      {/* <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} /> */}
+      {/* Chat V2  */}
+      <ChatV2 onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} />
     </div>
   );
 };

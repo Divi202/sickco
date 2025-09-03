@@ -48,6 +48,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   // Handle sending new message
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault?.();
+
     if (!newMessage.trim()) return;
 
     const userMessageText = newMessage.trim();
@@ -66,7 +67,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     setError(null);
     setAiResponse(null); // Clear previous AI response
 
-    // Call the health/symptoms API
+    // Call the API to chat with Sickco AI
     try {
       const response = await fetch('/api/health/symptoms', {
         method: 'POST',
