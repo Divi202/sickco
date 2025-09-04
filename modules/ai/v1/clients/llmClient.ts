@@ -88,7 +88,6 @@ export const llmClient = {
         ],
         temperature: 0.7, // Balanced creativity vs consistency
         max_tokens: 500, // Reasonable response length
-        response_format: { type: 'json_object' }, // Ensure JSON response
       });
 
       // Extract and parse the AI response

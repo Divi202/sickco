@@ -1,4 +1,5 @@
-import { UserInputDTO, UserInputDTOType } from '@/modules/chat/types/userInputDTO';
+import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/schemas/chat.schema';
+import { chatService } from '@/modules/chat/services/chat.service';
 import { NextResponse } from 'next/server';
 
 // Docstring for this file code
@@ -47,7 +48,6 @@ import { NextResponse } from 'next/server';
  *                 "disclaimer" : " ",
  *                 "followUpQuestion" : " ",
  *                 }
- *     "createdAt": "2024-01-01T00:00:00Z"
  *   }
  * }
  * ```
@@ -55,10 +55,10 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     // Parse request body
-    const { userInput }: UserInputDTOType = await request.json();
+    const { message }: ChatRequestDTO = await request.json();
 
     // Input data validation
-    const validationResult = UserInputDTO.safeParse({ userInput });
+    const validationResult = ChatRequestDTO.safeParse({ message });
 
     if (!validationResult.success) {
       return NextResponse.json(
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
       );
     }
     // Process the valid input through the chat service
-    const aiResponse = await chatService.processUerInput(userInput);
+    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({ message });
 
     // Return both the symptom entry details and the AI analysis
     return NextResponse.json(aiResponse, { status: 201 });

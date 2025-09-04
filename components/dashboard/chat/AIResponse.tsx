@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse';
+import { AIAnalysisResponse } from '@/modules/ai/v1/models/AIResponse';
 
 interface AIResponseProps {
   aiResponse: AIAnalysisResponse;

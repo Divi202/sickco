@@ -4,7 +4,7 @@
  */
 'use client';
 import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
-import { AIAnalysisResponse } from '@/modules/ai/models/AIResponse'; // Import AIAnalysisResponse
+import { AIAnalysisResponse } from '@/modules/ai/v1/models/AIResponse'; // Import AIAnalysisResponse
 import ChatHeader from './chat/ChatHeader';
 import ChatMessages from './chat/ChatMessages';
 import AIResponse from './chat/AIResponse';
