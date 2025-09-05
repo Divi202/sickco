@@ -26,7 +26,7 @@ import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
 import { useRouter } from 'next/navigation';
-import { ChatRequestDTO } from '@/modules/chat/schemas/chat.schema';
+import { ChatRequestDTO } from '@/modules/chat/chat.schema';
 
 /**
  * UserInput Component

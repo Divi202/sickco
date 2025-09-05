@@ -1,5 +1,5 @@
-import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/schemas/chat.schema';
-import { chatService } from '@/modules/chat/services/chat.service';
+import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
+import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
 
 // Docstring for this file code

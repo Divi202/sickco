@@ -46,7 +46,7 @@ export const llmClient = {
 
     // Systme prompt to set the context for the conversation
     // Read the markdown file
-    const systemPrompt = fs.readFileSync('modules/ai/v2/prompts/system.prompt.md', 'utf8');
+    const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
 
     if (!systemPrompt) {
       throw new Error('System prompt file not found or is empty.');

@@ -1,6 +1,6 @@
-import { aiService } from '@/modules/ai/v2/ai.service';
-import { ChatRequestDTO, ChatResponseDTO } from '../schemas/chat.schema';
-import { chatRepository } from '../respositorys/chat.repository';
+import { aiService } from '@/modules/ai/ai.service';
+import { ChatRequestDTO, ChatResponseDTO } from './chat.schema';
+import { chatRepository } from '../chat/chat.repository';
 
 /**
  * Chat Service

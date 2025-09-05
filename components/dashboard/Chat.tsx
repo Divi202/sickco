@@ -9,7 +9,7 @@ import ChatMessages from './chat/ChatMessages';
 import AIResponse from './chat/AIResponse';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
-import { SickCoAIResponseDTO } from '@/modules/ai/v2/ai.schema';
+import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 
 interface ChatProps {
   onToggleMobileMenu: () => void;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SickCoAIResponseDTO } from '@/modules/ai/v2/ai.schema';
+import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 
 interface AIResponseProps {
   aiResponse: SickCoAIResponseDTO;

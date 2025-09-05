@@ -16,7 +16,7 @@
  * - Supabase integration
  */
 
-import { ChatRequestDTO } from '../schemas/chat.schema';
+import { ChatRequestDTO } from '../chat/chat.schema';
 import { createClient } from '@/lib/supabase/server';
 
 /**

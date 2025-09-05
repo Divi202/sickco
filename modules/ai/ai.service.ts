@@ -1,4 +1,4 @@
-import { llmClient } from '../v2/llm.client';
+import { llmClient } from '../ai/llm.client';
 import { SickCoAIRequestDTO, SickCoAIResponseDTO } from './ai.schema';
 /**
  * AI Service
