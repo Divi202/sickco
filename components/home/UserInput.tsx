@@ -26,7 +26,7 @@ import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
 import { useRouter } from 'next/navigation';
-import { UserInputSchema } from '@/lib/schemas/userInputSchema';
+import { ChatRequestDTO } from '@/modules/chat/schemas/chat.schema';
 
 /**
  * UserInput Component
@@ -65,12 +65,15 @@ export default function UserInput() {
    */
 
   const handleSubmit = async () => {
-    // if (isLoading) return; // Prevent multiple submissions
+    if (isLoading) return; // Prevent multiple submissions
+
     // Validate input using Zod schema
-    const validationResult = UserInputSchema.safeParse({ userInput });
+    console.log('Submitting user input:', userInput);
+    const validationResult = ChatRequestDTO.safeParse({ message: userInput });
 
     if (!validationResult.success) {
       setError(validationResult.error.errors[0].message);
+      console.error('Validation Error:', validationResult.error);
       return;
     }
 

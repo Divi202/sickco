@@ -4,11 +4,12 @@
  */
 'use client';
 import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
-import { AIAnalysisResponse } from '@/modules/ai/v1/models/AIResponse'; // Import AIAnalysisResponse
 import ChatHeader from './chat/ChatHeader';
 import ChatMessages from './chat/ChatMessages';
 import AIResponse from './chat/AIResponse';
 import ChatInput from './chat/ChatInput';
+import axios from 'axios';
+import { SickCoAIResponseDTO } from '@/modules/ai/v2/ai.schema';
 
 interface ChatProps {
   onToggleMobileMenu: () => void;
@@ -27,7 +28,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // New state for loading
   const [error, setError] = useState<string | null>(null); // New state for errors
-  const [aiResponse, setAiResponse] = useState<AIAnalysisResponse | null>(null); // New state for AI response
+  const [aiResponse, setAiResponse] = useState<SickCoAIResponseDTO | null>(null); // New state for AI response
 
   const messagesEndRef = useRef<HTMLDivElement>(null); // Create a ref for the messages container
 
@@ -48,6 +49,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   // Handle sending new message
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault?.();
+
     if (!newMessage.trim()) return;
 
     const userMessageText = newMessage.trim();
@@ -66,44 +68,49 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     setError(null);
     setAiResponse(null); // Clear previous AI response
 
-    // Call the health/symptoms API
+    // Call the API to chat with Sickco AI
     try {
-      const response = await fetch('/api/health/symptoms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      //Using axios
+      const response = await axios.post(
+        '/api/v1/chat',
+        { message: userMessageText },
+        {
+          headers: { 'Content-Type': 'application/json' },
         },
-        body: JSON.stringify({ symptoms: userMessageText }),
-      });
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit symptoms.');
-      }
+      const result = response.data;
 
-      const result = await response.json();
-      console.log('Symptoms submitted successfully:', result);
-      setAiResponse(result.aiAnalysis);
+      setAiResponse(result);
 
+      console.log('AI Response:', result.information);
       // Add AI response to chat messages
       // Note: The ID calculation here might be slightly off if messages state updates
       // are not immediate. For a robust solution, consider using a unique ID generator.
-      const sickoResponse = {
+      const sickCoResponse = {
         id: messages.length + 2,
-        text: `Here's the analysis for "${userMessageText}":\n\n${result.aiAnalysis.analysis}`,
+        text: `Here's the analysis for "${userMessageText}":\n\n${result.information}`,
+        // text: aiResponse,
         sender: 'sicko',
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, sickoResponse]);
+      setMessages((prev) => [...prev, sickCoResponse]);
     } catch (err: any) {
-      console.error('Error submitting symptoms:', err);
-      setError(err.message || 'An unexpected error occurred.');
+      // Extract a useful message from axios error shape if available
+      const apiMessage =
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
+        err?.message ||
+        'An unexpected error occurred.';
+
+      setError(apiMessage);
       // Add an error message to the chat if the API call fails
       setMessages((prev) => [
         ...prev,
         {
           id: prev.length + 1,
-          text: `Error: ${err.message || 'Failed to get AI analysis.'}`,
+          text: `Error: ${apiMessage}`,
           sender: 'sicko',
           timestamp: new Date(),
         },

@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { RefObject } from 'react';
-import { AIAnalysisResponse } from '@/modules/ai/v1/models/AIResponse';
 
 interface Message {
   id: number;
