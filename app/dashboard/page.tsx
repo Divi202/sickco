@@ -5,8 +5,8 @@
 'use client';
 import React, { useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
-import Chat from '@/components/dashboard/Chat';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
+import Chat from '@/components/dashboard/Chat';
 
 // =============================================================================
 // MAIN DASHBOARD COMPONENT
@@ -21,9 +21,9 @@ const Dashboard = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const searchParams = useSearchParams(); // Initialize useSearchParams
-  const initialSymptoms = searchParams.get('symptoms'); // Get the 'symptoms' query parameter
+  const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
-  const handleFeatureSelect = (featureId) => {
+  const handleFeatureSelect = (featureId: string) => {
     setSelectedFeature(featureId);
   };
 
@@ -43,7 +43,8 @@ const Dashboard = () => {
         isMobileMenuOpen={isMobileMenuOpen}
         onCloseMobile={handleCloseMobileMenu}
       />
-
+      {/* <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} /> */}
+      {/* Chat V2  */}
       <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} />
     </div>
   );

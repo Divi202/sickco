@@ -1,5 +1,6 @@
+// components/home/UserInput.tsx
 /**
- * SymptomInput Component
+ * UserInput Component
  *
  * The main input interface for users to describe their health symptoms and receive
  * AI-powered analysis. This component handles user input, API communication, and
@@ -24,19 +25,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
+import { ChatRequestDTO } from '@/modules/chat/chat.schema';
 
 /**
- * SymptomInput Component
+ * UserInput Component
  *
- * Main component for symptom input and AI analysis display. Manages the entire
- * user flow from symptom description to AI response visualization.
+ * Main component for user input of symptoms and interaction with Sickco AI.
  *
  * @returns {JSX.Element} The rendered symptom input interface
  */
-export default function SymptomInput() {
+export default function UserInput() {
   // State for user input
-  const [symptoms, setSymptoms] = useState('');
+  const [userInput, setUserInput] = useState('');
   // Loading state for API calls (now for navigation)
   const [isLoading, setIsLoading] = useState(false);
   // Error state for displaying error messages
@@ -51,30 +52,37 @@ export default function SymptomInput() {
    * @param {string} example - The example text to populate in the input
    */
   const handleExampleClick = (example: string) => {
-    setSymptoms(example);
+    setUserInput(example);
   };
 
   /**
    * Handles form submission and navigation
    *
-   * Validates input and navigates to the dashboard with symptoms as a query parameter.
+   * Validates input and navigates to the dashboard with userInput as a query parameter.
    *
    * @async
    * @returns {Promise<void>}
    */
 
   const handleSubmit = async () => {
-    if (!symptoms.trim()) {
-      setError('Please describe your symptoms.');
+    if (isLoading) return; // Prevent multiple submissions
+
+    // Validate input using Zod schema
+    console.log('Submitting user input:', userInput);
+    const validationResult = ChatRequestDTO.safeParse({ message: userInput });
+
+    if (!validationResult.success) {
+      setError(validationResult.error.errors[0].message);
+      console.error('Validation Error:', validationResult.error);
       return;
     }
 
     setIsLoading(true);
-    setError(null);
+    setError(null); // Clear previous errors on successful validation
 
     try {
-      // Redirect to dashboard with symptoms as a query parameter
-      router.push(`/dashboard?symptoms=${encodeURIComponent(symptoms.trim())}`);
+      // Redirect to dashboard with userInput as a query parameter
+      router.push(`/dashboard?userInput=${encodeURIComponent(userInput.trim())}`);
     } catch (err: any) {
       console.error('Error navigating:', err);
       setError(err.message || 'An unexpected error occurred during navigation.');
@@ -108,8 +116,8 @@ export default function SymptomInput() {
           {/* Textarea */}
           <div className="flex-1">
             <Textarea
-              value={symptoms}
-              onChange={(e) => setSymptoms(e.target.value)}
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Describe your symptoms or health condition..."
               className="min-h-[120px] bg-transparent border-none text-slate-200 placeholder:text-slate-400 text-lg resize-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
@@ -120,7 +128,7 @@ export default function SymptomInput() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
               onClick={handleSubmit}
-              disabled={!symptoms.trim() || isLoading}
+              disabled={isLoading} // The disabled state now relies solely on isLoading
               className="bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 px-6 py-3 h-auto rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
@@ -136,8 +144,6 @@ export default function SymptomInput() {
         </div>
         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
       </div>
-
-      {/* Display AI Response - removed from here, now handle in chat.jsx*/}
 
       {/* Pass the example click handler */}
       <div className="mt-12">
