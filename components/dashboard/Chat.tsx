@@ -15,8 +15,15 @@ interface ChatProps {
   initialMessage?: string; // Add initialMessage prop
 }
 
+interface Message {
+  id: number;
+  text: string;
+  sender: string;
+  timestamp: Date;
+}
+
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // New state for loading
   const [error, setError] = useState<string | null>(null); // New state for errors

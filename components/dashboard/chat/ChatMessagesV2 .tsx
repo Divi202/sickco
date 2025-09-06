@@ -54,8 +54,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           `,
       }}
     />
-    {/* Welcome message - only show if no messages except the initial one */}
-    {messages.length <= 1 && <WelcomeMessage />}
+    {/* Show WelcomeMessage if no messages */}
+    {messages.length === 0 && <WelcomeMessage />}
     <AnimatePresence>
       {messages.map((message, index) => (
         <motion.div
@@ -65,46 +65,43 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {/* Only render non-initial messages */}
-          {index !== 0 && (
-            <>
-              {/* User Message */}
-              {message.sender === 'user' && (
-                <div className="flex justify-end">
-                  <div className="flex items-start gap-2 md:gap-3 max-w-xs sm:max-w-sm md:max-w-md flex-row-reverse">
-                    {/* User Avatar */}
-                    <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-600/90 flex items-center justify-center">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="text-white md:w-4 md:h-4"
-                      >
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                    {/* Message Bubble */}
-                    <div className="px-3 md:px-4 py-2 md:py-3 rounded-2xl shadow-lg bg-green-600/90 text-white rounded-br-sm">
-                      <p className="text-xs md:text-sm leading-relaxed">{message.text}</p>
-                      <p className="text-xs mt-1 md:mt-2 text-green-100">
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
+          <>
+            {/* User Message */}
+            {message.sender === 'user' && (
+              <div className="flex justify-end">
+                <div className="flex items-start gap-2 md:gap-3 max-w-xs sm:max-w-sm md:max-w-md flex-row-reverse">
+                  {/* User Avatar */}
+                  <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-600/90 flex items-center justify-center">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="text-white md:w-4 md:h-4"
+                    >
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  {/* Message Bubble */}
+                  <div className="px-3 md:px-4 py-2 md:py-3 rounded-2xl shadow-lg bg-green-600/90 text-white rounded-br-sm">
+                    <p className="text-xs md:text-sm leading-relaxed">{message.text}</p>
+                    <p className="text-xs mt-1 md:mt-2 text-green-100">
+                      {message.timestamp.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </p>
                   </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* AI Response */}
-              {message.sender === 'sicko' && aiResponse && <AIResponse aiResponse={aiResponse} />}
-            </>
-          )}
+            {/* AI Response */}
+            {message.sender === 'sicko' && aiResponse && <AIResponse aiResponse={aiResponse} />}
+          </>
         </motion.div>
       ))}
     </AnimatePresence>
