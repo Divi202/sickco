@@ -5,8 +5,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
 import ChatHeader from './chat/ChatHeader';
-import ChatMessages from './chat/ChatMessages';
-import AIResponse from './chat/AIResponse';
+import ChatMessages from './chat/ChatMessagesV2 ';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
@@ -131,10 +130,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         isLoading={isLoading}
         error={error}
         messagesEndRef={messagesEndRef}
+        aiResponse={aiResponse}
       />
-
-      {/* AIResponse - Displays the AI analysis and recommendations. */}
-      {aiResponse && <AIResponse aiResponse={aiResponse} />}
 
       {/* Chat Input - Handles the message input and send button.*/}
       <ChatInput

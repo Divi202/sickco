@@ -20,10 +20,10 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
       <>
         {/* <h4 className="text-lg font-medium mb-2 text-slate-300">Recommendations:</h4> */}
 
-        <p className="mb-4">
+        <div className="mb-4">
           {' '}
           <ReactMarkdown>{aiResponse.information}</ReactMarkdown>
-        </p>
+        </div>
         <p className="mb-4">{aiResponse.followUpQuestion}</p>
 
         <p className="text-sm mb-2">Disclaimer</p>
