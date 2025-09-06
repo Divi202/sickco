@@ -23,7 +23,7 @@ const Dashboard = () => {
   const searchParams = useSearchParams(); // Initialize useSearchParams
   const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
-  const handleFeatureSelect = (featureId) => {
+  const handleFeatureSelect = (featureId: string) => {
     setSelectedFeature(featureId);
   };
 
