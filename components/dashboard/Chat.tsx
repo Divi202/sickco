@@ -16,14 +16,7 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Hey there! I'm Sicko, your AI assistant. How can I help you today?",
-      sender: 'sicko',
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // New state for loading
   const [error, setError] = useState<string | null>(null); // New state for errors
