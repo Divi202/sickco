@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { RefObject } from 'react';
+import AIResponse from './AIResponse';
+import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 
 interface Message {
   id: number;
@@ -13,6 +15,7 @@ interface ChatMessagesProps {
   isLoading: boolean;
   error: string | null;
   messagesEndRef: RefObject<HTMLDivElement | null>; // <-- Allow null here
+  aiResponse: SickCoAIResponseDTO | null;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -20,6 +23,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   isLoading,
   error,
   messagesEndRef,
+  aiResponse,
 }) => (
   <div
     ref={messagesEndRef} // Attach the ref here
@@ -125,6 +129,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         </motion.div>
       ))}
     </AnimatePresence>
+
+    {/* AIResponse - Displays the AI analysis and recommendations. */}
+    {aiResponse && <AIResponse aiResponse={aiResponse} />}
 
     {isLoading && (
       <motion.div
