@@ -81,7 +81,8 @@ export async function POST(request: Request) {
     //     'Have you experienced any other symptoms, such as fever, nausea, or changes in vision?',
     // };
 
-    // Return both the symptom entry details and the AI analysis
+    // Return ai response
+    // console.log('AI Response in route:', aiResponse);
     return NextResponse.json(aiResponse, { status: 201 });
   } catch (error: any) {
     console.error('Error in POST /api/v1/chat:', error);

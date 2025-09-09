@@ -82,7 +82,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
       setAiResponse(result);
 
-      console.log('AI Response:', result.information);
+      console.log('AI Response:', result);
       // Add AI response to chat messages
       // Note: The ID calculation here might be slightly off if messages state updates
       // are not immediate. For a robust solution, consider using a unique ID generator.
