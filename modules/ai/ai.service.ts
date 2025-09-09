@@ -1,5 +1,5 @@
-import { llmClient } from '../ai/llm.client';
-import { SickCoAIRequestDTO, SickCoAIResponseDTO } from './ai.schema';
+import { llmClient } from './llm.client';
+import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 /**
  * AI Service
  *
@@ -25,7 +25,7 @@ import { SickCoAIRequestDTO, SickCoAIResponseDTO } from './ai.schema';
  * Acts as the main interface for AI functionality across the application.
  */
 export const aiService = {
-  async sickcoAI(data: SickCoAIRequestDTO): Promise<SickCoAIResponseDTO> {
+  async sickcoAI(data: SickCoAIRequestDTO): Promise<LLMResponseDTO> {
     // Validation logic here (if needed)
 
     try {
@@ -48,6 +48,7 @@ export const aiService = {
       // For example: adjust urgency based on business rules, add disclaimers, etc.
 
       console.log('AI Service: Successfully processed user message request');
+
       return llmResponse;
     } catch (error: any) {
       console.error('Error in SickCo AI response:', error);

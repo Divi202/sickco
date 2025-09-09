@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
-import { SickCoAIRequestDTO, SickCoAIResponseDTO } from './ai.schema';
+import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import fs from 'fs';
+import { zodResponseFormat } from 'openai/helpers/zod';
 
 /**
  * Large Language Model (LLM) Client
@@ -28,7 +29,7 @@ import fs from 'fs';
  */
 export const llmClient = {
   // Main fucntion to generate SickCo AI response
-  async generateAiResponse(request: SickCoAIRequestDTO): Promise<SickCoAIResponseDTO> {
+  async generateAiResponse(request: SickCoAIRequestDTO): Promise<LLMResponseDTO> {
     const openRouterApiKey = process.env.OPENROUTER_API_KEY;
     // const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
 
@@ -69,23 +70,28 @@ export const llmClient = {
           },
         ],
         temperature: 0.7, // Balanced creativity vs consistency
-        // max_tokens: 500, // Reasonable response length
-        // response_format: { type: 'json_object' }, // Ensure JSON response
+        max_completion_tokens: 1000, // Reasonable response length
+        response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
       });
 
       // Validate required fields in AI response
       // if (!aiContent.information || !aiContent.followUpQuestion) {
       //   throw new Error('AI response missing required fields.');
       // }
-      const aiContentString = chatCompletion.choices[0].message?.content;
-      if (!aiContentString) {
-        throw new Error('No content received from AI model.');
+      // Get the response content
+      const aiResponse = chatCompletion.choices[0].message?.content;
+      if (!aiResponse) {
+        throw new Error('AI response content is null');
       }
 
-      // Parse the markdown-style response
-      const aiResponse = this.parseMarkdownSections(aiContentString);
+      const parsedResponse = JSON.parse(aiResponse);
 
-      return aiResponse;
+      // You can access specific fields from the parsed JSON
+      // For example, if the response has a 'response' field:
+
+      // handle edge case where LLM respone with refusal (refuse to answer)
+
+      return parsedResponse;
     } catch (error: any) {
       console.error('Error calling OpenRouter API with OpenAI SDK:', error);
 
@@ -100,37 +106,5 @@ export const llmClient = {
 
       throw new Error(`Failed to get AI response: ${error.message || 'Unknown error'}`);
     }
-  },
-
-  // Helper function to parse markdown sections from AI response
-  parseMarkdownSections(content: string): SickCoAIResponseDTO {
-    const sections: Record<string, string> = {};
-    let currentSection = '';
-
-    // Split content into lines and process each line
-    const lines = content.split('\n');
-
-    for (const line of lines) {
-      // Check if line is a section header (starts with **)
-      const sectionMatch = line.match(/^\*\*(.*?)\*\*/);
-      if (sectionMatch) {
-        currentSection = sectionMatch[1].toLowerCase().trim();
-        sections[currentSection] = '';
-      } else if (currentSection) {
-        // Add non-empty lines to current section
-        const trimmedLine = line.trim();
-        if (trimmedLine) {
-          sections[currentSection] += (sections[currentSection] ? '\n' : '') + trimmedLine;
-        }
-      }
-    }
-    // Map sections to expected DTO format
-    return {
-      id: `ai-analysis-${Date.now()}`,
-      empathy: sections['empathy'] || '',
-      information: sections['helpful info'] || sections['information'] || '',
-      disclaimer: sections['disclaimer'] || '',
-      followUpQuestion: sections['follow-up question'] || '',
-    };
   },
 };
