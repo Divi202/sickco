@@ -5,22 +5,11 @@
 'use client';
 import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
 import ChatHeader from './chat/ChatHeader';
-import ChatMessages from './chat/ChatMessagesV2 ';
+import ChatMessages from './chat/ChatMessages ';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
-
-interface ChatProps {
-  onToggleMobileMenu: () => void;
-  initialMessage?: string; // Add initialMessage prop
-}
-
-interface Message {
-  id: number;
-  text: string;
-  sender: string;
-  timestamp: Date;
-}
+import { ChatProps, Message } from '../../types/dashboard.types';
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [messages, setMessages] = useState<Message[]>([]);

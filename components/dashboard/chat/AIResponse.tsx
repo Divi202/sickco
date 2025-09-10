@@ -1,11 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 import ReactMarkdown from 'react-markdown';
-
-interface AIResponseProps {
-  aiResponse: SickCoAIResponseDTO;
-}
+import { AIResponseProps } from '@/types/dashboard.types';
 
 const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
   <motion.div

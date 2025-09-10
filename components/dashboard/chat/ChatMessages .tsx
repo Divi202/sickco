@@ -1,23 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import React, { RefObject } from 'react';
 import AIResponse from './AIResponse';
-import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 import WelcomeMessage from './WelcomeMessage';
-
-interface Message {
-  id: number;
-  text: string;
-  sender: string;
-  timestamp: Date;
-}
-
-interface ChatMessagesProps {
-  messages: Message[];
-  isLoading: boolean;
-  error: string | null;
-  messagesEndRef: RefObject<HTMLDivElement | null>; // <-- Allow null here
-  aiResponse: SickCoAIResponseDTO | null;
-}
+import { ChatMessagesProps } from '@/types/dashboard.types';
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   messages,
@@ -57,7 +41,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     {/* Show WelcomeMessage if no messages */}
     {messages.length === 0 && <WelcomeMessage />}
     <AnimatePresence>
-      {messages.map((message, index) => (
+      {messages.map((message) => (
         <motion.div
           key={message.id}
           initial={{ opacity: 0, y: 20 }}

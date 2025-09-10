@@ -1,8 +1,5 @@
 import { motion } from 'framer-motion';
-
-interface ChatHeaderProps {
-  onToggleMobileMenu: () => void;
-}
+import { ChatHeaderProps } from '@/types/dashboard.types';
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu }) => (
   <motion.div

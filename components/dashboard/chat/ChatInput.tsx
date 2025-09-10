@@ -1,12 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-interface ChatInputProps {
-  newMessage: string;
-  setNewMessage: (msg: string) => void;
-  handleSendMessage: (e?: React.FormEvent) => void;
-  isLoading: boolean;
-}
+import { ChatInputProps } from '@/types/dashboard.types';
 
 const ChatInput: React.FC<ChatInputProps> = ({
   newMessage,
