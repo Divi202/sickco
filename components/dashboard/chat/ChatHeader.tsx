@@ -29,7 +29,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu }) => (
       </motion.button>
 
       <div>
-        <h2 className="text-lg md:text-xl font-semibold text-white">Chat with Sicko</h2>
+        <h2 className="text-lg md:text-xl font-semibold text-white">Chat with Sickco</h2>
         <p className="text-slate-400 text-xs md:text-sm mt-1">AI-powered conversation assistant</p>
       </div>
     </div>

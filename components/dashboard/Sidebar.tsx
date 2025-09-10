@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const sidebarFeatures = [
     {
       id: 'chat',
-      name: 'Chat with Sicko',
+      name: 'Chat with Sickco',
       icon: MessageCircle,
       active: true,
     },
@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         className={`mb-6 ${!isMobile ? 'md:mb-8' : ''}`}
       >
         <h1 className={`font-bold text-white mb-1 ${isMobile ? 'text-xl' : 'text-xl md:text-2xl'}`}>
-          Sicko
+          SickCo
         </h1>
         <p className={`text-slate-400 ${isMobile ? 'text-xs' : 'text-xs md:text-sm'}`}>
           AI Dashboard

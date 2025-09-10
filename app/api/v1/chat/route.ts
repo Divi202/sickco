@@ -33,7 +33,7 @@ import { NextResponse } from 'next/server';
  * Request body:
  * ```json
  * {
- *   "userInput": "I have been experiencing headaches and fatigue for the past few days"
+ *   "userMessage": "I have been experiencing headaches and fatigue for the past few days"
  * }
  * ```
  *
@@ -55,11 +55,11 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     // Parse request body
-    const { message }: ChatRequestDTO = await request.json();
+    const { userMessage }: ChatRequestDTO = await request.json();
 
     // Input data validation
 
-    const validationResult = ChatRequestDTO.safeParse({ message });
+    const validationResult = ChatRequestDTO.safeParse({ userMessage });
 
     if (!validationResult.success) {
       return NextResponse.json(
@@ -68,18 +68,22 @@ export async function POST(request: Request) {
       );
     }
     // Process the valid input through the chat service
-    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({ message });
+    // const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
+    //   userMessage,
+    // });
+
+    const sickcoResponseId = crypto.randomUUID();
 
     // ui integration testing
-    // const aiResponse = {
-    //   empathy:
-    //     "I'm sorry to hear that you're experiencing headaches and fatigue. It must be quite uncomfortable.",
-    //   information:
-    //     'Headaches and fatigue can be symptoms of various conditions, including stress, dehydration, or more serious health issues. It is important to monitor your symptoms and consider any other accompanying signs.',
-    //   disclaimer: ' Please note that I am an AI language model and not a medical professional',
-    //   followUpQuestion:
-    //     'Have you experienced any other symptoms, such as fever, nausea, or changes in vision?',
-    // };
+    const aiResponse = {
+      id: sickcoResponseId,
+      empathy: `${sickcoResponseId} + I'm sorry to hear that you're experiencing headaches and fatigue. It must be quite uncomfortable.`,
+      information:
+        'Headaches and fatigue can be symptoms of various conditions, including stress, dehydration, or more serious health issues. It is important to monitor your symptoms and consider any other accompanying signs.',
+      disclaimer: ' Please note that I am an AI language model and not a medical professional',
+      followUpQuestion:
+        'Have you experienced any other symptoms, such as fever, nausea, or changes in vision?',
+    };
 
     // Return ai response
     // console.log('AI Response in route:', aiResponse);

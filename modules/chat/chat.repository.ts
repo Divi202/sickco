@@ -37,7 +37,7 @@ export const chatRepository = {
 
     const { data: newEntry, error } = await supabase
       .from('chat_entries') // Supabase table name
-      .insert({ user_message: message.message, ai_response: null })
+      .insert({ user_message: message.userMessage, ai_response: null })
       .select('*')
       .single();
 

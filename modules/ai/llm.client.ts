@@ -31,7 +31,7 @@ export const llmClient = {
   // Main fucntion to generate SickCo AI response
   async generateAiResponse(request: SickCoAIRequestDTO): Promise<LLMResponseDTO> {
     const openRouterApiKey = process.env.OPENROUTER_API_KEY;
-    // const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
 
     if (!openRouterApiKey) {
       throw new Error(
@@ -43,6 +43,11 @@ export const llmClient = {
     const openai = new OpenAI({
       baseURL: 'https://openrouter.ai/api/v1',
       apiKey: openRouterApiKey,
+      // defaultHeaders: {
+      //   'User-Agent': `SickCoApp/1.0 (+${appUrl})`,
+      //   'X-OpenRouter-Source': 'sickco-health-app',
+      //   'X-OpenRouter-Source-Version': '1.0.0',
+      // },
     });
 
     // Systme prompt to set the context for the conversation

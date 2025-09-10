@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { AIResponseProps } from '@/types/dashboard.types';
 
 const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
+  // console.log('AIResponse component:', aiResponse),
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}

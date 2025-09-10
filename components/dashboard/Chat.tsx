@@ -5,18 +5,18 @@
 'use client';
 import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
 import ChatHeader from './chat/ChatHeader';
-import ChatMessages from './chat/ChatMessages ';
+import ChatMessages from './chat/ChatMessages';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
-import { ChatProps, Message } from '../../types/dashboard.types';
+import { ChatProps, UserMessages } from '../../types/dashboard.types';
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [userMessages, setUserMessages] = useState<UserMessages[]>([]);
+  const [sickcoResponses, setSickcoResponses] = useState<SickCoAIResponseDTO[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // New state for loading
   const [error, setError] = useState<string | null>(null); // New state for errors
-  const [aiResponse, setAiResponse] = useState<SickCoAIResponseDTO | null>(null); // New state for AI response
 
   const messagesEndRef = useRef<HTMLDivElement>(null); // Create a ref for the messages container
 
@@ -32,7 +32,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [userMessages]);
 
   // Handle sending new message
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -42,26 +42,26 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
     const userMessageText = newMessage.trim();
 
+    // Generate a temp unique ID for the message
+    const userMessageId = crypto.randomUUID();
+
     // Add user message to chat
-    const userMessage = {
-      id: messages.length + 1,
+    const userMessage: UserMessages = {
+      id: userMessageId,
       text: userMessageText,
-      sender: 'user',
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setUserMessages((prev) => [...prev, userMessage]);
     setNewMessage(''); // Clear input immediately
     setIsLoading(true);
     setError(null);
-    setAiResponse(null); // Clear previous AI response
-
     // Call the API to chat with Sickco AI
     try {
       //Using axios
       const response = await axios.post(
         '/api/v1/chat',
-        { message: userMessageText },
+        { userMessage: userMessageText },
         {
           headers: { 'Content-Type': 'application/json' },
         },
@@ -69,40 +69,15 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
       const result = response.data;
 
-      setAiResponse(result);
+      setSickcoResponses((prev) => [...prev, result]);
 
       console.log('AI Response:', result);
-      // Add AI response to chat messages
-      // Note: The ID calculation here might be slightly off if messages state updates
-      // are not immediate. For a robust solution, consider using a unique ID generator.
-      const sickCoResponse = {
-        id: messages.length + 2,
-        text: `Here's the analysis for "${userMessageText}":\n\n${result.information}`,
-        // text: aiResponse,
-        sender: 'sicko',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, sickCoResponse]);
+      console.log('sicko reposne id', result.id);
+
+      // Add AI response to sickco all the responses
     } catch (err: any) {
       // Extract a useful message from axios error shape if available
-      const apiMessage =
-        err?.response?.data?.error ||
-        err?.response?.data?.message ||
-        (typeof err?.response?.data === 'string' ? err.response.data : undefined) ||
-        err?.message ||
-        'An unexpected error occurred.';
-
-      setError(apiMessage);
-      // Add an error message to the chat if the API call fails
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          text: `Error: ${apiMessage}`,
-          sender: 'sicko',
-          timestamp: new Date(),
-        },
-      ]);
+      setError(err?.response?.data?.error || 'Failed to get AI response');
     } finally {
       setIsLoading(false);
     }
@@ -115,11 +90,11 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
       {/* Chat Messages- Displays the list of messages, loading state, and error state.*/}
       <ChatMessages
-        messages={messages}
+        userMessages={userMessages}
+        aiResponses={sickcoResponses}
         isLoading={isLoading}
         error={error}
         messagesEndRef={messagesEndRef}
-        aiResponse={aiResponse}
       />
 
       {/* Chat Input - Handles the message input and send button.*/}

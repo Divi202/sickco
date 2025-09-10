@@ -3,8 +3,7 @@ import { z } from 'zod';
 
 // Request DTO: what the frontend sends to SickCo
 export const ChatRequestDTO = z.object({
-  //   userId: z.string().uuid(),
-  message: z.string().max(2000),
+  userMessage: z.string().max(2000),
 });
 
 export type ChatRequestDTO = z.infer<typeof ChatRequestDTO>;

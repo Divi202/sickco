@@ -7,10 +7,9 @@ export interface ChatProps {
   initialMessage?: string; // Add initialMessage prop
 }
 
-export interface Message {
-  id: number;
+export interface UserMessages {
+  id: string;
   text: string;
-  sender: string;
   timestamp: Date;
 }
 
@@ -29,11 +28,11 @@ export interface ChatInputProps {
 
 // ChatMessages component types
 export interface ChatMessagesProps {
-  messages: Message[];
+  userMessages: UserMessages[];
+  aiResponses: SickCoAIResponseDTO[];
   isLoading: boolean;
   error: string | null;
-  messagesEndRef: RefObject<HTMLDivElement | null>; // <-- Allow null here
-  aiResponse: SickCoAIResponseDTO | null;
+  messagesEndRef: RefObject<HTMLDivElement | null>;
 }
 
 // AIResponse component types
