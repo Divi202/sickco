@@ -18,7 +18,7 @@
 
 import { ChatRequestDTO } from '../chat/chat.schema';
 import { createClient } from '@/lib/supabase/server';
-
+import { log } from '@/lib/log';
 /**
  * Chat Repository Object
  *
@@ -32,8 +32,7 @@ export const chatRepository = {
   async create(message: ChatRequestDTO): Promise<String> {
     // Initialize Supabase client for database operations
     const supabase = await createClient();
-
-    console.log('Chat Repository: Creating new message entry in supabase database');
+    log.info('Chat Repository: Processing...');
 
     const { data: newEntry, error } = await supabase
       .from('chat_entries') // Supabase table name
@@ -42,7 +41,6 @@ export const chatRepository = {
       .single();
 
     if (error) {
-      console.error('Error creating chat message entry:', error);
       throw new Error(`Database error while creating chat message entry: ${error.message}`);
     }
 
@@ -50,7 +48,9 @@ export const chatRepository = {
       throw new Error('No data returned from database after creating chat message entry');
     }
 
-    console.log('Chat Repository: Successfully created Chat message entry with ID:', newEntry.id);
+    // console.log('Chat Repository: Successfully created Chat message entry with ID:', newEntry.id);
+
+    log.info('Chat Repository: Successfully Processed.');
 
     return 'Message saved successfully in Database';
   },

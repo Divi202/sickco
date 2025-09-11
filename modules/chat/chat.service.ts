@@ -1,6 +1,7 @@
 import { aiService } from '@/modules/ai/ai.service';
 import { ChatRequestDTO, ChatResponseDTO } from './chat.schema';
 import { chatRepository } from '../chat/chat.repository';
+import { log } from '@/lib/log';
 
 /**
  * Chat Service
@@ -31,8 +32,8 @@ import { chatRepository } from '../chat/chat.repository';
 export const chatService = {
   // Function to process save user input input and get AI response
   async processMessage(message: ChatRequestDTO): Promise<ChatResponseDTO | undefined> {
-    console.log('Chat Service: Processing user message');
-    console.log(message);
+    log.info('Chat Service: Processing...'); // info log
+    log.debug(message);
 
     // business validation logic here (if needed)
     // e.g., check for prohibited content, length limits, etc.
@@ -45,11 +46,11 @@ export const chatService = {
       const newEntry = await chatRepository.create(message);
 
       // Step 2: Request AI analysis (non-blocking - entry is preserved even if this fails)
-      console.log('Symptom Service: Requesting AI analysis');
       const aiResponse = await aiService.sickcoAI({
         userMessage: message.userMessage,
       });
-      console.log('Chat Service: AI processing completed');
+
+      log.info('Chat Service: Successully Processed'); // info log
 
       return {
         empathy: aiResponse.empathy,
@@ -58,7 +59,7 @@ export const chatService = {
         followUpQuestion: aiResponse.followUpQuestion,
       };
     } catch (error) {
-      console.error('Chat Service: Error saving user message to database', error);
+      log.error('Chat Service: Error occurred', error);
     }
   },
 };

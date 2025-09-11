@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import fs from 'fs';
 import { zodResponseFormat } from 'openai/helpers/zod';
-
+import { log } from '@/lib/log';
 /**
  * Large Language Model (LLM) Client
  *
@@ -54,7 +54,7 @@ export const llmClient = {
     }
 
     try {
-      console.log('LLM Client: Requesting response from AI');
+      log.info('LLM Client: Requesting response from AI');
 
       // Make API call to OpenRouter using OpenAI SDK
       const chatCompletion = await openai.chat.completions.create({
@@ -81,7 +81,7 @@ export const llmClient = {
       // Get the response content
       const sickcoResponse = chatCompletion.choices[0].message.content;
 
-      console.log('Raw AI response content:', sickcoResponse);
+      log.debug('Raw AI response content:', sickcoResponse);
 
       if (!sickcoResponse) {
         throw new Error('AI response content is null');
@@ -93,10 +93,10 @@ export const llmClient = {
       // For example, if the response has a 'response' field:
 
       // handle edge case where LLM respone with refusal (refuse to answer)
-
+      log.info('LLM Client: Successfully Proceeded');
       return parsedResponse;
     } catch (error: any) {
-      console.error('Error calling OpenRouter API with OpenAI SDK:', error);
+      log.error('Error calling OpenRouter API with OpenAI SDK:', error);
 
       // Provide more specific error messages
       if (error.code === 'insufficient_quota') {

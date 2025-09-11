@@ -1,5 +1,6 @@
 import { llmClient } from './llm.client';
 import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
+import { log } from '@/lib/log';
 /**
  * AI Service
  *
@@ -30,7 +31,7 @@ export const aiService = {
 
     // console.log(data);
     try {
-      console.log('AI Service: Processing user message for Sickco AI');
+      log.info('AI Service: Processing user message for Sickco AI');
 
       // Delegate to the LLM client for actual AI communication
       const llmResponse = await llmClient.generateAiResponse(data);
@@ -48,11 +49,11 @@ export const aiService = {
       // Post-process the response (could add business logic here)
       // For example: adjust urgency based on business rules, add disclaimers, etc.
 
-      console.log('AI Service: Successfully processed user message request');
+      log.info('AI Service: Successfully processed user message request');
 
       return llmResponse;
     } catch (error: any) {
-      console.error('Error in SickCo AI response:', error);
+      log.error('Error in SickCo AI response:', error);
 
       // Transform technical errors into user-friendly messages
       if (error.message.includes('API quota exceeded')) {

@@ -54,7 +54,7 @@ import { log } from '@/lib/log';
  * ```
  */
 export async function POST(request: Request) {
-  log.info('Hello API called'); // info log
+  log.info('Chat API called...'); // info log
   try {
     // Parse request body
     const { userMessage }: ChatRequestDTO = await request.json();
@@ -87,6 +87,7 @@ export async function POST(request: Request) {
 
     // Return ai response
     // console.log('AI Response in route:', aiResponse);
+    log.info('Chat API: Success'); // info log
     return NextResponse.json(fullAiResponse, { status: 201 });
   } catch (error: any) {
     log.error({ error }, 'Error in /api/v1/chat'); // error log
