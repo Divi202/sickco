@@ -1,6 +1,7 @@
 import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
 import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
+import { log } from '@/lib/log';
 
 // Docstring for this file code
 
@@ -53,6 +54,7 @@ import { NextResponse } from 'next/server';
  * ```
  */
 export async function POST(request: Request) {
+  log.info('Hello API called'); // info log
   try {
     // Parse request body
     const { userMessage }: ChatRequestDTO = await request.json();
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
     // console.log('AI Response in route:', aiResponse);
     return NextResponse.json(fullAiResponse, { status: 201 });
   } catch (error: any) {
-    console.error('Error in POST /api/v1/chat:', error);
+    log.error({ error }, 'Error in /api/v1/chat'); // error log
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
