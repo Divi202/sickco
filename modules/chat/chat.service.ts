@@ -47,7 +47,7 @@ export const chatService = {
       // Step 2: Request AI analysis (non-blocking - entry is preserved even if this fails)
       console.log('Symptom Service: Requesting AI analysis');
       const aiResponse = await aiService.sickcoAI({
-        userMessage: message.message,
+        userMessage: message.userMessage,
       });
       console.log('Chat Service: AI processing completed');
 

@@ -68,26 +68,24 @@ export async function POST(request: Request) {
       );
     }
     // Process the valid input through the chat service
-    // const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
-    //   userMessage,
-    // });
+    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
+      userMessage,
+    });
 
-    const sickcoResponseId = crypto.randomUUID();
+    const sickcoResponseId = crypto.randomUUID(); // temp id to send frontend till we get it form the db
 
     // ui integration testing
-    const aiResponse = {
+    const fullAiResponse = {
       id: sickcoResponseId,
-      empathy: `${sickcoResponseId} + I'm sorry to hear that you're experiencing headaches and fatigue. It must be quite uncomfortable.`,
-      information:
-        'Headaches and fatigue can be symptoms of various conditions, including stress, dehydration, or more serious health issues. It is important to monitor your symptoms and consider any other accompanying signs.',
-      disclaimer: ' Please note that I am an AI language model and not a medical professional',
-      followUpQuestion:
-        'Have you experienced any other symptoms, such as fever, nausea, or changes in vision?',
+      information: aiResponse?.information,
+      empathy: aiResponse?.empathy,
+      disclaimer: aiResponse?.disclaimer,
+      followUpQuestion: aiResponse?.followUpQuestion,
     };
 
     // Return ai response
     // console.log('AI Response in route:', aiResponse);
-    return NextResponse.json(aiResponse, { status: 201 });
+    return NextResponse.json(fullAiResponse, { status: 201 });
   } catch (error: any) {
     console.error('Error in POST /api/v1/chat:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });

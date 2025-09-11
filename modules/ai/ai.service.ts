@@ -28,6 +28,7 @@ export const aiService = {
   async sickcoAI(data: SickCoAIRequestDTO): Promise<LLMResponseDTO> {
     // Validation logic here (if needed)
 
+    // console.log(data);
     try {
       console.log('AI Service: Processing user message for Sickco AI');
 
