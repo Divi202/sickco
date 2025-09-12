@@ -2,6 +2,7 @@ import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
 import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
 import { log } from '@/lib/log';
+import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
 
 // Docstring for this file code
 
@@ -53,6 +54,7 @@ import { log } from '@/lib/log';
  * }
  * ```
  */
+
 export async function POST(request: Request) {
   log.info('Chat API called...'); // info log
   try {
@@ -60,15 +62,12 @@ export async function POST(request: Request) {
     const { userMessage }: ChatRequestDTO = await request.json();
 
     // Input data validation
-
     const validationResult = ChatRequestDTO.safeParse({ userMessage });
 
     if (!validationResult.success) {
-      return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
-        { status: 400 },
-      );
+      throw new ValidationError('Invalid input');
     }
+
     // Process the valid input through the chat service
     const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
       userMessage,
@@ -86,11 +85,39 @@ export async function POST(request: Request) {
     };
 
     // Return ai response
-    // console.log('AI Response in route:', aiResponse);
-    log.info('Chat API: Success'); // info log
+    log.info('Chat API: Successfully send the SickCo resposne to the user.'); // info log
     return NextResponse.json(fullAiResponse, { status: 201 });
   } catch (error: any) {
-    log.error({ error }, 'Error in /api/v1/chat'); // error log
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    // Validation error
+    if (error instanceof ValidationError) {
+      log.error('Validation Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Message is too big. (Lenght should be under 2000 words)' },
+        { status: error.statusCode },
+      );
+    }
+    // Database Error
+    if (error instanceof DbError) {
+      log.error('Database Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Fails to save the data at the moment. Please try again later' },
+        { status: error.statusCode },
+      );
+    }
+
+    // This kind of error are only for developers.
+    if (error instanceof ExternalApiError) {
+      log.error('External API Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again later' },
+        { status: error.statusCode },
+      );
+    }
+    //General fallback error
+    log.error('Error in /api/v1/chat', error.message); // error log
+    return NextResponse.json(
+      { error: 'Something went wrong. Please try again later' },
+      { status: 500 },
+    );
   }
 }

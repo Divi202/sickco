@@ -3,6 +3,7 @@ import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import fs from 'fs';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { log } from '@/lib/log';
+import { ExternalApiError } from '@/lib/errors';
 /**
  * Large Language Model (LLM) Client
  *
@@ -34,7 +35,7 @@ export const llmClient = {
     // const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
 
     if (!openRouterApiKey) {
-      throw new Error(
+      throw new ExternalApiError(
         'OpenRouter API key is not configured. Please set OPENROUTER_API_KEY in your environment variables.',
       );
     }
@@ -50,7 +51,7 @@ export const llmClient = {
     const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
 
     if (!systemPrompt) {
-      throw new Error('System prompt file not found or is empty.');
+      throw new ExternalApiError('System prompt file not found or is empty.');
     }
 
     try {
@@ -84,7 +85,7 @@ export const llmClient = {
       log.debug('Raw AI response content:', sickcoResponse);
 
       if (!sickcoResponse) {
-        throw new Error('AI response content is null');
+        throw new ExternalApiError('AI response content is null');
       }
 
       const parsedResponse = JSON.parse(sickcoResponse);
@@ -96,18 +97,8 @@ export const llmClient = {
       log.info('LLM Client: Successfully Proceeded');
       return parsedResponse;
     } catch (error: any) {
-      log.error('Error calling OpenRouter API with OpenAI SDK:', error);
-
-      // Provide more specific error messages
-      if (error.code === 'insufficient_quota') {
-        throw new Error('API quota exceeded. Please try again later.');
-      } else if (error.code === 'model_not_found') {
-        throw new Error('The specified AI model is not available.');
-      } else if (error instanceof SyntaxError) {
-        throw new Error('Failed to parse AI response. Please try again.');
-      }
-
-      throw new Error(`Failed to get AI response: ${error.message || 'Unknown error'}`);
+      log.debug('Raw error:', error.message);
+      throw new ExternalApiError('Failed to get AI response: Unknown error');
     }
   },
 };

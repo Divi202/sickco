@@ -1,5 +1,4 @@
 // lib/errors.ts
-
 // Custom errors
 
 export class AppError extends Error {
@@ -16,14 +15,14 @@ export class ValidationError extends AppError {
   }
 }
 
-export class ExternalApiError extends AppError {
-  constructor(message = 'External service failed') {
-    super(message, 502);
+export class DbError extends AppError {
+  constructor(message = 'Database error') {
+    super(message, 500);
   }
 }
 
-export class DBError extends AppError {
-  constructor(message = 'Database error') {
-    super(message, 500);
+export class ExternalApiError extends AppError {
+  constructor(message = 'External service failed') {
+    super(message, 502);
   }
 }

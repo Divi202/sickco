@@ -1,6 +1,7 @@
 import { llmClient } from './llm.client';
 import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import { log } from '@/lib/log';
+import { AppError } from '@/lib/errors';
 /**
  * AI Service
  *
@@ -30,48 +31,27 @@ export const aiService = {
     // Validation logic here (if needed)
 
     // console.log(data);
-    try {
-      log.info('AI Service: Processing user message for Sickco AI');
 
-      // Delegate to the LLM client for actual AI communication
-      const llmResponse = await llmClient.generateAiResponse(data);
+    log.info('AI Service: Processing user message for Sickco AI');
 
-      // Mock resposne from llm
-      //   const llmResponse = {
-      //     id: 'ai-analysis-123',
-      //     empathy: 'I understand that dealing with health issues can be challenging.',
-      //     information: 'Hello I am Sickco AI. How can I help you today?',
-      //     disclaimer:
-      //       'Please note that this information is not a substitute for professional medical advice.',
-      //     followUpQuestion: 'Can you provide more details about your symptoms?',
-      //   };
+    // Delegate to the LLM client for actual AI communication
+    const llmResponse = await llmClient.generateAiResponse(data);
 
-      // Post-process the response (could add business logic here)
-      // For example: adjust urgency based on business rules, add disclaimers, etc.
+    // Mock resposne from llm
+    //   const llmResponse = {
+    //     id: 'ai-analysis-123',
+    //     empathy: 'I understand that dealing with health issues can be challenging.',
+    //     information: 'Hello I am Sickco AI. How can I help you today?',
+    //     disclaimer:
+    //       'Please note that this information is not a substitute for professional medical advice.',
+    //     followUpQuestion: 'Can you provide more details about your symptoms?',
+    //   };
 
-      log.info('AI Service: Successfully processed user message request');
+    // Post-process the response (could add business logic here)
+    // For example: adjust urgency based on business rules, add disclaimers, etc.
 
-      return llmResponse;
-    } catch (error: any) {
-      log.error('Error in SickCo AI response:', error);
+    log.info('AI Service: Successfully processed user message request');
 
-      // Transform technical errors into user-friendly messages
-      if (error.message.includes('API quota exceeded')) {
-        throw new Error(
-          'Our AI service is temporarily unavailable due to high demand. Please try again in a few minutes.',
-        );
-      } else if (error.message.includes('API key')) {
-        throw new Error(
-          'AI service is currently unavailable. Please contact support if this persists.',
-        );
-      } else if (error.message.includes('model_not_found')) {
-        throw new Error('AI analysis service is temporarily unavailable. Please try again later.');
-      }
-
-      // Generic fallback error message
-      throw new Error(
-        `Unable to analyze symptoms at this time: ${error.message || 'Please try again later'}`,
-      );
-    }
+    return llmResponse;
   },
 };
