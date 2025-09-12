@@ -2,7 +2,8 @@ import OpenAI from 'openai';
 import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import fs from 'fs';
 import { zodResponseFormat } from 'openai/helpers/zod';
-
+import { log } from '@/lib/log';
+import { ExternalApiError } from '@/lib/errors';
 /**
  * Large Language Model (LLM) Client
  *
@@ -34,7 +35,7 @@ export const llmClient = {
     // const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
 
     if (!openRouterApiKey) {
-      throw new Error(
+      throw new ExternalApiError(
         'OpenRouter API key is not configured. Please set OPENROUTER_API_KEY in your environment variables.',
       );
     }
@@ -50,11 +51,11 @@ export const llmClient = {
     const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
 
     if (!systemPrompt) {
-      throw new Error('System prompt file not found or is empty.');
+      throw new ExternalApiError('System prompt file not found or is empty.');
     }
 
     try {
-      console.log('LLM Client: Requesting response from AI');
+      log.info('LLM Client: Requesting response from AI');
 
       // Make API call to OpenRouter using OpenAI SDK
       const chatCompletion = await openai.chat.completions.create({
@@ -79,32 +80,25 @@ export const llmClient = {
       //   throw new Error('AI response missing required fields.');
       // }
       // Get the response content
-      const aiResponse = chatCompletion.choices[0].message?.content;
-      if (!aiResponse) {
-        throw new Error('AI response content is null');
+      const sickcoResponse = chatCompletion.choices[0].message.content;
+
+      log.debug('Raw AI response content:', sickcoResponse);
+
+      if (!sickcoResponse) {
+        throw new ExternalApiError('AI response content is null');
       }
 
-      const parsedResponse = JSON.parse(aiResponse);
+      const parsedResponse = JSON.parse(sickcoResponse);
 
       // You can access specific fields from the parsed JSON
       // For example, if the response has a 'response' field:
 
       // handle edge case where LLM respone with refusal (refuse to answer)
-
+      log.info('LLM Client: Successfully Proceeded');
       return parsedResponse;
     } catch (error: any) {
-      console.error('Error calling OpenRouter API with OpenAI SDK:', error);
-
-      // Provide more specific error messages
-      if (error.code === 'insufficient_quota') {
-        throw new Error('API quota exceeded. Please try again later.');
-      } else if (error.code === 'model_not_found') {
-        throw new Error('The specified AI model is not available.');
-      } else if (error instanceof SyntaxError) {
-        throw new Error('Failed to parse AI response. Please try again.');
-      }
-
-      throw new Error(`Failed to get AI response: ${error.message || 'Unknown error'}`);
+      log.debug('Raw error:', error.message);
+      throw new ExternalApiError('Failed to get AI response: Unknown error');
     }
   },
 };

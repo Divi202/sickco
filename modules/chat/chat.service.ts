@@ -1,6 +1,8 @@
 import { aiService } from '@/modules/ai/ai.service';
 import { ChatRequestDTO, ChatResponseDTO } from './chat.schema';
 import { chatRepository } from '../chat/chat.repository';
+import { log } from '@/lib/log';
+import { AppError, DbError, ExternalApiError } from '@/lib/errors';
 
 /**
  * Chat Service
@@ -31,8 +33,8 @@ import { chatRepository } from '../chat/chat.repository';
 export const chatService = {
   // Function to process save user input input and get AI response
   async processMessage(message: ChatRequestDTO): Promise<ChatResponseDTO | undefined> {
-    console.log('Chat Service: Processing user message');
-    console.log(message);
+    log.info('Chat Service: Processing user data...'); // info log
+    log.debug('User data: ', message);
 
     // business validation logic here (if needed)
     // e.g., check for prohibited content, length limits, etc.
@@ -43,13 +45,19 @@ export const chatService = {
      created but we are not using it for now
      */
       const newEntry = await chatRepository.create(message);
-
-      // Step 2: Request AI analysis (non-blocking - entry is preserved even if this fails)
-      console.log('Symptom Service: Requesting AI analysis');
+      if (!newEntry) {
+        throw new DbError('Database fails to create new entry');
+      }
+      //Request AI analysis (non-blocking - entry is preserved even if this fails)
       const aiResponse = await aiService.sickcoAI({
-        userMessage: message.message,
+        userMessage: message.userMessage,
       });
-      console.log('Chat Service: AI processing completed');
+
+      if (!aiResponse) {
+        throw new ExternalApiError('No reponse returend from the LLM.');
+      }
+
+      log.info('Chat Service: Successully saved the user input and produce AI response.'); // info log
 
       return {
         empathy: aiResponse.empathy,
@@ -58,7 +66,7 @@ export const chatService = {
         followUpQuestion: aiResponse.followUpQuestion,
       };
     } catch (error) {
-      console.error('Chat Service: Error saving user message to database', error);
+      throw error;
     }
   },
 };

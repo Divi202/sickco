@@ -69,7 +69,7 @@ export default function UserInput() {
 
     // Validate input using Zod schema
     console.log('Submitting user input:', userInput);
-    const validationResult = ChatRequestDTO.safeParse({ message: userInput });
+    const validationResult = ChatRequestDTO.safeParse({ userMessage: userInput });
 
     if (!validationResult.success) {
       setError(validationResult.error.errors[0].message);

@@ -1,6 +1,8 @@
 import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
 import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
+import { log } from '@/lib/log';
+import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
 
 // Docstring for this file code
 
@@ -33,7 +35,7 @@ import { NextResponse } from 'next/server';
  * Request body:
  * ```json
  * {
- *   "userInput": "I have been experiencing headaches and fatigue for the past few days"
+ *   "userMessage": "I have been experiencing headaches and fatigue for the past few days"
  * }
  * ```
  *
@@ -52,40 +54,70 @@ import { NextResponse } from 'next/server';
  * }
  * ```
  */
+
 export async function POST(request: Request) {
+  log.info('Chat API called...'); // info log
   try {
     // Parse request body
-    const { message }: ChatRequestDTO = await request.json();
+    const { userMessage }: ChatRequestDTO = await request.json();
 
     // Input data validation
-
-    const validationResult = ChatRequestDTO.safeParse({ message });
+    const validationResult = ChatRequestDTO.safeParse({ userMessage });
 
     if (!validationResult.success) {
-      return NextResponse.json(
-        { error: validationResult.error.errors[0].message },
-        { status: 400 },
-      );
+      throw new ValidationError('Invalid input');
     }
+
     // Process the valid input through the chat service
-    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({ message });
+    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
+      userMessage,
+    });
+
+    const sickcoResponseId = crypto.randomUUID(); // temp id to send frontend till we get it form the db
 
     // ui integration testing
-    // const aiResponse = {
-    //   empathy:
-    //     "I'm sorry to hear that you're experiencing headaches and fatigue. It must be quite uncomfortable.",
-    //   information:
-    //     'Headaches and fatigue can be symptoms of various conditions, including stress, dehydration, or more serious health issues. It is important to monitor your symptoms and consider any other accompanying signs.',
-    //   disclaimer: ' Please note that I am an AI language model and not a medical professional',
-    //   followUpQuestion:
-    //     'Have you experienced any other symptoms, such as fever, nausea, or changes in vision?',
-    // };
+    const fullAiResponse = {
+      id: sickcoResponseId,
+      information: aiResponse?.information,
+      empathy: aiResponse?.empathy,
+      disclaimer: aiResponse?.disclaimer,
+      followUpQuestion: aiResponse?.followUpQuestion,
+    };
 
     // Return ai response
-    // console.log('AI Response in route:', aiResponse);
-    return NextResponse.json(aiResponse, { status: 201 });
+    log.info('Chat API: Successfully send the SickCo resposne to the user.'); // info log
+    return NextResponse.json(fullAiResponse, { status: 201 });
   } catch (error: any) {
-    console.error('Error in POST /api/v1/chat:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    // Validation error
+    if (error instanceof ValidationError) {
+      log.error('Validation Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Message is too big. (Lenght should be under 2000 words)' },
+        { status: error.statusCode },
+      );
+    }
+    // Database Error
+    if (error instanceof DbError) {
+      log.error('Database Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Fails to save the data at the moment. Please try again later' },
+        { status: error.statusCode },
+      );
+    }
+
+    // This kind of error are only for developers.
+    if (error instanceof ExternalApiError) {
+      log.error('External API Error: ', error.message);
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again later' },
+        { status: error.statusCode },
+      );
+    }
+    //General fallback error
+    log.error('Error in /api/v1/chat', error.message); // error log
+    return NextResponse.json(
+      { error: 'Something went wrong. Please try again later' },
+      { status: 500 },
+    );
   }
 }
