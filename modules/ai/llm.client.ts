@@ -71,7 +71,7 @@ export const llmClient = {
           },
         ],
         temperature: 0.7, // Balanced creativity vs consistency
-        max_completion_tokens: 1000, // Reasonable response length
+        // max_completion_tokens: 1000, // Reasonable response length
         response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
       });
 
@@ -80,7 +80,7 @@ export const llmClient = {
       //   throw new Error('AI response missing required fields.');
       // }
       // Get the response content
-      log.debug('Content returned inside chat completion:', chatCompletion);
+      // log.debug('Content returned inside chat completion:', chatCompletion);
       const sickcoResponse = chatCompletion.choices[0].message.content;
 
       log.debug('Raw AI response content:', sickcoResponse);

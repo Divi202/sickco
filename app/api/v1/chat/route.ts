@@ -73,11 +73,9 @@ export async function POST(request: Request) {
       userMessage,
     });
 
-    const sickcoResponseId = crypto.randomUUID(); // temp id to send frontend till we get it form the db
-
     // ui integration testing
     const fullAiResponse = {
-      id: sickcoResponseId,
+      id: aiResponse?.id,
       information: aiResponse?.information,
       empathy: aiResponse?.empathy,
       disclaimer: aiResponse?.disclaimer,

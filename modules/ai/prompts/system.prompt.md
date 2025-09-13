@@ -25,6 +25,7 @@ Rules:
    - Short paragraphs (max 3 sentences each)
    - Break text with headings and bullets
    - No long walls of text
+   - Conclude reponse under 50K tokens.
 
 6. Keep responses clear, simple, and supportive.
 
