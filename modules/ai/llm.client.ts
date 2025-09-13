@@ -80,6 +80,7 @@ export const llmClient = {
       //   throw new Error('AI response missing required fields.');
       // }
       // Get the response content
+      log.debug('Content returned inside chat completion:', chatCompletion);
       const sickcoResponse = chatCompletion.choices[0].message.content;
 
       log.debug('Raw AI response content:', sickcoResponse);
@@ -97,8 +98,7 @@ export const llmClient = {
       log.info('LLM Client: Successfully Proceeded');
       return parsedResponse;
     } catch (error: any) {
-      log.debug('Raw error:', error.message);
-      throw new ExternalApiError('Failed to get AI response: Unknown error');
+      throw error;
     }
   },
 };
