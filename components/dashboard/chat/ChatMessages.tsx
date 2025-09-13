@@ -4,13 +4,10 @@ import WelcomeMessage from './WelcomeMessage';
 import { ChatMessagesProps } from '@/types/dashboard.types';
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
-  userMessages,
-  isLoading,
-  error,
+  conversation,
   messagesEndRef,
-  aiResponses,
-}) => (
-  // console.log('AI Response in ChatMessages:', aiResponse),
+}) => {
+  return (
   <div
     ref={messagesEndRef} // Attach the ref here
     className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4 custom-scrollbar "
@@ -40,13 +37,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
       }}
     />
     {/* Show WelcomeMessage if no messages */}
-    {userMessages.length === 0 && <WelcomeMessage />}
+    {conversation.length === 0 && <WelcomeMessage />}
 
-    {/* User and AI responses */}
+    {/* Conversation turns */}
     <AnimatePresence>
-      {userMessages.map((message, index) => (
+      {conversation.map((turn) => (
         <motion.div
-          key={message.id}
+          key={turn.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
@@ -72,9 +69,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
               </div>
               {/* Message Bubble */}
               <div className="px-3 md:px-4 py-2 md:py-3 rounded-2xl shadow-lg bg-green-600/90 text-white rounded-br-sm">
-                <p className="text-xs md:text-sm leading-relaxed">{message.text}</p>
+                <p className="text-xs md:text-sm leading-relaxed">{turn.userMessage.text}</p>
                 <p className="text-xs mt-1 md:mt-2 text-green-100">
-                  {message.timestamp.toLocaleTimeString([], {
+                  {turn.userMessage.timestamp.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
                   })}
@@ -83,45 +80,44 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             </div>
           </div>
 
-          {/* AI Response */}
-          {aiResponses[index] && <AIResponse aiResponse={aiResponses[index]} />}
+          {/* AI Response or Loading/Error State */}
+          {turn.isLoadingAI && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex justify-start"
+            >
+              <div className="w-full bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-slate-600 animate-pulse" />
+                  <div className="h-4 w-24 bg-slate-600 rounded animate-pulse" />
+                </div>
+                <div className="mt-3 space-y-2">
+                  <div className="h-4 w-3/4 bg-slate-600 rounded animate-pulse" />
+                  <div className="h-4 w-1/2 bg-slate-600 rounded animate-pulse" />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {turn.errorAI && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center"
+            >
+              {turn.errorAI}
+            </motion.div>
+          )}
+
+          {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
         </motion.div>
       ))}
     </AnimatePresence>
-
-    {/* Loading State */}
-    {isLoading && (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex justify-start"
-      >
-        <div className="w-full bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-slate-600 animate-pulse" />
-            <div className="h-4 w-24 bg-slate-600 rounded animate-pulse" />
-          </div>
-          <div className="mt-3 space-y-2">
-            <div className="h-4 w-3/4 bg-slate-600 rounded animate-pulse" />
-            <div className="h-4 w-1/2 bg-slate-600 rounded animate-pulse" />
-          </div>
-        </div>
-      </motion.div>
-    )}
-
-    {/* Error Message */}
-    {error && (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center"
-      >
-        {error}
-      </motion.div>
-    )}
   </div>
-);
+  );
+};
 
 export default ChatMessages;

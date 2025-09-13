@@ -1,6 +1,15 @@
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
 import { RefObject } from 'react';
 
+// Conversation Turn - represents a complete exchange between user and AI
+export interface ConversationTurn {
+  id: string; // Chat entry ID from database
+  userMessage: UserMessages;
+  aiResponse?: SickCoAIResponseDTO;
+  isLoadingAI?: boolean;
+  errorAI?: string;
+}
+
 //Chat component types
 export interface ChatProps {
   onToggleMobileMenu: () => void;
@@ -16,9 +25,10 @@ export interface UserMessages {
 // ChatHeader component types
 export interface ChatHeaderProps {
   onToggleMobileMenu: () => void;
+  onClearChat: () => void;
 }
 
-// ChatHeader component types
+// ChatInput component types
 export interface ChatInputProps {
   newMessage: string;
   setNewMessage: (msg: string) => void;
@@ -28,14 +38,16 @@ export interface ChatInputProps {
 
 // ChatMessages component types
 export interface ChatMessagesProps {
-  userMessages: UserMessages[];
-  aiResponses: SickCoAIResponseDTO[];
-  isLoading: boolean;
-  error: string | null;
+  conversation: ConversationTurn[];
   messagesEndRef: RefObject<HTMLDivElement | null>;
 }
 
 // AIResponse component types
 export interface AIResponseProps {
   aiResponse: SickCoAIResponseDTO;
+}
+
+// ClearChatBtn component types
+export interface ClearChatBtnProps {
+  onClearChat: () => void;
 }

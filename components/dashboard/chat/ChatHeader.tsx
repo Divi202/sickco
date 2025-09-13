@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { ChatHeaderProps } from '@/types/dashboard.types';
+import ClearChatBtn from './ClearChatBtn';
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu }) => (
+const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu, onClearChat }) => (
   <motion.div
     initial={{ y: -20, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
@@ -33,6 +34,9 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu }) => (
         <p className="text-slate-400 text-xs md:text-sm mt-1">AI-powered conversation assistant</p>
       </div>
     </div>
+    
+    {/* Clear Chat Button */}
+    <ClearChatBtn onClearChat={onClearChat} />
   </motion.div>
 );
 
