@@ -74,6 +74,9 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
       console.log('AI Response:', result);
       console.log('sicko reposne id', result.id);
 
+      //Updating user message id with the actual id received from db
+      userMessage.id = result.id;
+
       // Add AI response to sickco all the responses
     } catch (err: any) {
       // Extract a useful message from axios error shape if available
