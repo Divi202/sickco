@@ -98,7 +98,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     } catch (err: any) {
       // Extract a useful message from axios error shape if available
       const errorMessage = err?.response?.data?.error || 'Failed to get AI response';
-      
+
       // Update the conversation turn with error
       setConversation((prev) =>
         prev.map((turn) =>
@@ -122,10 +122,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
       <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
       {/* Chat Messages- Displays the list of messages, loading state, and error state.*/}
-      <ChatMessages
-        conversation={conversation}
-        messagesEndRef={messagesEndRef}
-      />
+      <ChatMessages conversation={conversation} messagesEndRef={messagesEndRef} />
 
       {/* Chat Input - Handles the message input and send button.*/}
       <ChatInput
