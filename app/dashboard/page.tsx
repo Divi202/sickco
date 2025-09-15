@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import Chat from '@/components/dashboard/Chat';
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 // =============================================================================
 // MAIN DASHBOARD COMPONENT
@@ -18,6 +17,9 @@ import { createClient } from '@/lib/supabase/client';
  * Manages global state for selected features and mobile menu
  */
 const Dashboard = () => {
+  const [selectedFeature, setSelectedFeature] = useState('chat');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const searchParams = useSearchParams(); // Initialize useSearchParams
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -28,10 +30,7 @@ const Dashboard = () => {
   }, []);
 
   if (!user) return null;
-  const [selectedFeature, setSelectedFeature] = useState('chat');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const searchParams = useSearchParams(); // Initialize useSearchParams
   const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
   const handleFeatureSelect = (featureId: string) => {

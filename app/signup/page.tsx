@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, LoginFormData } from '@/types/login.types';
+import { signupSchema, SignupFormData } from '@/types/signup.types';
 
 import {
   Form,
@@ -17,31 +17,35 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+  const form = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     setLoading(true);
     setServerError(null);
 
     try {
-      const res = await fetch('/api/v1/auth/login', {
+      const res = await fetch('/api/v1/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ email: data.email, password: data.password }),
       });
 
       const result = await res.json();
 
       if (!res.ok) {
-        setServerError(result.error || 'Invalid email or password');
+        setServerError(result.error || 'Something went wrong');
         setLoading(false);
         return;
       }
@@ -60,7 +64,7 @@ export default function LoginPage() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full max-w-md space-y-6 rounded-lg bg-card p-8 shadow"
         >
-          <h1 className="text-center text-2xl font-bold">Login</h1>
+          <h1 className="text-center text-2xl font-bold">Sign Up</h1>
 
           {serverError && <p className="text-center text-sm text-destructive">{serverError}</p>}
 
@@ -92,8 +96,22 @@ export default function LoginPage() {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="********" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Signing up...' : 'Sign Up'}
           </Button>
         </form>
       </Form>
