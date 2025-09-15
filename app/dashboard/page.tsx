@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
+import Chat from '@/components/dashboard/Chat';
 // =============================================================================
 // MAIN DASHBOARD COMPONENT
 // =============================================================================
@@ -40,7 +41,6 @@ const Dashboard = () => {
       // Optionally, display an error message to the user
     }
   };
-
 
   if (!user) return null;
 
