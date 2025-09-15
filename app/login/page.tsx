@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,23 +33,10 @@ export default function LoginPage() {
     setServerError(null);
 
     try {
-      const res = await fetch('/api/v1/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        setServerError(result.error || 'Invalid email or password');
-        setLoading(false);
-        return;
-      }
-
+      const result = await axios.post('/api/login', data);
       router.push('/dashboard');
-    } catch (err) {
-      setServerError('Network error, please try again.');
+    } catch (error: any) {
+      setServerError(error.response?.data?.error || 'Invalid email or password');
       setLoading(false);
     }
   };

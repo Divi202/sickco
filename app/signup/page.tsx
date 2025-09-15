@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import axios from 'axios';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -36,23 +37,14 @@ export default function SignupPage() {
     setServerError(null);
 
     try {
-      const res = await fetch('/api/v1/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: data.email, password: data.password }),
+      const result = await axios.post('/api/signup', {
+        email: data.email,
+        password: data.password,
       });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        setServerError(result.error || 'Something went wrong');
-        setLoading(false);
-        return;
-      }
-
       router.push('/dashboard');
-    } catch (err) {
-      setServerError('Network error, please try again.');
+    } catch (error: any) {
+      setServerError(error.response?.data?.error || 'Something went wrong');
       setLoading(false);
     }
   };
