@@ -73,20 +73,12 @@ export async function POST(request: Request) {
       userMessage,
     });
 
-    const sickcoResponseId = crypto.randomUUID(); // temp id to send frontend till we get it form the db
-
-    // ui integration testing
-    const fullAiResponse = {
-      id: sickcoResponseId,
-      information: aiResponse?.information,
-      empathy: aiResponse?.empathy,
-      disclaimer: aiResponse?.disclaimer,
-      followUpQuestion: aiResponse?.followUpQuestion,
-    };
-
+    if (!aiResponse) {
+      throw new ExternalApiError('Chat Route: AI response is null');
+    }
     // Return ai response
     log.info('Chat API: Successfully send the SickCo resposne to the user.'); // info log
-    return NextResponse.json(fullAiResponse, { status: 201 });
+    return NextResponse.json(aiResponse, { status: 201 });
   } catch (error: any) {
     // Validation error
     if (error instanceof ValidationError) {

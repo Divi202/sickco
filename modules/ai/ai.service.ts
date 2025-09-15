@@ -1,7 +1,7 @@
 import { llmClient } from './llm.client';
 import { LLMResponseDTO, SickCoAIRequestDTO } from './ai.schema';
 import { log } from '@/lib/log';
-import { AppError } from '@/lib/errors';
+
 /**
  * AI Service
  *
@@ -34,8 +34,10 @@ export const aiService = {
 
     log.info('AI Service: Processing user message for Sickco AI');
 
+    log.debug('Data recieved in ai service:', data);
     // Delegate to the LLM client for actual AI communication
     const llmResponse = await llmClient.generateAiResponse(data);
+    log.debug('LLM response recieved in AI service:', llmResponse);
 
     // Mock resposne from llm
     //   const llmResponse = {

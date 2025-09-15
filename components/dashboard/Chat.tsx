@@ -8,15 +8,12 @@ import ChatHeader from './chat/ChatHeader';
 import ChatMessages from './chat/ChatMessages';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
-import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema';
-import { ChatProps, UserMessages } from '../../types/dashboard.types';
+import { ChatProps, UserMessages, ConversationTurn } from '../../types/dashboard.types';
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
-  const [userMessages, setUserMessages] = useState<UserMessages[]>([]);
-  const [sickcoResponses, setSickcoResponses] = useState<SickCoAIResponseDTO[]>([]);
+  const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // New state for loading
-  const [error, setError] = useState<string | null>(null); // New state for errors
 
   const messagesEndRef = useRef<HTMLDivElement>(null); // Create a ref for the messages container
 
@@ -32,7 +29,12 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
-  }, [userMessages]);
+  }, [conversation]);
+
+  // Handle clearing chat
+  const handleClearChat = () => {
+    setConversation([]);
+  };
 
   // Handle sending new message
   const handleSendMessage = async (e?: React.FormEvent) => {
@@ -43,19 +45,26 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     const userMessageText = newMessage.trim();
 
     // Generate a temp unique ID for the message
-    const userMessageId = crypto.randomUUID();
+    const tempId = crypto.randomUUID();
 
     // Add user message to chat
     const userMessage: UserMessages = {
-      id: userMessageId,
+      id: tempId,
       text: userMessageText,
       timestamp: new Date(),
     };
 
-    setUserMessages((prev) => [...prev, userMessage]);
+    // Create conversation turn with loading state
+    const newTurn: ConversationTurn = {
+      id: tempId,
+      userMessage,
+      isLoadingAI: true,
+    };
+
+    setConversation((prev) => [...prev, newTurn]);
     setNewMessage(''); // Clear input immediately
     setIsLoading(true);
-    setError(null);
+
     // Call the API to chat with Sickco AI
     try {
       //Using axios
@@ -69,15 +78,39 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
       const result = response.data;
 
-      setSickcoResponses((prev) => [...prev, result]);
-
       console.log('AI Response:', result);
       console.log('sicko reposne id', result.id);
 
-      // Add AI response to sickco all the responses
+      // Update the conversation turn with AI response and actual ID
+      setConversation((prev) =>
+        prev.map((turn) =>
+          turn.id === tempId
+            ? {
+                ...turn,
+                id: result.id,
+                userMessage: { ...turn.userMessage, id: result.id },
+                aiResponse: result,
+                isLoadingAI: false,
+              }
+            : turn,
+        ),
+      );
     } catch (err: any) {
       // Extract a useful message from axios error shape if available
-      setError(err?.response?.data?.error || 'Failed to get AI response');
+      const errorMessage = err?.response?.data?.error || 'Failed to get AI response';
+
+      // Update the conversation turn with error
+      setConversation((prev) =>
+        prev.map((turn) =>
+          turn.id === tempId
+            ? {
+                ...turn,
+                isLoadingAI: false,
+                errorAI: errorMessage,
+              }
+            : turn,
+        ),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -86,16 +119,10 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   return (
     <div className="flex-1 flex flex-col min-w-0">
       {/* Chat Header  - Handles the chat header and mobile menu button*/}
-      <ChatHeader onToggleMobileMenu={onToggleMobileMenu} />
+      <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
       {/* Chat Messages- Displays the list of messages, loading state, and error state.*/}
-      <ChatMessages
-        userMessages={userMessages}
-        aiResponses={sickcoResponses}
-        isLoading={isLoading}
-        error={error}
-        messagesEndRef={messagesEndRef}
-      />
+      <ChatMessages conversation={conversation} messagesEndRef={messagesEndRef} />
 
       {/* Chat Input - Handles the message input and send button.*/}
       <ChatInput

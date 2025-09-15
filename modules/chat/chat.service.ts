@@ -2,7 +2,7 @@ import { aiService } from '@/modules/ai/ai.service';
 import { ChatRequestDTO, ChatResponseDTO } from './chat.schema';
 import { chatRepository } from '../chat/chat.repository';
 import { log } from '@/lib/log';
-import { AppError, DbError, ExternalApiError } from '@/lib/errors';
+import { DbError, ExternalApiError } from '@/lib/errors';
 
 /**
  * Chat Service
@@ -44,27 +44,47 @@ export const chatService = {
       /* NOTE:  new entrry conatins message form the databse that entry is 
      created but we are not using it for now
      */
-      const newEntry = await chatRepository.create(message);
-      if (!newEntry) {
+
+      // Return chat entry id
+      const chatEntryId = await chatRepository.create(message);
+      // log.debug('chat entry db id: ', chatEntryId);
+
+      if (!chatEntryId) {
         throw new DbError('Database fails to create new entry');
       }
-      //Request AI analysis (non-blocking - entry is preserved even if this fails)
-      const aiResponse = await aiService.sickcoAI({
-        userMessage: message.userMessage,
-      });
 
-      if (!aiResponse) {
-        throw new ExternalApiError('No reponse returend from the LLM.');
+      // Request AI analysis (non-blocking - entry is preserved even if this fails)
+      // const aiResponse = await aiService.sickcoAI({
+      //   userMessage: message.userMessage,
+      // });
+
+      // if (!aiResponse) {
+      //   throw new ExternalApiError('No reponse returend from the LLM.');
+      // }
+
+      const aiResponseWithId: ChatResponseDTO = {
+        id: chatEntryId,
+        // empathy: aiResponse.empathy,
+        // information: aiResponse.information,
+        // disclaimer: aiResponse.disclaimer,
+        // followUpQuestion: aiResponse.followUpQuestion,
+        empathy: 'I am empathy',
+        information: 'I am info',
+        disclaimer: 'I am disclaimer',
+        followUpQuestion: 'I am follow up q',
+      };
+
+      // aiResponseId is same as chatEntryId, here we are taking in response form the chat repository just
+      // conclude whether the updation is successfully or not.
+      const aiResponseId = await chatRepository.update(aiResponseWithId);
+
+      if (!aiResponseId) {
+        throw new DbError('Chat Service: DB fails to save AI response.');
       }
 
       log.info('Chat Service: Successully saved the user input and produce AI response.'); // info log
 
-      return {
-        empathy: aiResponse.empathy,
-        information: aiResponse.information,
-        disclaimer: aiResponse.disclaimer,
-        followUpQuestion: aiResponse.followUpQuestion,
-      };
+      return aiResponseWithId;
     } catch (error) {
       throw error;
     }
