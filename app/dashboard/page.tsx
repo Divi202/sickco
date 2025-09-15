@@ -3,11 +3,12 @@
  * Manages global state and coordinates between Sidebar and Chat components
  */
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
 import Chat from '@/components/dashboard/Chat';
-
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 // =============================================================================
 // MAIN DASHBOARD COMPONENT
 // =============================================================================
@@ -17,6 +18,16 @@ import Chat from '@/components/dashboard/Chat';
  * Manages global state for selected features and mobile menu
  */
 const Dashboard = () => {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+  }, []);
+
+  if (!user) return null;
   const [selectedFeature, setSelectedFeature] = useState('chat');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
