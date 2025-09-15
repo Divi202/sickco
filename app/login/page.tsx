@@ -33,7 +33,7 @@ export default function LoginPage() {
     setServerError(null);
 
     try {
-      const result = await axios.post('/api/login', data);
+      const result = await axios.post('/api/v1/auth/login', data);
       router.push('/dashboard');
     } catch (error: any) {
       setServerError(error.response?.data?.error || 'Invalid email or password');
@@ -42,24 +42,29 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-md space-y-6 rounded-lg bg-card p-8 shadow"
+          className="w-full max-w-md space-y-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 shadow-2xl"
         >
-          <h1 className="text-center text-2xl font-bold">Login</h1>
+          <h1 className="text-center text-2xl font-bold text-white mb-2">Welcome Back</h1>
+          <p className="text-center text-slate-400 text-sm mb-6">Sign in to your SickCo account</p>
 
-          {serverError && <p className="text-center text-sm text-destructive">{serverError}</p>}
+          {serverError && <p className="text-center text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">{serverError}</p>}
 
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-slate-200">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
+                  <Input 
+                    placeholder="you@example.com" 
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -71,18 +76,40 @@ export default function LoginPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-slate-200">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="********" {...field} />
+                  <Input 
+                    type="password" 
+                    placeholder="********" 
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full bg-green-600/90 hover:bg-green-600 text-white font-medium py-3 transition-all duration-200" 
+            disabled={loading}
+          >
             {loading ? 'Logging in...' : 'Login'}
           </Button>
+          
+          <div className="text-center">
+            <p className="text-slate-400 text-sm">
+              Don't have an account?{' '}
+              <button
+                type="button"
+                onClick={() => router.push('/signup')}
+                className="text-green-400 hover:text-green-300 font-medium transition-colors"
+              >
+                Sign up
+              </button>
+            </p>
+          </div>
         </form>
       </Form>
     </div>

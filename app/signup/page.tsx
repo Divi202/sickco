@@ -37,7 +37,7 @@ export default function SignupPage() {
     setServerError(null);
 
     try {
-      const result = await axios.post('/api/signup', {
+      const result = await axios.post('/api/v1/auth/signup', {
         email: data.email,
         password: data.password,
       });
@@ -50,24 +50,29 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full max-w-md space-y-6 rounded-lg bg-card p-8 shadow"
+          className="w-full max-w-md space-y-6 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 shadow-2xl"
         >
-          <h1 className="text-center text-2xl font-bold">Sign Up</h1>
+          <h1 className="text-center text-2xl font-bold text-white mb-2">Create Account</h1>
+          <p className="text-center text-slate-400 text-sm mb-6">Join SickCo to get started</p>
 
-          {serverError && <p className="text-center text-sm text-destructive">{serverError}</p>}
+          {serverError && <p className="text-center text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-3">{serverError}</p>}
 
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-slate-200">Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="you@example.com" {...field} />
+                  <Input 
+                    placeholder="you@example.com" 
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,9 +84,14 @@ export default function SignupPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-slate-200">Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="********" {...field} />
+                  <Input 
+                    type="password" 
+                    placeholder="********" 
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -93,18 +103,40 @@ export default function SignupPage() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel className="text-slate-200">Confirm Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="********" {...field} />
+                  <Input 
+                    type="password" 
+                    placeholder="********" 
+                    className="bg-slate-700/50 border-slate-600/50 text-white placeholder:text-slate-400 focus:border-green-500/50 focus:ring-green-500/20"
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full bg-green-600/90 hover:bg-green-600 text-white font-medium py-3 transition-all duration-200" 
+            disabled={loading}
+          >
             {loading ? 'Signing up...' : 'Sign Up'}
           </Button>
+          
+          <div className="text-center">
+            <p className="text-slate-400 text-sm">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => router.push('/login')}
+                className="text-green-400 hover:text-green-300 font-medium transition-colors"
+              >
+                Sign in
+              </button>
+            </p>
+          </div>
         </form>
       </Form>
     </div>
