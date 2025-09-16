@@ -54,24 +54,24 @@ export const chatService = {
       }
 
       // Request AI analysis (non-blocking - entry is preserved even if this fails)
-      // const aiResponse = await aiService.sickcoAI({
-      //   userMessage: message.userMessage,
-      // });
+      const aiResponse = await aiService.sickcoAI({
+        userMessage: message.userMessage,
+      });
 
-      // if (!aiResponse) {
-      //   throw new ExternalApiError('No reponse returend from the LLM.');
-      // }
+      if (!aiResponse) {
+        throw new ExternalApiError('No reponse returend from the LLM.');
+      }
 
       const aiResponseWithId: ChatResponseDTO = {
         id: chatEntryId,
-        // empathy: aiResponse.empathy,
-        // information: aiResponse.information,
-        // disclaimer: aiResponse.disclaimer,
-        // followUpQuestion: aiResponse.followUpQuestion,
-        empathy: 'I am empathy',
-        information: 'I am info',
-        disclaimer: 'I am disclaimer',
-        followUpQuestion: 'I am follow up q',
+        empathy: aiResponse.empathy,
+        information: aiResponse.information,
+        disclaimer: aiResponse.disclaimer,
+        followUpQuestion: aiResponse.followUpQuestion,
+        // empathy: 'I am empathy',
+        // information: 'I am info',
+        // disclaimer: 'I am disclaimer',
+        // followUpQuestion: 'I am follow up q',
       };
 
       // aiResponseId is same as chatEntryId, here we are taking in response form the chat repository just
