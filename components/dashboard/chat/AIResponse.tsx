@@ -15,7 +15,7 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
 
     {aiResponse.disclaimer && aiResponse.information.length > 0 && (
       <>
-        <div className="mt-4 text-slate-300/90 break-words">
+        <div className="mt-4 text-slate-300/90 max-w-none">
           <ReactMarkdown>{aiResponse.information}</ReactMarkdown>
         </div>
 
