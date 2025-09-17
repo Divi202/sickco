@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { AIResponseProps } from '@/types/dashboard.types';
 
 const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
@@ -16,7 +17,7 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
     {aiResponse.disclaimer && aiResponse.information.length > 0 && (
       <>
         <div className="mt-4 text-slate-300/90 markdown-content">
-          <ReactMarkdown>{aiResponse.information}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiResponse.information}</ReactMarkdown>
         </div>
 
         <p className="mt-4 text-slate-300/90 ">{aiResponse.followUpQuestion}</p>
