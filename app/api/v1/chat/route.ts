@@ -1,3 +1,4 @@
+// app/api/v1/chat/route.ts
 import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
 import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
   log.info('Chat API called...'); // info log
   try {
     //authenticate the user
-    await requireUser();
+    const user = await requireUser(); // MODIFIED: Get the user object
     // Parse request body
     const { userMessage }: ChatRequestDTO = await request.json();
 
@@ -72,9 +73,10 @@ export async function POST(request: Request) {
     }
 
     // Process the valid input through the chat service
-    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage({
-      userMessage,
-    });
+    const aiResponse: ChatResponseDTO | undefined = await chatService.processMessage(
+      { userMessage },
+      user.id, // MODIFIED: Pass user.id to the service
+    );
 
     if (!aiResponse) {
       throw new ExternalApiError('Chat Route: AI response is null');
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
     if (error instanceof ExternalApiError) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     // Validation error
     if (error instanceof ValidationError) {
       log.error('Validation Error: ', error.message);

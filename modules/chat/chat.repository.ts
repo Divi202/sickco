@@ -1,3 +1,4 @@
+// modules/chat/chat.repository.ts
 import { ChatResponseDTO } from './chat.schema';
 /**
  * Chat Repository
@@ -31,14 +32,15 @@ import { DbError } from '@/lib/errors';
 
 export const chatRepository = {
   // Create a new chat entry
-  async create(request: ChatRequestDTO) {
+  async create(request: ChatRequestDTO, userId: string) {
+    // MODIFIED: Added userId parameter
     // Initialize Supabase client for database operations
     const supabase = await createClient();
     log.info('Chat Repository: Stroing user data in the database...');
 
     const { data: newEntry, error } = await supabase
       .from('chat_entries') // Supabase table name
-      .insert({ user_message: request.userMessage, ai_response: null })
+      .insert({ user_message: request.userMessage, ai_response: null, user_id: userId }) // MODIFIED: Added user_id
       .select('*')
       .single();
 
@@ -94,5 +96,45 @@ export const chatRepository = {
 
     // retrun db chat entry id
     return data.id;
+  },
+
+  // NEW: Function to get chat history for a user
+  async getChatHistory(userId: string) {
+    const supabase = await createClient();
+    log.info(`Chat Repository: Fetching chat history for user ${userId}...`);
+
+    const { data, error } = await supabase
+      .from('chat_entries')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_deleted', false) // Filter out soft-deleted chats
+      .order('created_at', { ascending: true }); // Order by creation time
+
+    if (error) {
+      log.error('Chat Repository: Failed to fetch chat history', error.message);
+      throw new DbError('Database error while fetching chat history');
+    }
+
+    log.info(`Chat Repository: Successfully fetched chat history for user ${userId}`);
+    return data;
+  },
+
+  // NEW: Function to mark all chats for a user as deleted (soft delete)
+  async markChatsAsDeleted(userId: string) {
+    const supabase = await createClient();
+    log.info(`Chat Repository: Marking chats as deleted for user ${userId}...`);
+
+    const { error } = await supabase
+      .from('chat_entries')
+      .update({ is_deleted: true })
+      .eq('user_id', userId);
+
+    if (error) {
+      log.error('Chat Repository: Failed to mark chats as deleted', error.message);
+      throw new DbError('Database error while marking chats as deleted');
+    }
+
+    log.info(`Chat Repository: Successfully marked chats as deleted for user ${userId}`);
+    return { success: true };
   },
 };

@@ -1,9 +1,14 @@
-// app/middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+// lib/supabase/middleware.ts
+import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
-const PROTECTED = [/^\/api\/v1\/chat/, /^\/api\/v1\/auth\/me/,  /^\/api\/v1\/auth\/logout/];
+const PROTECTED = [
+  /^\/api\/v1\/chat/,
+  /^\/api\/v1\/auth\/me/,
+  /^\/api\/v1\/auth\/logout/,
+  /^\/api\/v1\/chat\/history/, // NEW: Add chat history API route
+  /^\/api\/v1\/chat\/clear/, // NEW: Add clear chat API route
+];
 
 export async function middleware(req: NextRequest) {
   // keep your existing session sync
