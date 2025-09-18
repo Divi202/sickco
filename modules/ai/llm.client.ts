@@ -70,8 +70,9 @@ export const llmClient = {
             content: request.userMessage,
           },
         ],
+
         temperature: 0.7, // Balanced creativity vs consistency
-        // max_completion_tokens: 1000, // Reasonable response length
+        max_completion_tokens: 5000, // Reasonable response length
         response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
       });
 

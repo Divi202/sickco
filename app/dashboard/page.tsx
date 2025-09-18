@@ -3,11 +3,13 @@
  * Manages global state and coordinates between Sidebar and Chat components
  */
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '@/components/dashboard/Sidebar';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { createClient } from '@/lib/supabase/client';
 import Chat from '@/components/dashboard/Chat';
-
 // =============================================================================
 // MAIN DASHBOARD COMPONENT
 // =============================================================================
@@ -19,8 +21,29 @@ import Chat from '@/components/dashboard/Chat';
 const Dashboard = () => {
   const [selectedFeature, setSelectedFeature] = useState('chat');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const searchParams = useSearchParams(); // Initialize useSearchParams
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/api/v1/auth/logout');
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Optionally, display an error message to the user
+    }
+  };
+
+  if (!user) return null;
+
   const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
   const handleFeatureSelect = (featureId: string) => {
@@ -42,10 +65,13 @@ const Dashboard = () => {
         onFeatureSelect={handleFeatureSelect}
         isMobileMenuOpen={isMobileMenuOpen}
         onCloseMobile={handleCloseMobileMenu}
+        user={user}
+        onLogout={handleLogout}
       />
-      {/* <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} /> */}
-      {/* Chat V2  */}
-      <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} />
+      {/* Render Chat component only if 'chat' is selected */}
+      {selectedFeature === 'chat' && (
+        <Chat onToggleMobileMenu={handleToggleMobileMenu} initialMessage={initialSymptoms || ''} />
+      )}
     </div>
   );
 };

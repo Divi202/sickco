@@ -2,22 +2,21 @@
  * Sidebar Component - Handles both desktop and mobile sidebar functionality
  * Props: selectedFeature, onFeatureSelect, isMobileMenuOpen, onCloseMobile
  */
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+
 // Define the props type
 interface SidebarProps {
   selectedFeature: string;
   onFeatureSelect: (featureId: string) => void;
   isMobileMenuOpen: boolean;
   onCloseMobile: () => void;
+  user: any; // User object from Supabase
+  onLogout: () => void; // Logout function
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  selectedFeature,
-  onFeatureSelect,
-  isMobileMenuOpen,
-  onCloseMobile,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ selectedFeature, onFeatureSelect, isMobileMenuOpen, onCloseMobile, user, onLogout }) => {
   const sidebarFeatures = [
     {
       id: 'chat',
@@ -27,8 +26,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     },
   ];
 
-  const SidebarContent = ({ isMobile = false }) => (
-    <div className={`p-4 ${!isMobile ? 'md:p-6' : ''}`}>
+  const SidebarContent = ({ isMobile = false, user, onLogout }: { isMobile?: boolean; user: any; onLogout: () => void }) => (
+    <div className={`flex flex-col h-full p-4 ${!isMobile ? 'md:p-6' : ''}`}>
       {/* Logo/Brand */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -45,7 +44,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       </motion.div>
 
       {/* Feature List */}
-      <nav className="space-y-2">
+      <nav className="flex-grow space-y-2">
         {sidebarFeatures.map((feature, index) => {
           const Icon = feature.icon;
           return (
@@ -72,6 +71,28 @@ const Sidebar: React.FC<SidebarProps> = ({
           );
         })}
       </nav>
+
+      {/* User Profile and Logout */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="mt-8 pt-4 border-t border-slate-700/50"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-sm font-semibold">
+            {user?.email ? user.email[0].toUpperCase() : 'U'}
+          </div>
+          <p className="text-slate-200 text-sm font-medium truncate">{user?.email}</p>
+        </div>
+        <Button
+          onClick={onLogout}
+          className="w-full bg-red-600/90 hover:bg-red-700 text-white font-medium py-2 transition-all duration-200"
+        >
+          <LogOut className="w-4 h-4" />
+          Logout
+        </Button>
+      </motion.div>
     </div>
   );
 
@@ -84,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         transition={{ duration: 0.5 }}
         className="w-64 lg:w-72 bg-slate-800/50 border-r border-slate-700/50 backdrop-blur-sm flex-col hidden lg:flex"
       >
-        <SidebarContent />
+        <SidebarContent user={user} onLogout={onLogout} />
       </motion.div>
 
       {/* Mobile Sidebar Overlay */}
@@ -129,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </motion.button>
               </div>
 
-              <SidebarContent isMobile={true} />
+              <SidebarContent isMobile={true} user={user} onLogout={onLogout} />
             </motion.div>
           </>
         )}

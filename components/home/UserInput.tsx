@@ -25,8 +25,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
+import LoginPromptModal from './LoginPromptModal';
 import { useRouter } from 'next/navigation';
 import { ChatRequestDTO } from '@/modules/chat/chat.schema';
+import { createClient } from '@/lib/supabase/client';
 
 /**
  * UserInput Component
@@ -42,6 +44,9 @@ export default function UserInput() {
   const [isLoading, setIsLoading] = useState(false);
   // Error state for displaying error messages
   const [error, setError] = useState<string | null>(null);
+
+  // State for login prompt modal
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   const router = useRouter(); // Initialize useRouter
 
@@ -67,6 +72,16 @@ export default function UserInput() {
   const handleSubmit = async () => {
     if (isLoading) return; // Prevent multiple submissions
 
+    // Check if user is authenticated
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      // User is not logged in, show login prompt
+      setShowLoginPrompt(true);
+      return;
+    }
+
     // Validate input using Zod schema
     console.log('Submitting user input:', userInput);
     const validationResult = ChatRequestDTO.safeParse({ userMessage: userInput });
@@ -89,6 +104,29 @@ export default function UserInput() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  /**
+   * Handles closing the login prompt modal
+   */
+  const handleCloseLoginPrompt = () => {
+    setShowLoginPrompt(false);
+  };
+
+  /**
+   * Handles navigation to login page
+   */
+  const handleLoginClick = () => {
+    setShowLoginPrompt(false);
+    router.push('/login');
+  };
+
+  /**
+   * Handles navigation to signup page
+   */
+  const handleSignupClick = () => {
+    setShowLoginPrompt(false);
+    router.push('/signup');
   };
 
   /**
@@ -149,6 +187,14 @@ export default function UserInput() {
       <div className="mt-12">
         <ExampleSuggestions onExampleClick={handleExampleClick} />
       </div>
+
+      {/* Login Prompt Modal */}
+      <LoginPromptModal
+        isOpen={showLoginPrompt}
+        onClose={handleCloseLoginPrompt}
+        onLoginClick={handleLoginClick}
+        onSignupClick={handleSignupClick}
+      />
     </motion.div>
   );
 }
