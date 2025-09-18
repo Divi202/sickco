@@ -112,7 +112,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
     setConversation((prev) => [...prev, newTurn]);
     if (!messageToSend) {
-    setNewMessage(''); // Always clear the input after sending
+      setNewMessage(''); // Always clear the input after sending
+    }
     setIsLoading(true);
 
     // Call the API to chat with Sickco AI
