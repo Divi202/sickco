@@ -1,17 +1,26 @@
+// app/api/v1/auth/logout/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { usersService } from '@/modules/users/users.service';
+import { log } from '@/lib/log';
+import { ExternalApiError } from '@/lib/errors';
 
 export async function POST() {
-  try {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.signOut();
+  log.info('Auth API: Logout endpoint called...');
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+  try {
+    const result = await usersService.logout();
+
+    log.info('Auth API: Logout successful');
+    return NextResponse.json(result, { status: 200 });
+  } catch (error: any) {
+    // External API error (Supabase auth errors)
+    if (error instanceof ExternalApiError) {
+      log.error('Auth API: Logout Error', error.message);
+      return NextResponse.json({ error: 'Logout failed' }, { status: error.statusCode });
     }
 
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    // General fallback error
+    log.error('Auth API: Unexpected error', error.message);
+    return NextResponse.json({ error: 'Logout failed. Please try again later.' }, { status: 500 });
   }
 }

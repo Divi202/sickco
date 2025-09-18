@@ -1,29 +1,48 @@
+// app/api/v1/auth/login/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { loginSchema } from '@/modules/users/users.schema';
+import { usersService } from '@/modules/users/users.service';
+import { log } from '@/lib/log';
+import { ValidationError, ExternalApiError } from '@/lib/errors';
+import { loginSchema } from '@/types/login.types';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
+  log.info('Auth API: Login endpoint called...');
+
   try {
-    const body = await req.json();
-    const parsed = loginSchema.safeParse(body);
+    const body = await request.json();
 
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.format() }, { status: 400 });
-    }
-    const supabase = await createClient();
-    const { email, password } = parsed.data;
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 401 });
+    // Input validation
+    const validationResult = loginSchema.safeParse(body);
+    if (!validationResult.success) {
+      throw new ValidationError('Invalid input data');
     }
 
-    return NextResponse.json({ session: data.session, user: data.user });
-  } catch (err) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    // Process through auth service
+    const authResponse = await usersService.login(validationResult.data);
+
+    log.info('Auth API: Login successful');
+    return NextResponse.json(authResponse, { status: 200 });
+  } catch (error: any) {
+    // Validation error
+    if (error instanceof ValidationError) {
+      log.error('Auth API: Validation Error', error.message);
+      return NextResponse.json(
+        { error: 'Invalid email or password format' },
+        { status: error.statusCode },
+      );
+    }
+
+    // External API error (Supabase auth errors)
+    if (error instanceof ExternalApiError) {
+      log.error('Auth API: Authentication Error', error.message);
+      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+    }
+
+    // General fallback error
+    log.error('Auth API: Unexpected error', error.message);
+    return NextResponse.json(
+      { error: 'Authentication failed. Please try again later.' },
+      { status: 500 },
+    );
   }
 }

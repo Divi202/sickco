@@ -1,29 +1,53 @@
+// app/api/v1/auth/signup/route.ts
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { log } from '@/lib/log';
+import { ValidationError, ExternalApiError } from '@/lib/errors';
+import { usersService } from '@/modules/users/users.service';
 import { signupSchema } from '@/modules/users/users.schema';
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
+  log.info('Auth API: Signup endpoint called...');
+
   try {
-    const body = await req.json();
-    const parsed = signupSchema.safeParse(body);
+    const body = await request.json();
 
-    if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.format() }, { status: 400 });
+    // Input validation
+    const validationResult = signupSchema.safeParse(body);
+    // log.info('Recieved data', body);
+    // log.error(validationResult.error?.message);
+    if (!validationResult.success) {
+      throw new ValidationError('Invalid input data');
     }
 
-    const supabase = await createClient(); // ✅ ensure await
-    const { email, password } = parsed.data;
+    // Process through auth service
+    const authResponse = await usersService.signup(validationResult.data);
 
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-      console.error('Supabase signup error:', error.message);
-      return NextResponse.json({ error: error.message }, { status: 400 });
+    log.info('Auth API: Signup successful');
+    return NextResponse.json(authResponse, { status: 201 });
+  } catch (error: any) {
+    // Validation error
+    if (error instanceof ValidationError) {
+      log.error('Auth API: Validation Error', error.message);
+      return NextResponse.json(
+        { error: 'Invalid input data. Please check your email and password.' },
+        { status: error.statusCode },
+      );
     }
 
-    return NextResponse.json({ user: data.user });
-  } catch (err) {
-    console.error('Signup API failed:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    // External API error (Supabase auth errors)
+    if (error instanceof ExternalApiError) {
+      log.error('Auth API: Registration Error', error.message);
+      return NextResponse.json(
+        { error: 'Registration failed. Email may already be in use.' },
+        { status: 400 },
+      );
+    }
+
+    // General fallback error
+    log.error('Auth API: Unexpected error', error.message);
+    return NextResponse.json(
+      { error: 'Registration failed. Please try again later.' },
+      { status: 500 },
+    );
   }
 }
