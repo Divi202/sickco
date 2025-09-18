@@ -18,7 +18,6 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const initialMessageSentRef = useRef(false); // NEW: To prevent sending initial message multiple times
 
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
@@ -27,7 +26,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     }
   }, [conversation]);
 
-  // NEW: Effect to load chat history when the component mounts
+  // Effect to load chat history when the component mounts
   useEffect(() => {
     const loadChatHistory = async () => {
       setIsLoading(true);
@@ -48,6 +47,18 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
           errorAI: undefined,
         }));
         setConversation(formattedHistory);
+
+        // Handle initial message from homepage navigation
+        const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
+        if (initialMessage && !initialMessageConsumed) {
+          // Pre-fill the input with the initial message for user to edit/send
+          setNewMessage(initialMessage);
+          // Mark as consumed so it doesn't reappear on refresh
+          sessionStorage.setItem('initialMessageConsumed', 'true');
+        } else {
+          // Ensure input is empty if no initial message or already consumed
+          setNewMessage('');
+        }
       } catch (error) {
         console.error('Failed to load chat history:', error);
         // Optionally, display an error message to the user
@@ -59,28 +70,14 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     loadChatHistory();
   }, []); // Run only once on mount
 
-  // NEW: Effect to handle initial message after history is loaded and not yet sent
-  useEffect(() => {
-    // Only process initialMessage if it exists, hasn't been sent yet,
-    // and we are not currently loading (which includes initial history load)
-    if (initialMessage && !initialMessageSentRef.current && !isLoading) {
-      // Check if conversation is loaded (even if empty)
-      // This ensures initialMessage is processed after history is fetched
-      if (conversation.length >= 0) {
-        initialMessageSentRef.current = true; // Mark as sent
-        // Directly call handleSendMessage with the initial message
-        // This avoids issues with state updates not being immediate
-        handleSendMessage(undefined, initialMessage);
-      }
-    }
-  }, [initialMessage, isLoading, conversation.length]); // Depend on initialMessage, isLoading, and conversation length
-
   // Handle clearing chat
   const handleClearChat = async () => {
     // MODIFIED: Made async
     try {
-      await axios.post('/api/v1/chat/clear'); // NEW: Call API to soft delete chats
+      await axios.post('/api/v1/chat/clear');
       setConversation([]); // Clear local state only after successful API call
+      // Remove the consumed flag so new initial messages can be processed
+      sessionStorage.removeItem('initialMessageConsumed');
     } catch (error) {
       console.error('Failed to clear chat history:', error);
       // Optionally, display an error message to the user
@@ -92,9 +89,9 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     // MODIFIED: Added messageToSend parameter
     e?.preventDefault?.();
 
-    const userMessageText = messageToSend || newMessage.trim(); // Use messageToSend if provided, otherwise use newMessage
+    const userMessageText = messageToSend || newMessage.trim();
 
-    if (!userMessageText) return; // Check if message is empty
+    if (!userMessageText) return;
 
     // Generate a temp unique ID for the message
     const tempId = crypto.randomUUID();
@@ -115,14 +112,11 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
     setConversation((prev) => [...prev, newTurn]);
     if (!messageToSend) {
-      // Only clear input if it's not an initial message being sent
-      setNewMessage('');
-    }
+    setNewMessage(''); // Always clear the input after sending
     setIsLoading(true);
 
     // Call the API to chat with Sickco AI
     try {
-      //Using axios
       const response = await axios.post(
         '/api/v1/chat',
         { userMessage: userMessageText },
@@ -173,10 +167,10 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
   return (
     <div className="flex-1 flex flex-col min-w-0">
-      {/* Chat Header  - Handles the chat header and mobile menu button*/}
+      {/* Chat Header - Handles the chat header and mobile menu button*/}
       <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
-      {/* Chat Messages- Displays the list of messages, loading state, and error state.*/}
+      {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
       <ChatMessages conversation={conversation} messagesEndRef={messagesEndRef} />
 
       {/* Chat Input - Handles the message input and send button.*/}
