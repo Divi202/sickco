@@ -2,6 +2,7 @@ import { ChatRequestDTO, ChatResponseDTO } from '@/modules/chat/chat.schema';
 import { chatService } from '@/modules/chat/chat.service';
 import { NextResponse } from 'next/server';
 import { log } from '@/lib/log';
+import { requireUser } from '@/lib/auth';
 import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
 
 // Docstring for this file code
@@ -58,6 +59,8 @@ import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
 export async function POST(request: Request) {
   log.info('Chat API called...'); // info log
   try {
+    //authenticate the user
+    await requireUser();
     // Parse request body
     const { userMessage }: ChatRequestDTO = await request.json();
 
@@ -80,6 +83,11 @@ export async function POST(request: Request) {
     log.info('Chat API: Successfully send the SickCo resposne to the user.'); // info log
     return NextResponse.json(aiResponse, { status: 201 });
   } catch (error: any) {
+    // External API error (Supabase auth errors)
+    if (error instanceof ExternalApiError) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    
     // Validation error
     if (error instanceof ValidationError) {
       log.error('Validation Error: ', error.message);

@@ -1,19 +1,19 @@
-import { type NextRequest } from 'next/server';
+// app/middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
-export async function middleware(request: NextRequest) {
-  return await updateSession(request);
-}
+const PROTECTED = [/^\/api\/v1\/chat/, /^\/api\/v1\/protected/];
 
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
-};
+export async function middleware(req: NextRequest) {
+  // keep your existing session sync
+  const res = await updateSession(req);
+
+  // guard API routes
+  if (PROTECTED.some((r) => r.test(req.nextUrl.pathname))) {
+    const auth = req.cookies.get('sb-access-token') || req.headers.get('authorization');
+    if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  return res;
+}
