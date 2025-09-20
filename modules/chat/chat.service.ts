@@ -39,7 +39,7 @@ export const chatService = {
   ): Promise<ChatResponseDTO | undefined> {
     // MODIFIED: Added userId parameter
     log.info('Chat Service: Processing user data...'); // info log
-    log.debug('User data: ', message);
+    log.debug('Processing user message');
 
     // business validation logic here (if needed)
     // e.g., check for prohibited content, length limits, etc.
@@ -103,7 +103,7 @@ export const chatService = {
       log.info(`Chat Service: Successfully fetched chat history for user ${userId}`);
       return history;
     } catch (error) {
-      log.error(`Chat Service: Failed to fetch chat history for user ${userId}`, error);
+      log.error(`Chat Service: Failed to fetch chat history for user ${userId}`);
       throw error;
     }
   },
@@ -116,7 +116,7 @@ export const chatService = {
       log.info(`Chat Service: Successfully cleared chat history for user ${userId}`);
       return result;
     } catch (error) {
-      log.error(`Chat Service: Failed to clear chat history for user ${userId}`, error);
+      log.error(`Chat Service: Failed to clear chat history for user ${userId}`);
       throw error;
     }
   },

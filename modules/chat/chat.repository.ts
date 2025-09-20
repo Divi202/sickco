@@ -111,7 +111,7 @@ export const chatRepository = {
       .order('created_at', { ascending: true }); // Order by creation time
 
     if (error) {
-      log.error('Chat Repository: Failed to fetch chat history', error.message);
+      log.error('Chat Repository: Failed to fetch chat history');
       throw new DbError('Database error while fetching chat history');
     }
 
@@ -130,7 +130,7 @@ export const chatRepository = {
       .eq('user_id', userId);
 
     if (error) {
-      log.error('Chat Repository: Failed to mark chats as deleted', error.message);
+      log.error('Chat Repository: Failed to mark chats as deleted');
       throw new DbError('Database error while marking chats as deleted');
     }
 

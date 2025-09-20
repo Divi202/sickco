@@ -8,7 +8,7 @@ export async function requireUserFromCookies() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
-    log.warn('Auth: no user from cookies', error?.message);
+    log.warn('Auth: no user from cookies, authentication failed');
     throw new ExternalApiError('Unauthorized');
   }
   return data.user;

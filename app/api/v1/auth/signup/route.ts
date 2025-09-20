@@ -27,7 +27,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // Validation error
     if (error instanceof ValidationError) {
-      log.error('Auth API: Validation Error', error.message);
+      log.error('Auth API: Validation Error in signup');
       return NextResponse.json(
         { error: 'Invalid input data. Please check your email and password.' },
         { status: error.statusCode },
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      log.error('Auth API: Registration Error', error.message);
+      log.error('Auth API: Registration Error in signup');
       return NextResponse.json(
         { error: 'Registration failed. Email may already be in use.' },
         { status: 400 },
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     }
 
     // General fallback error
-    log.error('Auth API: Unexpected error', error.message);
+    log.error('Auth API: Unexpected error in signup');
     return NextResponse.json(
       { error: 'Registration failed. Please try again later.' },
       { status: 500 },

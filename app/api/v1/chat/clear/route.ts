@@ -45,11 +45,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Chat history cleared successfully' }, { status: 200 });
   } catch (error: any) {
     if (error instanceof ExternalApiError) {
-      log.error('Clear Chat History API: Authentication Error', error.message);
+      log.error('Clear Chat History API: Authentication Error');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    log.error('Clear Chat History API: Unexpected error', error.message);
+    log.error('Clear Chat History API: Unexpected error');
     return NextResponse.json(
       { error: 'Failed to clear chat history. Please try again later.' },
       { status: 500 },

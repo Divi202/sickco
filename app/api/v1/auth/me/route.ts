@@ -15,12 +15,12 @@ export async function GET() {
   } catch (error: any) {
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      log.error('Auth API: Authentication Error', error.message);
+      log.error('Auth API: Authentication Error');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // General fallback error
-    log.error('Auth API: Unexpected error', error.message);
+    log.error('Auth API: Unexpected error in me endpoint');
     return NextResponse.json({ error: 'Failed to fetch user data' }, { status: 500 });
   }
 }

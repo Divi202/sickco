@@ -116,7 +116,7 @@ export async function POST(request: Request) {
       );
     }
     //General fallback error
-    log.error('Error in /api/v1/chat', error.message); // error log
+    log.error('Unexpected error in chat API'); // error log
     return NextResponse.json(
       { error: 'Something went wrong. Please try again later' },
       { status: 500 },

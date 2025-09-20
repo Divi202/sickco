@@ -53,11 +53,11 @@ export async function GET(request: Request) {
     return NextResponse.json(history, { status: 200 });
   } catch (error: any) {
     if (error instanceof ExternalApiError) {
-      log.error('Chat History API: Authentication Error', error.message);
+      log.error('Chat History API: Authentication Error');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    log.error('Chat History API: Unexpected error', error.message);
+    log.error('Chat History API: Unexpected error');
     return NextResponse.json(
       { error: 'Failed to fetch chat history. Please try again later.' },
       { status: 500 },

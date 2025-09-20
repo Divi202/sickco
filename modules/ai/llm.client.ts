@@ -84,7 +84,7 @@ export const llmClient = {
       // log.debug('Content returned inside chat completion:', chatCompletion);
       const sickcoResponse = chatCompletion.choices[0].message.content;
 
-      log.debug('Raw AI response content:', sickcoResponse);
+      log.debug('AI response received from LLM');
 
       if (!sickcoResponse) {
         throw new ExternalApiError('AI response content is null');
