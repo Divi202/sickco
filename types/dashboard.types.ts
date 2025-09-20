@@ -40,6 +40,8 @@ export interface ChatInputProps {
 export interface ChatMessagesProps {
   conversation: ConversationTurn[];
   messagesEndRef: RefObject<HTMLDivElement | null>;
+  isHistoryLoading: boolean;
+  isClearingChat: boolean;
 }
 
 // AIResponse component types

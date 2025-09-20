@@ -3,7 +3,7 @@ import AIResponse from './AIResponse';
 import WelcomeMessage from './WelcomeMessage';
 import { ChatMessagesProps } from '@/types/dashboard.types';
 
-const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRef }) => {
+const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRef, isHistoryLoading, isClearingChat }) => {
   return (
     <div
       ref={messagesEndRef} // Attach the ref here
@@ -33,8 +33,29 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
           `,
         }}
       />
-      {/* Show WelcomeMessage if no messages */}
-      {conversation.length === 0 && <WelcomeMessage />}
+      {/* Show skeleton loader while loading history */}
+      {isHistoryLoading && conversation.length === 0 && (
+        <div className="space-y-4">
+          {/* Skeleton message bubbles */}
+          {[1, 2, 3].map((index) => (
+            <div key={index} className="animate-pulse">
+              <div className="flex justify-start">
+                <div className="flex items-start gap-3 max-w-md">
+                  <div className="w-8 h-8 rounded-full bg-slate-600/50" />
+                  <div className="bg-slate-700/50 rounded-xl p-4 space-y-2">
+                    <div className="h-4 bg-slate-600/50 rounded w-48" />
+                    <div className="h-4 bg-slate-600/50 rounded w-32" />
+                    <div className="h-4 bg-slate-600/50 rounded w-24" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Show WelcomeMessage if no messages and not loading */}
+      {!isHistoryLoading && conversation.length === 0 && <WelcomeMessage />}
 
       {/* Conversation turns */}
       <AnimatePresence>
@@ -43,8 +64,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
             key={turn.id}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
+            className={isClearingChat ? 'animate-pulse opacity-50' : ''}
           >
             {/* User Message */}
             <div className="flex justify-end">
@@ -85,14 +107,37 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
                 transition={{ duration: 0.3 }}
                 className="flex justify-start mt-4"
               >
-                <div className="w-full bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-slate-600 animate-pulse" />
-                    <div className="h-4 w-24 bg-slate-600 rounded animate-pulse" />
+                <div className="flex items-start gap-3 max-w-md">
+                  {/* AI Avatar */}
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 flex items-center justify-center">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="text-teal-400"
+                    >
+                      <path d="M12 8V4H8" />
+                      <rect width="16" height="12" x="4" y="8" rx="2" />
+                      <path d="M2 14h2" />
+                      <path d="M20 14h2" />
+                      <path d="M15 13v2" />
+                      <path d="M9 13v2" />
+                    </svg>
                   </div>
-                  <div className="mt-3 space-y-2">
-                    <div className="h-4 w-3/4 bg-slate-600 rounded animate-pulse" />
-                    <div className="h-4 w-1/2 bg-slate-600 rounded animate-pulse" />
+                  
+                  {/* Typing indicator bubble */}
+                  <div className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
+                    <div className="flex items-center gap-1">
+                      <span className="text-slate-300 text-sm mr-2">Sickco is typing</span>
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>

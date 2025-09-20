@@ -16,6 +16,9 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+  const [isClearingChat, setIsClearingChat] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +32,6 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   // Effect to load chat history when the component mounts
   useEffect(() => {
     const loadChatHistory = async () => {
-      setIsLoading(true);
       try {
         const response = await axios.get('/api/v1/chat/history');
         const historyData = response.data;
@@ -63,7 +65,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         console.error('Failed to load chat history:', error);
         // Optionally, display an error message to the user
       } finally {
-        setIsLoading(false);
+        setIsHistoryLoading(false);
       }
     };
 
@@ -74,12 +76,26 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const handleClearChat = async () => {
     // MODIFIED: Made async
     try {
+      // Start clearing animation
+      setIsClearingChat(true);
+      
+      // Wait for animation to complete before clearing
+      setTimeout(async () => {
       await axios.post('/api/v1/chat/clear');
       setConversation([]); // Clear local state only after successful API call
       // Remove the consumed flag so new initial messages can be processed
       sessionStorage.removeItem('initialMessageConsumed');
+        setIsClearingChat(false);
+      
+      // Show confirmation message
+      setShowClearConfirmation(true);
+      setTimeout(() => {
+        setShowClearConfirmation(false);
+      }, 3000);
+      }, 500); // Wait for fade out animation
     } catch (error) {
       console.error('Failed to clear chat history:', error);
+      setIsClearingChat(false);
       // Optionally, display an error message to the user
     }
   };
@@ -172,7 +188,24 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
       <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
-      <ChatMessages conversation={conversation} messagesEndRef={messagesEndRef} />
+      {/* Chat Cleared Confirmation */}
+      {showClearConfirmation && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="mx-4 md:mx-6 mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center text-sm font-medium"
+        >
+          ✅ Chat history cleared successfully!
+        </motion.div>
+      )}
+      
+      <ChatMessages 
+        conversation={conversation} 
+        messagesEndRef={messagesEndRef} 
+        isHistoryLoading={isHistoryLoading}
+        isClearingChat={isClearingChat}
+      />
 
       {/* Chat Input - Handles the message input and send button.*/}
       <ChatInput
