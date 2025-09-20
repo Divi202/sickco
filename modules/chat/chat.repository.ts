@@ -71,7 +71,7 @@ export const chatRepository = {
     const aiResponseJson = {
       empathy: request.empathy,
       information: request.information,
-      disclamier: request.disclaimer,
+      disclaimer: request.disclaimer,
       followUpQuestion: request.followUpQuestion,
     };
     const { data, error } = await supabase
