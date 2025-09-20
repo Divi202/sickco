@@ -35,7 +35,11 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
         className="flex-1 bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-slate-700/30 rounded-xl rounded-tl-sm p-5 shadow-lg"
       >
         {/* Empathy (lead-in) */}
-        {aiResponse.empathy && <p className="text-slate-300/90 italic">{aiResponse.empathy}</p>}
+        {aiResponse.empathy && (
+          <div className="text-slate-300/90 italic">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiResponse.empathy}</ReactMarkdown>
+          </div>
+        )}
 
         {/* Information (primary content) */}
         {aiResponse.information && aiResponse.information.length > 0 && (
@@ -57,7 +61,11 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
         {/* Follow-up question (inline, subtle) */}
         {aiResponse.followUpQuestion && (
           <div className="mt-3 pt-3 border-t border-slate-700/30">
-            <p className="text-slate-300/90">{aiResponse.followUpQuestion}</p>
+            <div className="text-slate-300/90">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {aiResponse.followUpQuestion}
+              </ReactMarkdown>
+            </div>
           </div>
         )}
       </motion.div>

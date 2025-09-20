@@ -11,6 +11,7 @@ import ChatInput from './chat/ChatInput';
 import axios from 'axios';
 import { ChatProps, UserMessages, ConversationTurn } from '../../types/dashboard.types';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
+import { motion } from 'framer-motion';
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
@@ -78,20 +79,20 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     try {
       // Start clearing animation
       setIsClearingChat(true);
-      
+
       // Wait for animation to complete before clearing
       setTimeout(async () => {
-      await axios.post('/api/v1/chat/clear');
-      setConversation([]); // Clear local state only after successful API call
-      // Remove the consumed flag so new initial messages can be processed
-      sessionStorage.removeItem('initialMessageConsumed');
+        await axios.post('/api/v1/chat/clear');
+        setConversation([]); // Clear local state only after successful API call
+        // Remove the consumed flag so new initial messages can be processed
+        sessionStorage.removeItem('initialMessageConsumed');
         setIsClearingChat(false);
-      
-      // Show confirmation message
-      setShowClearConfirmation(true);
-      setTimeout(() => {
-        setShowClearConfirmation(false);
-      }, 3000);
+
+        // Show confirmation message
+        setShowClearConfirmation(true);
+        setTimeout(() => {
+          setShowClearConfirmation(false);
+        }, 3000);
       }, 500); // Wait for fade out animation
     } catch (error) {
       console.error('Failed to clear chat history:', error);
@@ -199,10 +200,10 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
           ✅ Chat history cleared successfully!
         </motion.div>
       )}
-      
-      <ChatMessages 
-        conversation={conversation} 
-        messagesEndRef={messagesEndRef} 
+
+      <ChatMessages
+        conversation={conversation}
+        messagesEndRef={messagesEndRef}
         isHistoryLoading={isHistoryLoading}
         isClearingChat={isClearingChat}
       />
