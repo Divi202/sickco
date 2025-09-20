@@ -25,10 +25,10 @@ const WelcomeMessage = () => (
         <path d="M9 13v2" />
       </svg>
     </div>
-    <h2 className="text-xl font-bold text-white mb-2 tracking-wide">Welcome to Sicko AI</h2>
+    <h2 className="text-xl font-bold text-white mb-2 tracking-wide">Hi there, I’m SickCo 👋</h2>
     <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
-      I&apos;m here to help you understand your symptoms and provide general health information. How
-      can I assist you today?
+      I&apos;m your companion when you’re not feeling your best. Just tell me how you’re doing, and
+      we’ll figure things out together.
     </p>
   </motion.div>
 );
