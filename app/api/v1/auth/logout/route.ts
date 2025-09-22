@@ -15,12 +15,12 @@ export async function POST() {
   } catch (error: any) {
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      log.error('Auth API: Logout Error', error.message);
+      log.error('Auth API: Logout Error');
       return NextResponse.json({ error: 'Logout failed' }, { status: error.statusCode });
     }
 
     // General fallback error
-    log.error('Auth API: Unexpected error', error.message);
+    log.error('Auth API: Unexpected error in logout');
     return NextResponse.json({ error: 'Logout failed. Please try again later.' }, { status: 500 });
   }
 }

@@ -1,28 +1,27 @@
+// components/dashboard/Chat.tsx
 /**
  * Chat Component - Handles all chat functionality including messages and input
  * Props: onToggleMobileMenu
  */
 'use client';
-import { useState, useEffect, useRef } from 'react'; // Import useEffect and useRef
+import { useState, useEffect, useRef } from 'react';
 import ChatHeader from './chat/ChatHeader';
 import ChatMessages from './chat/ChatMessages';
 import ChatInput from './chat/ChatInput';
 import axios from 'axios';
 import { ChatProps, UserMessages, ConversationTurn } from '../../types/dashboard.types';
+import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
+import { motion } from 'framer-motion';
 
 const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // New state for loading
+  const [isLoading, setIsLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+  const [isClearingChat, setIsClearingChat] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Create a ref for the messages container
-
-  // Effect to pre-fill message if initialMessage is provided
-  useEffect(() => {
-    if (initialMessage) {
-      setNewMessage(initialMessage);
-    }
-  }, [initialMessage]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
@@ -31,18 +30,85 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     }
   }, [conversation]);
 
+  // Effect to load chat history when the component mounts
+  useEffect(() => {
+    const loadChatHistory = async () => {
+      try {
+        const response = await axios.get('/api/v1/chat/history');
+        const historyData = response.data;
+
+        // Map fetched history to ConversationTurn format
+        const formattedHistory: ConversationTurn[] = historyData.map((entry: any) => ({
+          id: entry.id,
+          userMessage: {
+            id: entry.id,
+            text: entry.user_message,
+            timestamp: new Date(entry.created_at),
+          },
+          aiResponse: entry.ai_response ? (entry.ai_response as SickCoAIResponseDTO) : undefined,
+          isLoadingAI: false,
+          errorAI: undefined,
+        }));
+        setConversation(formattedHistory);
+
+        // Handle initial message from homepage navigation
+        const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
+        if (initialMessage && !initialMessageConsumed) {
+          // Pre-fill the input with the initial message for user to edit/send
+          setNewMessage(initialMessage);
+          // Mark as consumed so it doesn't reappear on refresh
+          sessionStorage.setItem('initialMessageConsumed', 'true');
+        } else {
+          // Ensure input is empty if no initial message or already consumed
+          setNewMessage('');
+        }
+      } catch (error) {
+        console.error('Failed to load chat history:', error);
+        // Optionally, display an error message to the user
+      } finally {
+        setIsHistoryLoading(false);
+      }
+    };
+
+    loadChatHistory();
+  }, []); // Run only once on mount
+
   // Handle clearing chat
-  const handleClearChat = () => {
-    setConversation([]);
+  const handleClearChat = async () => {
+    // MODIFIED: Made async
+    try {
+      // Start clearing animation
+      setIsClearingChat(true);
+
+      // Wait for animation to complete before clearing
+      setTimeout(async () => {
+        await axios.post('/api/v1/chat/clear');
+        setConversation([]); // Clear local state only after successful API call
+        // Remove the consumed flag so new initial messages can be processed
+        sessionStorage.removeItem('initialMessageConsumed');
+        setIsClearingChat(false);
+
+        // Show confirmation message
+        setShowClearConfirmation(true);
+        setTimeout(() => {
+          setShowClearConfirmation(false);
+        }, 3000);
+      }, 500); // Wait for fade out animation
+    } catch (error) {
+      console.error('Failed to clear chat history:', error);
+      setIsClearingChat(false);
+      // Optionally, display an error message to the user
+    }
   };
 
   // Handle sending new message
-  const handleSendMessage = async (e?: React.FormEvent) => {
+  const handleSendMessage = async (e?: React.FormEvent, messageToSend?: string) => {
+    // MODIFIED: Added messageToSend parameter
     e?.preventDefault?.();
 
-    if (!newMessage.trim()) return;
+    const userMessageText = messageToSend || newMessage.trim();
 
-    const userMessageText = newMessage.trim();
+    if (!userMessageText) return;
 
     // Generate a temp unique ID for the message
     const tempId = crypto.randomUUID();
@@ -62,12 +128,13 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     };
 
     setConversation((prev) => [...prev, newTurn]);
-    setNewMessage(''); // Clear input immediately
+    if (!messageToSend) {
+      setNewMessage(''); // Always clear the input after sending
+    }
     setIsLoading(true);
 
     // Call the API to chat with Sickco AI
     try {
-      //Using axios
       const response = await axios.post(
         '/api/v1/chat',
         { userMessage: userMessageText },
@@ -118,11 +185,28 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
   return (
     <div className="flex-1 flex flex-col min-w-0">
-      {/* Chat Header  - Handles the chat header and mobile menu button*/}
+      {/* Chat Header - Handles the chat header and mobile menu button*/}
       <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
-      {/* Chat Messages- Displays the list of messages, loading state, and error state.*/}
-      <ChatMessages conversation={conversation} messagesEndRef={messagesEndRef} />
+      {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
+      {/* Chat Cleared Confirmation */}
+      {showClearConfirmation && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="mx-4 md:mx-6 mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center text-sm font-medium"
+        >
+          ✅ Chat history cleared successfully!
+        </motion.div>
+      )}
+
+      <ChatMessages
+        conversation={conversation}
+        messagesEndRef={messagesEndRef}
+        isHistoryLoading={isHistoryLoading}
+        isClearingChat={isClearingChat}
+      />
 
       {/* Chat Input - Handles the message input and send button.*/}
       <ChatInput

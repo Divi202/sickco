@@ -15,7 +15,7 @@ export const usersRepository = {
     });
 
     if (error) {
-      log.error('Users Repository: Login failed', error.message);
+      log.error('Users Repository: Login failed');
       throw new ExternalApiError(`Authentication failed: ${error.message}`);
     }
 
@@ -37,7 +37,7 @@ export const usersRepository = {
     });
 
     if (error) {
-      log.error('Users Repository: Signup failed', error.message);
+      log.error('Users Repository: Signup failed');
       throw new ExternalApiError(`Registration failed: ${error.message}`);
     }
 
@@ -56,7 +56,7 @@ export const usersRepository = {
     const { data, error } = await supabase.auth.getUser();
 
     if (error) {
-      log.error('Users Repository: Failed to get current user', error.message);
+      log.error('Users Repository: Failed to get current user');
       throw new ExternalApiError(`Failed to get user: ${error.message}`);
     }
 
@@ -75,7 +75,7 @@ export const usersRepository = {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      log.error('Users Repository: Logout failed', error.message);
+      log.error('Users Repository: Logout failed');
       throw new ExternalApiError(`Logout failed: ${error.message}`);
     }
 
@@ -90,7 +90,7 @@ export const usersRepository = {
     const { error } = await supabase.auth.resetPasswordForEmail(email.email);
 
     if (error) {
-      log.error('Users Repository: Password reset failed', error.message);
+      log.error('Users Repository: Password reset failed');
       throw new ExternalApiError(`Password reset failed: ${error.message}`);
     }
 

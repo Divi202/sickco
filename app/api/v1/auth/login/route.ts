@@ -25,7 +25,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // Validation error
     if (error instanceof ValidationError) {
-      log.error('Auth API: Validation Error', error.message);
+      log.error('Auth API: Validation Error in login');
       return NextResponse.json(
         { error: 'Invalid email or password format' },
         { status: error.statusCode },
@@ -34,12 +34,12 @@ export async function POST(request: Request) {
 
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      log.error('Auth API: Authentication Error', error.message);
+      log.error('Auth API: Authentication Error in login');
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
 
     // General fallback error
-    log.error('Auth API: Unexpected error', error.message);
+    log.error('Auth API: Unexpected error in login');
     return NextResponse.json(
       { error: 'Authentication failed. Please try again later.' },
       { status: 500 },

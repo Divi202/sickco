@@ -34,10 +34,10 @@ export const aiService = {
 
     log.info('AI Service: Processing user message for Sickco AI');
 
-    log.debug('Data recieved in ai service:', data);
+    log.debug('Processing user message in AI service');
     // Delegate to the LLM client for actual AI communication
     const llmResponse = await llmClient.generateAiResponse(data);
-    log.debug('LLM response recieved in AI service:', llmResponse);
+    log.debug('LLM response received in AI service');
 
     // Mock resposne from llm
     //   const llmResponse = {

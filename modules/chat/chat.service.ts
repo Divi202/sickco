@@ -1,3 +1,4 @@
+// modules/chat/chat.service.ts
 import { aiService } from '@/modules/ai/ai.service';
 import { ChatRequestDTO, ChatResponseDTO } from './chat.schema';
 import { chatRepository } from '../chat/chat.repository';
@@ -32,21 +33,25 @@ import { DbError, ExternalApiError } from '@/lib/errors';
 
 export const chatService = {
   // Function to process save user input input and get AI response
-  async processMessage(message: ChatRequestDTO): Promise<ChatResponseDTO | undefined> {
+  async processMessage(
+    message: ChatRequestDTO,
+    userId: string,
+  ): Promise<ChatResponseDTO | undefined> {
+    // MODIFIED: Added userId parameter
     log.info('Chat Service: Processing user data...'); // info log
-    log.debug('User data: ', message);
+    log.debug('Processing user message');
 
     // business validation logic here (if needed)
     // e.g., check for prohibited content, length limits, etc.
 
     // Save user input message to database
     try {
-      /* NOTE:  new entrry conatins message form the databse that entry is 
+      /* NOTE:  new entrry conatins message form the databse that entry is
      created but we are not using it for now
      */
 
       // Return chat entry id
-      const chatEntryId = await chatRepository.create(message);
+      const chatEntryId = await chatRepository.create(message, userId); // MODIFIED: Passed userId
       // log.debug('chat entry db id: ', chatEntryId);
 
       if (!chatEntryId) {
@@ -86,6 +91,32 @@ export const chatService = {
 
       return aiResponseWithId;
     } catch (error) {
+      throw error;
+    }
+  },
+
+  // NEW: Function to get chat history for a user
+  async getChatHistory(userId: string) {
+    log.info(`Chat Service: Fetching chat history for user ${userId}...`);
+    try {
+      const history = await chatRepository.getChatHistory(userId);
+      log.info(`Chat Service: Successfully fetched chat history for user ${userId}`);
+      return history;
+    } catch (error) {
+      log.error(`Chat Service: Failed to fetch chat history for user ${userId}`);
+      throw error;
+    }
+  },
+
+  // NEW: Function to clear user chat history (soft delete)
+  async clearUserChatHistory(userId: string) {
+    log.info(`Chat Service: Clearing chat history for user ${userId}...`);
+    try {
+      const result = await chatRepository.markChatsAsDeleted(userId);
+      log.info(`Chat Service: Successfully cleared chat history for user ${userId}`);
+      return result;
+    } catch (error) {
+      log.error(`Chat Service: Failed to clear chat history for user ${userId}`);
       throw error;
     }
   },

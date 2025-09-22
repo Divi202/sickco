@@ -16,7 +16,7 @@ export const usersService = {
   // Authentication methods
   async login(credentials: LoginInput): Promise<AuthResponseDTO> {
     log.info('Users Service: Processing login request...');
-    log.debug('Login attempt for email:', credentials.email);
+    log.debug('Login attempt for user');
 
     // Business validation logic
     if (!credentials.email || !credentials.password) {
@@ -45,14 +45,14 @@ export const usersService = {
       log.info('Auth Service: Login successful');
       return response;
     } catch (error) {
-      log.error('Auth Service: Login failed', error);
+      log.error('Users Service: Login failed');
       throw error;
     }
   },
 
   async signup(userData: SignupInput): Promise<AuthResponseDTO> {
     log.info('Users Service: Processing signup request...');
-    log.debug('Signup attempt for email:', userData.email);
+    log.debug('Signup attempt for user');
 
     // Business validation logic
     if (!userData.email || !userData.password) {
@@ -81,7 +81,7 @@ export const usersService = {
       log.info('Auth Service: Signup successful');
       return response;
     } catch (error) {
-      log.error('Auth Service: Signup failed', error);
+      log.error('Users Service: Signup failed');
       throw error;
     }
   },
@@ -104,7 +104,7 @@ export const usersService = {
       log.info('Auth Service: Current user fetched successfully');
       return response;
     } catch (error) {
-      log.error('Auth Service: Failed to get current user', error);
+      log.error('Users Service: Failed to get current user');
       throw error;
     }
   },
@@ -116,14 +116,14 @@ export const usersService = {
       log.info('Auth Service: Logout successful');
       return result;
     } catch (error) {
-      log.error('Auth Service: Logout failed', error);
+      log.error('Users Service: Logout failed');
       throw error;
     }
   },
 
   async resetPassword(email: ResetPasswordInput): Promise<{ success: boolean }> {
     log.info('Users Service: Processing password reset request...');
-    log.debug('Password reset for email:', email.email);
+    log.debug('Password reset request for user');
 
     // Business validation logic
     if (!email.email) {
@@ -135,7 +135,7 @@ export const usersService = {
       log.info('Auth Service: Password reset email sent successfully');
       return result;
     } catch (error) {
-      log.error('Auth Service: Password reset failed', error);
+      log.error('Users Service: Password reset failed');
       throw error;
     }
   },
