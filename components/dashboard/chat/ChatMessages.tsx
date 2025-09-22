@@ -71,6 +71,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
             {/* User Message */}
             <div className="flex justify-end">
               <div className="flex items-start gap-2 md:gap-3 max-w-xs sm:max-w-sm md:max-w-md flex-row-reverse">
+                {/* User Name */}
+                <div className="flex flex-col items-end">
                 {/* User Avatar */}
                 <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-600/90 flex items-center justify-center">
                   <svg
@@ -85,6 +87,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                   </svg>
+                </div>
+                  <span className="text-xs text-slate-400 mt-1 font-medium">You</span>
                 </div>
                 {/* Message Bubble */}
                 <div className="px-3 md:px-4 py-2 md:py-3 rounded-2xl shadow-lg bg-green-600/90 text-white rounded-br-sm">
@@ -108,6 +112,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
                 className="flex justify-start mt-4"
               >
                 <div className="flex items-start gap-3 max-w-md">
+                  <div className="flex flex-col items-start">
                   {/* AI Avatar */}
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 flex items-center justify-center">
                     <svg
@@ -126,6 +131,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ conversation, messagesEndRe
                       <path d="M15 13v2" />
                       <path d="M9 13v2" />
                     </svg>
+                  </div>
+                    <span className="text-xs text-slate-400 mt-1 font-medium">SickCo</span>
                   </div>
                   
                   {/* Typing indicator bubble */}

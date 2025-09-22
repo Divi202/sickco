@@ -7,6 +7,7 @@ import { AIResponseProps } from '@/types/dashboard.types';
 const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
   <div className="flex justify-start mt-4">
     <div className="flex items-start gap-3 max-w-4xl">
+      <div className="flex flex-col items-start">
       {/* AI Avatar */}
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 flex items-center justify-center">
         <svg
@@ -25,6 +26,8 @@ const AIResponse: React.FC<AIResponseProps> = ({ aiResponse }) => (
           <path d="M15 13v2" />
           <path d="M9 13v2" />
         </svg>
+      </div>
+        <span className="text-xs text-slate-400 mt-1 font-medium">SickCo</span>
       </div>
 
       {/* AI Response Content */}
