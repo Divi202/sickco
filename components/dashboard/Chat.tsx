@@ -20,6 +20,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [isClearingChat, setIsClearingChat] = useState(false);
+  const [emptyDueToClear, setEmptyDueToClear] = useState(false); // NEW
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -50,7 +51,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
           errorAI: undefined,
         }));
         setConversation(formattedHistory);
-
+        // If history has messages, ensure cleared flag is off
+     setEmptyDueToClear(formattedHistory.length === 0 ? emptyDueToClear : false);
         // Handle initial message from homepage navigation
         const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
         if (initialMessage && !initialMessageConsumed) {
@@ -87,7 +89,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         // Remove the consumed flag so new initial messages can be processed
         sessionStorage.removeItem('initialMessageConsumed');
         setIsClearingChat(false);
-
+   // Show cleared empty-state
+   setEmptyDueToClear(true);
         // Show confirmation message
         setShowClearConfirmation(true);
         setTimeout(() => {
@@ -131,6 +134,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     if (!messageToSend) {
       setNewMessage(''); // Always clear the input after sending
     }
+    setEmptyDueToClear(false); // user starts a new conversation
     setIsLoading(true);
 
     // Call the API to chat with Sickco AI
@@ -201,11 +205,12 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         </motion.div>
       )}
 
-      <ChatMessages
+<ChatMessages
         conversation={conversation}
         messagesEndRef={messagesEndRef}
         isHistoryLoading={isHistoryLoading}
         isClearingChat={isClearingChat}
+        wasCleared={emptyDueToClear}
       />
 
       {/* Chat Input - Handles the message input and send button.*/}

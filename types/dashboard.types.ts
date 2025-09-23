@@ -42,6 +42,7 @@ export interface ChatMessagesProps {
   messagesEndRef: RefObject<HTMLDivElement | null>;
   isHistoryLoading: boolean;
   isClearingChat: boolean;
+  wasCleared?: boolean; // optional to avoid breaking usage
 }
 
 // AIResponse component types

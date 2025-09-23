@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 
-// New Welcome component
-const WelcomeMessage = () => (
+type WelcomeVariant = 'default' | 'cleared';
+
+const WelcomeMessage = ({ variant = 'default' }: { variant?: WelcomeVariant }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -26,10 +27,25 @@ const WelcomeMessage = () => (
       </svg>
     </div>
     <h2 className="text-xl font-bold text-white mb-2 tracking-wide">Hi there, I’m SickCo 👋</h2>
-    <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
-      I&apos;m your companion when you’re not feeling your best. Just tell me how you’re doing, and
-      we’ll figure things out together.
-    </p>
+    {variant === 'cleared' ? (
+      <>
+        <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
+          All set for a fresh start.
+        </p>
+        <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
+          Want to share how you’re feeling now?
+        </p>
+      </>
+    ) : (
+      <>
+        <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
+          I&apos;m your Sickness Companion.
+        </p>
+        <p className="text-slate-300/90 max-w-md mx-auto leading-relaxed">
+          Glad you’re here! How are you feeling today?
+        </p>
+      </>
+    )}
   </motion.div>
 );
 export default WelcomeMessage;

@@ -8,16 +8,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   messagesEndRef,
   isHistoryLoading,
   isClearingChat,
+  wasCleared,
 }) => {
   return (
     <div
       ref={messagesEndRef} // Attach the ref here
       className="flex-1 overflow-y-auto p-3 md:p-6 space-y-3 md:space-y-4 custom-scrollbar"
     >
-  
       {/* Show skeleton loader while loading history */}
       {isHistoryLoading && conversation.length === 0 && (
-        <div >
+        <div>
           {/* Skeleton message bubbles */}
           {[1, 2, 3].map((index) => (
             <div key={index} className="animate-pulse">
@@ -36,8 +36,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         </div>
       )}
 
-      {/* Show WelcomeMessage if no messages and not loading */}
-      {!isHistoryLoading && conversation.length === 0 && <WelcomeMessage />}
+      {!isHistoryLoading && conversation.length === 0 && (
+        <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
+      )}
 
       {/* Conversation turns */}
       <AnimatePresence>
