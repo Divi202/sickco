@@ -147,7 +147,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center"
+                className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-center"
               >
                 {turn.errorAI}
               </motion.div>

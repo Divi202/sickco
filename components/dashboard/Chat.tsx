@@ -52,7 +52,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         }));
         setConversation(formattedHistory);
         // If history has messages, ensure cleared flag is off
-     setEmptyDueToClear(formattedHistory.length === 0 ? emptyDueToClear : false);
+        setEmptyDueToClear(formattedHistory.length === 0 ? emptyDueToClear : false);
         // Handle initial message from homepage navigation
         const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
         if (initialMessage && !initialMessageConsumed) {
@@ -89,8 +89,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         // Remove the consumed flag so new initial messages can be processed
         sessionStorage.removeItem('initialMessageConsumed');
         setIsClearingChat(false);
-   // Show cleared empty-state
-   setEmptyDueToClear(true);
+        // Show cleared empty-state
+        setEmptyDueToClear(true);
         // Show confirmation message
         setShowClearConfirmation(true);
         setTimeout(() => {
@@ -205,7 +205,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         </motion.div>
       )}
 
-<ChatMessages
+      <ChatMessages
         conversation={conversation}
         messagesEndRef={messagesEndRef}
         isHistoryLoading={isHistoryLoading}
