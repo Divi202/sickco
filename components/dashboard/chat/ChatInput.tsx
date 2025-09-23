@@ -99,7 +99,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         whileTap={{ scale: 0.95 }}
         animate={showEmptyInputWarning ? { x: [-2, 2, -2, 2, 0] } : {}}
         transition={{ duration: 0.3 }}
-        className="bg-green-600/90 hover:bg-green-600 disabled:bg-slate-600 disabled:cursor-not-allowed text-white px-4 md:px-6 py-2 md:py-3 rounded-lg flex items-center gap-1 md:gap-2 transition-all duration-200 font-medium text-sm md:text-base"
+        className="self-center bg-green-600/90 hover:bg-green-600 disabled:bg-slate-600 disabled:cursor-not-allowed text-white px-4 md:px-6 py-2 md:py-3 rounded-lg flex items-center gap-1 md:gap-2 transition-all duration-200 font-medium text-sm md:text-base"
       >
         <svg
           width="16"
