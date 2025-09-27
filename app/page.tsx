@@ -1,5 +1,8 @@
 'use client';
 
+import SiteFooter from '@/components/home/footer';
+import Hero from '@/components/home/hero';
+import Navbar from '@/components/home/navbar';
 /**
  * Home Page Component
  *
@@ -20,9 +23,15 @@ import UserInput from '@/components/home/UserInput';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-      {/* <SymptomInput /> changed to user input  */}
-      <UserInput />
+    // <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    // <Navbar />
+    // <UserInput />
+    // </main>
+
+    <main>
+      <Navbar />
+      <Hero />
+      <SiteFooter />
     </main>
   );
 }

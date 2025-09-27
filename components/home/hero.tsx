@@ -1,43 +1,21 @@
-// components/home/UserInput.tsx
-/**
- * UserInput Component
- *
- * The main input interface for users to describe their health symptoms and receive
- * AI-powered analysis. This component handles user input, API communication, and
- * displays the AI response with proper loading and error states.
- *
- * Features:
- * - Large textarea for symptom description
- * - Real-time input validation
- * - Loading states during API calls
- * - Error handling and display
- * - AI response visualization
- * - Example suggestions for user guidance
- * - Keyboard shortcuts (Cmd/Ctrl + Enter to submit)
- * - Smooth animations using Framer Motion
- *
- * @component
- */
-
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
 import LoginPromptModal from './LoginPromptModal';
 import { useRouter } from 'next/navigation';
 import { ChatRequestDTO } from '@/modules/chat/chat.schema';
 import { createClient } from '@/lib/supabase/client';
-
 /**
- * UserInput Component
+ * Hero Component
  *
  * Main component for user input of symptoms and interaction with Sickco AI.
  *
  * @returns {JSX.Element} The rendered symptom input interface
  */
-export default function UserInput() {
+export function Hero() {
   // State for user input
   const [userInput, setUserInput] = useState('');
   // Loading state for API calls (now for navigation)
@@ -142,61 +120,69 @@ export default function UserInput() {
       handleSubmit();
     }
   };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="w-full max-w-4xl mx-auto p-6 mb-8"
-    >
-      {/* Main Input Container */}
-      <div className="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 shadow-2xl">
-        <div className="flex flex-col lg:flex-row gap-4 items-end">
-          {/* Textarea */}
-          <div className="flex-1">
-            <Textarea
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Describe your symptoms or health condition..."
-              className="min-h-[120px] bg-transparent border-none text-slate-200 placeholder:text-slate-400 text-lg resize-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
-            />
-          </div>
+    <section className="mx-auto w-full max-w-5xl px-4 py-12 md:py-16">
+      <header className="text-center">
+        <h1 className="text-balance font-sans text-4xl font-bold leading-tight tracking-tight text-foreground md:text-6xl">
+          Never Feel Lost About Your Health Again.
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
+          With SickCo, you&apos;re never alone. Just chat and get answers to all your health-related
+          questions. Simple, supportive, and always here for you.
+        </p>
+        <div className="mx-auto mt-4 h-1 w-10 rounded-full bg-accent" aria-hidden="true" />
+      </header>
 
-          {/* Chat with Sicko Button */}
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button
-              onClick={handleSubmit}
-              disabled={isLoading} // The disabled state now relies solely on isLoading
-              className="bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 px-6 py-3 h-auto rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                'Submitting...'
-              ) : (
-                <>
-                  <Send className="w-4 h-4" />
-                  Chat with Sickco
-                </>
-              )}
-            </Button>
-          </motion.div>
+      <div className="mx-auto mt-8 w-full max-w-3xl">
+        {/* Chat input card */}
+        <div className="relative rounded-xl border bg-card p-3 text-card-foreground shadow-sm md:p-4">
+          {/* For accessibility, keep a visible placeholder and an sr-only label */}
+          <label htmlFor="symptom" className="sr-only">
+            Describe your symptom or health condition
+          </label>
+          <Textarea
+            id="symptom"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Describe your symptom or health condition..."
+            className="min-h-28 resize-none border-0 bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0 "
+          />
+          <Button
+            size="sm"
+            onClick={handleSubmit}
+            disabled={isLoading} // The disabled state now relies solely on isLoading
+            className="absolute bottom-3 right-3 md:bottom-4 md:right-4 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              'Submitting...'
+            ) : (
+              <>
+                Chat with Sickco
+                <Send className="ml-2 h-4 w-4" aria-hidden="true" />
+              </>
+            )}
+          </Button>
         </div>
+
+        {/* Error  */}
         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
-      </div>
 
-      {/* Pass the example click handler */}
-      <div className="mt-12">
-        <ExampleSuggestions onExampleClick={handleExampleClick} />
-      </div>
+        {/* Pass the example click handler */}
+        <div className="mt-12">
+          <ExampleSuggestions onExampleClick={handleExampleClick} />
+        </div>
 
-      {/* Login Prompt Modal */}
-      <LoginPromptModal
-        isOpen={showLoginPrompt}
-        onClose={handleCloseLoginPrompt}
-        onLoginClick={handleLoginClick}
-        onSignupClick={handleSignupClick}
-      />
-    </motion.div>
+        {/* Login Prompt Modal */}
+        <LoginPromptModal
+          isOpen={showLoginPrompt}
+          onClose={handleCloseLoginPrompt}
+          onLoginClick={handleLoginClick}
+          onSignupClick={handleSignupClick}
+        />
+      </div>
+    </section>
   );
 }
+
+export default Hero;
