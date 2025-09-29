@@ -12,7 +12,8 @@ export interface ConversationTurn {
 
 //Chat component types
 export interface ChatProps {
-  onToggleMobileMenu: () => void;
+  // onToggleMobileMenu: () => void;
+  user?: any;
   initialMessage?: string; // Add initialMessage prop
 }
 
@@ -24,7 +25,7 @@ export interface UserMessages {
 
 // ChatHeader component types
 export interface ChatHeaderProps {
-  onToggleMobileMenu: () => void;
+  // onToggleMobileMenu: () => void;
   onClearChat: () => void;
 }
 
@@ -38,6 +39,7 @@ export interface ChatInputProps {
 
 // ChatMessages component types
 export interface ChatMessagesProps {
+  user: any;
   conversation: ConversationTurn[];
   messagesEndRef: RefObject<HTMLDivElement | null>;
   isHistoryLoading: boolean;

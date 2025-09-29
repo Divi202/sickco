@@ -20,7 +20,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         <div>
           {/* Skeleton message bubbles */}
           {[1, 2, 3].map((index) => (
-            <div key={index} className="animate-pulse">
+            <div key={index} className="animate-pulse mt-4">
               <div className="flex justify-start">
                 <div className="flex items-start gap-3 max-w-md">
                   <div className="w-8 h-8 rounded-full bg-slate-600/50" />

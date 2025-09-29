@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import ExampleSuggestions from './ExampleSuggestions';
 import LoginPromptModal from './LoginPromptModal';
 import { useRouter } from 'next/navigation';
@@ -77,7 +76,9 @@ export function Hero() {
 
     try {
       // Redirect to dashboard with userInput as a query parameter
-      router.push(`/dashboard?userInput=${encodeURIComponent(userInput.trim())}`);
+      router.push(
+        `/dashboard?userInput=${encodeURIComponent(userInput.trim())}?section='sickco-ai'`,
+      );
     } catch (err: any) {
       console.error('Error navigating:', err);
       setError(err.message || 'An unexpected error occurred during navigation.');

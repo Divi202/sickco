@@ -192,7 +192,6 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
       {/* Chat Header - Handles the chat header and mobile menu button*/}
       <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
 
-      {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
       {/* Chat Cleared Confirmation */}
       {showClearConfirmation && (
         <motion.div
@@ -205,6 +204,7 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
         </motion.div>
       )}
 
+      {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
       <ChatMessages
         conversation={conversation}
         messagesEndRef={messagesEndRef}
