@@ -34,7 +34,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onToggleMobileMenu, onClearChat
         <p className="text-slate-400 text-xs md:text-sm mt-1">AI-powered conversation assistant</p>
       </div>
     </div>
-    
+
     {/* Clear Chat Button */}
     <ClearChatBtn onClearChat={onClearChat} />
   </motion.div>
