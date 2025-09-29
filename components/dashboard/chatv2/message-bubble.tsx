@@ -5,7 +5,6 @@ import WelcomeMessage from '../chat/WelcomeMessage';
 import AIResponse from '../chat/AIResponse';
 
 export default function MessageBubble({
-  user,
   conversation,
   messagesEndRef,
   isHistoryLoading,
@@ -40,53 +39,43 @@ export default function MessageBubble({
       )}
       <div
         ref={messagesEndRef} // Attach the ref here
-        className={cn('flex w-full items-end gap-3', user ? 'justify-end' : 'justify-start')}
       >
         {/* Conversation turns */}
         {conversation.map((turn) => (
           <div key={turn.id} className={isClearingChat ? 'animate-pulse opacity-50' : ''}>
-            {/* SickCo Message  */}
-            {turn.aiResponse && (
-              <Avatar className="h-6 w-6">
-                <AvatarImage src="/assistant-avatar.png" alt="Sickco AI" />
-                <AvatarFallback className="text-[10px]">SC</AvatarFallback>
-              </Avatar>
-            )}
-
-            {/* Message content(either user & AI) */}
-            <div
-              className={cn(
-                'max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm',
-                turn.userMessage
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted/30 text-foreground',
-              )}
-            >
-              <div className="leading-relaxed">
-                {turn.userMessage && turn.userMessage.text}
-                {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
-              </div>
-
-              {/* Time - WIP  */}
-              {/* {time && (
-              <p
-                className={cn('mt-1 text-[10px]', isUser ? 'opacity-85' : 'text-muted-foreground')}
-              >
-                {time}
-              </p>
-            )} */}
-
-              {/* AI Response or Loading/Error State - WIP*/}
-              {/* Typing indicator bubble  - WIP*/}
-            </div>
-
             {/* User Message */}
-            {turn.userMessage && (
+            <div className="flex justify-end">
+              {/* Message content*/}
+              {turn.userMessage && (
+                <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
+                  <div className="leading-relaxed">{turn.userMessage && turn.userMessage.text}</div>
+                </div>
+              )}{' '}
               <Avatar className="h-6 w-6">
                 <AvatarImage src="/diverse-user-avatars.png" alt="You" />
                 <AvatarFallback className="text-[10px]">You</AvatarFallback>
               </Avatar>
-            )}
+            </div>
+
+            {/* AI Response or Loading/Error State - WIP*/}
+            {/* Typing indicator bubble  - WIP*/}
+
+            {/* SickCo Message  */}
+            <div className="flex justify-start">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src="/assistant-avatar.png" alt="Sickco AI" />
+                <AvatarFallback className="text-[10px]">SC</AvatarFallback>
+              </Avatar>
+              {/* // message content*/}
+              {turn.aiResponse && (
+                <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm  bg-muted/30 text-foreground">
+                  <div className="leading-relaxed">
+                    {' '}
+                    {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}{' '}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>

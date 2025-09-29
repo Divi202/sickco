@@ -86,7 +86,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
               </div>
             </div>
 
-            {/* AI Response or Loading/Error State */}
+            {/* Loading State */}
             {turn.isLoadingAI && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -142,6 +142,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
               </motion.div>
             )}
 
+            {/* AI Error  */}
             {turn.errorAI && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -152,7 +153,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 {turn.errorAI}
               </motion.div>
             )}
-
+            {/* AI response  */}
             {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
           </motion.div>
         ))}

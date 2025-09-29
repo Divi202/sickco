@@ -9,7 +9,7 @@ import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import Sic
 import { motion } from 'framer-motion';
 import ChatHeader from './chat-header';
 
-const ChatWindow: React.FC<ChatProps> = ({ user, initialMessage }) => {
+const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -198,7 +198,6 @@ const ChatWindow: React.FC<ChatProps> = ({ user, initialMessage }) => {
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
       <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
         <MessageBubble
-          user={user}
           conversation={conversation}
           messagesEndRef={messagesEndRef}
           isHistoryLoading={isHistoryLoading}

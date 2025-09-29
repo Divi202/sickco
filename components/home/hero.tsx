@@ -76,9 +76,7 @@ export function Hero() {
 
     try {
       // Redirect to dashboard with userInput as a query parameter
-      router.push(
-        `/dashboard?userInput=${encodeURIComponent(userInput.trim())}?section='sickco-ai'`,
-      );
+      router.push(`/dashboard?userInput=${encodeURIComponent(userInput.trim())}&section=sickco-ai`);
     } catch (err: any) {
       console.error('Error navigating:', err);
       setError(err.message || 'An unexpected error occurred during navigation.');

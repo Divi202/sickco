@@ -5,6 +5,7 @@ import { NextResponse } from 'next/server';
 import { log } from '@/lib/log';
 import { requireUser } from '@/lib/auth';
 import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
+import { id } from 'zod/v4/locales';
 
 // Docstring for this file code
 
@@ -77,6 +78,13 @@ export async function POST(request: Request) {
       { userMessage },
       user.id, // MODIFIED: Pass user.id to the service
     );
+    // const aiResponse = {
+    //   id: 'id_demo_1234',
+    //   information: ' This is demo information',
+    //   followUpQuestion: 'This is demo follow up question?',
+    //   empathy: 'This is demo empathy',
+    //   disclaimer: 'This is demo disclaimer',
+    // };
 
     if (!aiResponse) {
       throw new ExternalApiError('Chat Route: AI response is null');

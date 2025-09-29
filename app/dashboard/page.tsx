@@ -2,7 +2,6 @@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import Sidebar from '@/components/dashboard/Sidebar';
 import ChatWindow from '@/components/dashboard/chatv2/chat-window';
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation'; // Import useSearchParams
@@ -10,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
 import DietPlan from '@/components/dashboard/chatv2/diet-plans';
+import Sidebar from '@/components/dashboard/sidebar';
 
 export default function DashboardPage() {
   const [selectedFeature, setSelectedFeature] = useState('sickco-ai');
@@ -71,13 +71,11 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main content */}
-        <section className="min-h-[70vh]">
+        <section className="max-h-screen">
           {/* chat window by default has sickco-ai section  */}
-          {selectedFeature === 'sickco-ai' && (
-            <ChatWindow user={user} initialMessage={initialSymptoms || ''} />
-          )}
+          {selectedFeature === 'sickco-ai' && <ChatWindow initialMessage={initialSymptoms || ''} />}
         </section>
-        <section className="min-h-[70vh]">
+        <section className="max-h-screen">
           {selectedFeature === 'diet-plans' && <DietPlan />}
         </section>
       </div>
