@@ -12,14 +12,13 @@ import DietPlan from '@/components/dashboard/chatv2/diet-plans';
 import Sidebar from '@/components/dashboard/sidebar';
 
 export default function DashboardPage() {
-  const [selectedFeature, setSelectedFeature] = useState('sickco-ai');
   const searchParams = useSearchParams(); // Initialize useSearchParams
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
   // which section to show : sickoai ui or diet plan.
   const section = searchParams.get('section');
-  if (section != null) setSelectedFeature(section);
+  const selectedFeature = section ?? 'sickco-ai';
 
   useEffect(() => {
     const supabase = createClient();
@@ -74,8 +73,6 @@ export default function DashboardPage() {
         <section className="max-h-screen">
           {/* chat window by default has sickco-ai section  */}
           {selectedFeature === 'sickco-ai' && <ChatWindow initialMessage={initialSymptoms || ''} />}
-        </section>
-        <section className="max-h-screen">
           {selectedFeature === 'diet-plans' && <DietPlan />}
         </section>
       </div>
