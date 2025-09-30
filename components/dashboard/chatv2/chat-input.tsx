@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { ChatInputProps } from '@/types/dashboard.types';
 import React, { useEffect, useRef } from 'react';
 
@@ -72,7 +72,8 @@ export default function ChatInput({
           className="rounded-lg"
           aria-label="Send message"
         >
-          <Send className="h-4 w-4" />
+          <ArrowUp className="h-4 w-4" />
+          <span className="sr-only">Send Button</span>
         </Button>
       </div>
     </div>

@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * LoginPromptModal Component
  *
@@ -60,13 +62,13 @@ export default function LoginPromptModal({
             onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-            {/* Modal Content */}
+            {/* Modal Content - Updated to use theme tokens */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-slate-800/95 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl"
+              className="bg-card backdrop-blur-sm border border-border rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl"
             >
               {/* Close Button */}
               <div className="flex justify-end mb-4">
@@ -74,50 +76,49 @@ export default function LoginPromptModal({
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="text-slate-400 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </motion.button>
               </div>
 
-              {/* Icon */}
+              {/* Icon - Updated to use theme primary color */}
               <div className="flex justify-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center border border-green-500/30">
-                  <Lock className="w-8 h-8 text-green-400" />
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center border border-primary/30">
+                  <Lock className="w-8 h-8 text-primary" />
                 </div>
               </div>
 
-              {/* Content */}
+              {/* Content - Updated text colors to theme tokens */}
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-white mb-3">
-                  Login Required
-                </h2>
-                <p className="text-slate-300 leading-relaxed">
-                  To use SickCo's AI-powered health companion, you need to create an account or sign in to your existing account.
+                <h2 className="text-2xl font-bold text-foreground mb-3">Login Required</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  To use SickCo's AI-powered health companion, you need to create an account or sign
+                  in to your existing account.
                 </p>
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Buttons - Updated button styling to match theme */}
               <div className="space-y-3">
                 <Button
                   onClick={onLoginClick}
-                  className="w-full bg-green-600/90 hover:bg-green-600 text-white font-medium py-3 transition-all duration-200"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 transition-all duration-200"
                 >
                   Sign In to Your Account
                 </Button>
-                
+
                 <Button
                   onClick={onSignupClick}
                   variant="outline"
-                  className="w-full bg-transparent border-slate-600 text-slate-200 hover:bg-slate-700/50 hover:text-white font-medium py-3 transition-all duration-200"
+                  className="w-full bg-transparent border-border text-foreground hover:bg-muted hover:text-foreground font-medium py-3 transition-all duration-200"
                 >
                   Create New Account
                 </Button>
               </div>
 
-              {/* Additional Info */}
-              <div className="mt-6 pt-4 border-t border-slate-700/50">
-                <p className="text-xs text-slate-400 text-center">
+              {/* Additional Info - Updated border and text colors */}
+              <div className="mt-6 pt-4 border-t border-border">
+                <p className="text-xs text-muted-foreground text-center">
                   Your health data is secure and private. We never share your information.
                 </p>
               </div>

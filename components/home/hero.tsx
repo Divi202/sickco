@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { useState } from 'react';
 import ExampleSuggestions from './ExampleSuggestions';
 import LoginPromptModal from './LoginPromptModal';
@@ -157,8 +157,8 @@ export function Hero() {
               'Submitting...'
             ) : (
               <>
-                Chat with Sickco
-                <Send className="ml-2 h-4 w-4" aria-hidden="true" />
+                <ArrowUp className="h-4 w-4" />
+                <span className="sr-only">Send Button</span>
               </>
             )}
           </Button>
