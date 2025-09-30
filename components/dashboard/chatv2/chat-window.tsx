@@ -1,12 +1,11 @@
 'use client';
 
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MessageBubble from '@/components/dashboard/chatv2/message-bubble';
 import ChatInput from './chat-input';
 import axios from 'axios';
 import { ChatProps, UserMessages, ConversationTurn } from '@/types/dashboard.types';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
-import { motion } from 'framer-motion';
 import ChatHeader from './chat-header';
 
 const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
@@ -75,6 +74,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const handleClearChat = async () => {
     // MODIFIED: Made async
     try {
+      setIsLoading(true);
       // Start clearing animation
       setIsClearingChat(true);
 
@@ -93,6 +93,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
           setShowClearConfirmation(false);
         }, 3000);
       }, 500); // Wait for fade out animation
+      setIsLoading(false);
     } catch (error) {
       console.error('Failed to clear chat history:', error);
       setIsClearingChat(false);
@@ -186,7 +187,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   return (
     <div className="flex h-screen flex-col">
       {/*  Chat Header - Handles the chat header and mobile menu button */}
-      <ChatHeader onClearChat={handleClearChat} />
+      <ChatHeader onClearChat={handleClearChat} isLoading={isLoading} />
 
       {/* Chat Cleared Confirmation - WIP */}
       {/* {showClearConfirmation && (

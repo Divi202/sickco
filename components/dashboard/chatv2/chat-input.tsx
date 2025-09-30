@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, LoaderCircle } from 'lucide-react';
 import { ChatInputProps } from '@/types/dashboard.types';
 import React, { useEffect, useRef } from 'react';
 
@@ -71,8 +71,14 @@ export default function ChatInput({
           disabled={!newMessage.trim() || isLoading}
           className="rounded-lg"
         >
-          <ArrowUp className="h-4 w-4" />
-          <span className="sr-only">Send Message</span>
+          {isLoading ? (
+            <LoaderCircle className="h-4 w-4"></LoaderCircle>
+          ) : (
+            <>
+              <ArrowUp className="h-4 w-4" />
+              <span className="sr-only">Send Message</span>
+            </>
+          )}
         </Button>
       </div>
     </div>

@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const searchParams = useSearchParams(); // Initialize useSearchParams
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // which section to show : sickoai ui or diet plan.
   const section = searchParams.get('section');
@@ -28,6 +29,7 @@ export default function DashboardPage() {
   }, []);
 
   const handleLogout = async () => {
+    setIsLoading(true);
     try {
       await axios.post('/api/v1/auth/logout');
       router.push('/login');
@@ -35,6 +37,7 @@ export default function DashboardPage() {
       console.error('Logout failed:', error);
       // Optionally, display an error message to the user
     }
+    setIsLoading(false);
   };
 
   if (!user) return null;
@@ -58,7 +61,12 @@ export default function DashboardPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72 p-0">
-            <Sidebar user={user} onLogout={handleLogout} active={selectedFeature} />
+            <Sidebar
+              user={user}
+              onLogout={handleLogout}
+              active={selectedFeature}
+              isLoading={isLoading}
+            />
           </SheetContent>
         </Sheet>
       </div>
@@ -66,7 +74,12 @@ export default function DashboardPage() {
       <div className="grid max-w-screen md:grid-cols-[260px_1fr]">
         {/* Desktop sidebar */}
         <aside className="hidden md:block border-r">
-          <Sidebar user={user} onLogout={handleLogout} active={selectedFeature} />
+          <Sidebar
+            user={user}
+            onLogout={handleLogout}
+            active={selectedFeature}
+            isLoading={isLoading}
+          />
         </aside>
 
         {/* Main content */}

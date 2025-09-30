@@ -25,6 +25,7 @@ export interface UserMessages {
 // ChatHeader component types
 export interface ChatHeaderProps {
   // onToggleMobileMenu: () => void;
+  isLoading: boolean;
   onClearChat: () => void;
 }
 

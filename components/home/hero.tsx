@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 import ExampleSuggestions from './ExampleSuggestions';
 import LoginPromptModal from './LoginPromptModal';
@@ -155,7 +155,7 @@ export function Hero() {
             className="absolute bottom-3 right-3 md:bottom-4 md:right-4 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              'Submitting...'
+              <LoaderCircle className="h-4 w-4"></LoaderCircle>
             ) : (
               <>
                 <ArrowUp className="h-4 w-4" />

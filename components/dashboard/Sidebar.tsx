@@ -3,7 +3,15 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Bot, Salad, MessageSquare, EllipsisVertical, HeartPulse } from 'lucide-react';
+import {
+  Bot,
+  Salad,
+  MessageSquare,
+  EllipsisVertical,
+  HeartPulse,
+  LogOut,
+  LoaderCircle,
+} from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -11,14 +19,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { Button } from '../ui/button';
 
 // Define the props type
 interface SidebarProps {
   active: string;
   user: any; // User object from Supabase
   onLogout: () => void; // Logout function
+  isLoading: boolean;
 }
-const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout }) => {
+const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) => {
   console.log(active);
   const items = [
     {
@@ -130,9 +140,30 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout }) => {
                 <EllipsisVertical className="h-5 w-5" aria-hidden />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align="center" className="w-40">
               {/* Hook this up to your auth logout when ready */}
-              <DropdownMenuItem onClick={onLogout}>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={onLogout} variant="destructive">
+                {/* <Button className="flex flex-1" onClick={onLogout} variant="destructive">
+                  {isLoading ? (
+                    <LoaderCircle className="h-4 w-4"></LoaderCircle>
+                  ) : (
+                    <>
+                      <LogOut className="h-4 w-4 text-background"></LogOut>
+                      <span className="text-background">Logout</span>
+                      <span className="sr-only">Logout</span>
+                    </>
+                  )}
+                </Button> */}
+                {isLoading ? (
+                  <LoaderCircle className="h-4 w-4"></LoaderCircle>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <LogOut className="h-4 w-4 text-destructive"></LogOut>
+                    <span className="text-destructive">Logout</span>
+                    <span className="sr-only">Logout</span>
+                  </div>
+                )}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
