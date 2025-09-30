@@ -126,6 +126,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
+import { LoaderCircle } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -180,7 +181,7 @@ export default function LoginPage() {
         <Input type="password" placeholder="********" {...form.register('password')} />
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? <LoaderCircle className="h-4 w-4"></LoaderCircle> : 'Login'}
         </Button>
 
         <div className="text-center">

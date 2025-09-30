@@ -152,6 +152,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
+import { LoaderCircle } from 'lucide-react';
 
 const signupSchema = z
   .object({
@@ -222,7 +223,7 @@ export default function SignupPage() {
         <Input type="password" placeholder="********" {...form.register('confirmPassword')} />
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Signing up...' : 'Sign Up'}
+          {loading ? <LoaderCircle className="h-4 w-4"></LoaderCircle> : 'Sign Up'}
         </Button>
 
         <div className="text-center">
