@@ -49,6 +49,7 @@ export function Hero() {
   const handleSubmit = async () => {
     if (isLoading) return; // Prevent multiple submissions
 
+    setIsLoading(true);
     // Check if user is authenticated
     const supabase = createClient();
     const {
@@ -62,7 +63,7 @@ export function Hero() {
     }
 
     // Validate input using Zod schema
-    console.log('Submitting user input:', userInput);
+    // console.log('Submitting user input:', userInput);
     const validationResult = ChatRequestDTO.safeParse({ userMessage: userInput });
 
     if (!validationResult.success) {
@@ -150,7 +151,7 @@ export function Hero() {
           <Button
             size="sm"
             onClick={handleSubmit}
-            disabled={isLoading} // The disabled state now relies solely on isLoading
+            disabled={!userInput.trim() || isLoading} // The disabled state now relies solely on isLoading
             className="absolute bottom-3 right-3 md:bottom-4 md:right-4 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
@@ -158,7 +159,7 @@ export function Hero() {
             ) : (
               <>
                 <ArrowUp className="h-4 w-4" />
-                <span className="sr-only">Send Button</span>
+                <span className="sr-only">Send Message</span>
               </>
             )}
           </Button>

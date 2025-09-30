@@ -70,10 +70,9 @@ export default function ChatInput({
           onClick={handleSendClick}
           disabled={!newMessage.trim() || isLoading}
           className="rounded-lg"
-          aria-label="Send message"
         >
           <ArrowUp className="h-4 w-4" />
-          <span className="sr-only">Send Button</span>
+          <span className="sr-only">Send Message</span>
         </Button>
       </div>
     </div>
