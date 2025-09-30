@@ -71,8 +71,6 @@ export function Hero() {
       console.error('Validation Error:', validationResult.error);
       return;
     }
-
-    setIsLoading(true);
     setError(null); // Clear previous errors on successful validation
 
     try {

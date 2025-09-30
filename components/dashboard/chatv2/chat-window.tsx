@@ -18,7 +18,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const [emptyDueToClear, setEmptyDueToClear] = useState(false); // NEW
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  console.log('chat window: message received from the homepage', initialMessage);
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -45,18 +45,19 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
           isLoadingAI: false,
           errorAI: undefined,
         }));
+
         setConversation(formattedHistory);
+
         // If history has messages, ensure cleared flag is off
         setEmptyDueToClear(formattedHistory.length === 0 ? emptyDueToClear : false);
-        // Handle initial message from homepage navigation
-        const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
-        if (initialMessage && !initialMessageConsumed) {
-          // Pre-fill the input with the initial message for user to edit/send
+
+        //Handle message received form the homepage
+        if (initialMessage?.trim()) {
           setNewMessage(initialMessage);
-          // Mark as consumed so it doesn't reappear on refresh
-          sessionStorage.setItem('initialMessageConsumed', 'true');
+          // Optionally track the last message if you still want to avoid duplicates across refreshes:
+          sessionStorage.setItem('lastInitialMessage', initialMessage);
         } else {
-          // Ensure input is empty if no initial message or already consumed
+          // Only clear if there isn't a new initial message or user refreseh the page
           setNewMessage('');
         }
       } catch (error) {
@@ -68,7 +69,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
     };
 
     loadChatHistory();
-  }, []); // Run only once on mount
+  }, [initialMessage]); // Run only once on mount
 
   // Handle clearing chat
   const handleClearChat = async () => {
@@ -82,8 +83,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
       setTimeout(async () => {
         await axios.post('/api/v1/chat/clear');
         setConversation([]); // Clear local state only after successful API call
-        // Remove the consumed flag so new initial messages can be processed
-        sessionStorage.removeItem('initialMessageConsumed');
+
         setIsClearingChat(false);
         // Show cleared empty-state
         setEmptyDueToClear(true);

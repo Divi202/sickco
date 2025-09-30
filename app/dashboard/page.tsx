@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import ChatWindow from '@/components/dashboard/chatv2/chat-window';
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation'; // Import useSearchParams
+import { usePathname, useSearchParams } from 'next/navigation'; // Import useSearchParams
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const pathname = usePathname();
 
   // which section to show : sickoai ui or diet plan.
   const section = searchParams.get('section');
@@ -27,6 +28,19 @@ export default function DashboardPage() {
       setUser(data.user);
     });
   }, []);
+
+  // Get the user input send by homepage by query parameter
+  const initialSymptoms = searchParams.get('userInput');
+  // Remove userInput from the URL after consuming it so it won't reappear on refresh
+  useEffect(() => {
+    if (initialSymptoms) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('userInput');
+      const qs = params.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname);
+    }
+    // It's safe to depend on these; replace won't loop because the param is removed
+  }, [initialSymptoms, searchParams, router, pathname]);
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -41,8 +55,6 @@ export default function DashboardPage() {
   };
 
   if (!user) return null;
-
-  const initialSymptoms = searchParams.get('userInput'); // Get the 'symptoms' query parameter
 
   return (
     <main className="min-h-[calc(100vh-56px)] bg-background text-foreground">
@@ -85,7 +97,9 @@ export default function DashboardPage() {
         {/* Main content */}
         <section className="max-h-screen">
           {/* chat window by default has sickco-ai section  */}
-          {selectedFeature === 'sickco-ai' && <ChatWindow initialMessage={initialSymptoms || ''} />}
+          {selectedFeature === 'sickco-ai' && (
+            <ChatWindow key={initialSymptoms || 'default'} initialMessage={initialSymptoms || ''} />
+          )}
           {selectedFeature === 'diet-plans' && <DietPlan />}
         </section>
       </div>
