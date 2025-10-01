@@ -81,23 +81,31 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
 
       // Wait for animation to complete before clearing
       setTimeout(async () => {
-        await axios.post('/api/v1/chat/clear');
-        setConversation([]); // Clear local state only after successful API call
+        try {
+          await axios.post('/api/v1/chat/clear');
+          setConversation([]); // Clear local state only after successful API call
 
-        setIsClearingChat(false);
-        // Show cleared empty-state
-        setEmptyDueToClear(true);
-        // Show confirmation message
-        setShowClearConfirmation(true);
-        setTimeout(() => {
-          setShowClearConfirmation(false);
-        }, 3000);
+          setIsClearingChat(false);
+          // Show cleared empty-state
+          setEmptyDueToClear(true);
+          // Show confirmation message
+          setShowClearConfirmation(true);
+          setTimeout(() => {
+            setShowClearConfirmation(false);
+          }, 3000);
+        } catch (error) {
+          console.error('Failed to clear chat history:', error);
+          setIsClearingChat(false);
+          // Optionally, display an error message to the user
+        } finally {
+          setIsLoading(false); // Move this inside the setTimeout callback
+        }
       }, 500); // Wait for fade out animation
-      setIsLoading(false);
     } catch (error) {
       console.error('Failed to clear chat history:', error);
       setIsClearingChat(false);
       // Optionally, display an error message to the user
+      setIsLoading(false);
     }
   };
 
@@ -190,11 +198,11 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
       <ChatHeader onClearChat={handleClearChat} isLoading={isLoading} />
 
       {/* Chat Cleared Confirmation - WIP */}
-      {/* {showClearConfirmation && (
+      {showClearConfirmation && (
         <div className="mx-4 md:mx-6 mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center text-sm font-medium">
           ✅ Chat history cleared successfully!
         </div>
-      )} */}
+      )}
 
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
       <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
