@@ -180,7 +180,11 @@ export default function LoginPage() {
         {/* Password Field */}
         <Input type="password" placeholder="********" {...form.register('password')} />
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+        >
           {loading ? <LoaderCircle className="h-4 w-4"></LoaderCircle> : 'Login'}
         </Button>
 

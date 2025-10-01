@@ -222,7 +222,11 @@ export default function SignupPage() {
         {/* Confirm Password Field */}
         <Input type="password" placeholder="********" {...form.register('confirmPassword')} />
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button
+          type="submit"
+          className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={loading}
+        >
           {loading ? <LoaderCircle className="h-4 w-4"></LoaderCircle> : 'Sign Up'}
         </Button>
 
@@ -232,7 +236,7 @@ export default function SignupPage() {
             <button
               type="button"
               onClick={() => router.push('/login')}
-              className="text-primary hover:opacity-90 font-medium transition-colors"
+              className="text-primary hover:opacity-90 font-medium transition-colors "
             >
               Sign in
             </button>

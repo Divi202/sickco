@@ -142,7 +142,12 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center" className="w-40">
               {/* Hook this up to your auth logout when ready */}
-              <DropdownMenuItem onClick={onLogout} variant="destructive">
+              <DropdownMenuItem
+                onClick={onLogout}
+                variant="destructive"
+                disabled={isLoading}
+                className="disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 {/* <Button className="flex flex-1" onClick={onLogout} variant="destructive">
                   {isLoading ? (
                     <LoaderCircle className="h-4 w-4"></LoaderCircle>

@@ -69,7 +69,7 @@ export default function ChatInput({
         <Button
           onClick={handleSendClick}
           disabled={!newMessage.trim() || isLoading}
-          className="rounded-lg"
+          className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <LoaderCircle className="h-4 w-4"></LoaderCircle>

@@ -21,19 +21,16 @@ export default function DashboardPage() {
   // which section to show : sickoai ui or diet plan.
   const section = searchParams.get('section');
   const selectedFeature = section ?? 'sickco-ai';
+  // Get the user input send by homepage by query parameter
+  const initialSymptoms = searchParams.get('userInput');
 
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
     });
-  }, []);
-
-  // Get the user input send by homepage by query parameter
-  const initialSymptoms = searchParams.get('userInput');
-  // Remove userInput from the URL after consuming it so it won't reappear on refresh
-  useEffect(() => {
     if (initialSymptoms) {
+      // Remove userInput from the URL after consuming it so it won't reappear on refresh
       const params = new URLSearchParams(searchParams.toString());
       params.delete('userInput');
       const qs = params.toString();
