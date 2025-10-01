@@ -10,7 +10,7 @@ type ClearChatBtnProps = {
 };
 
 export default function ClearChatBtn({ onClearChat, isLoading }: ClearChatBtnProps) {
-  console.log('isLoading status:', isLoading);
+  // console.log('isLoading status:', isLoading);
   return (
     <Button
       onClick={onClearChat}

@@ -20,7 +20,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const [emptyDueToClear, setEmptyDueToClear] = useState(false); // NEW
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  console.log('chat window: message received from the homepage', initialMessage);
+  // console.log('chat window: message received from the homepage', initialMessage);
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -156,8 +156,8 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
 
       const result = response.data;
 
-      console.log('AI Response:', result);
-      console.log('sicko reposne id', result.id);
+      // console.log('AI Response:', result);
+      // console.log('sicko reposne id', result.id);
 
       // Update the conversation turn with AI response and actual ID
       setConversation((prev) =>

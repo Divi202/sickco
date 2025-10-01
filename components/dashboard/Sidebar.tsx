@@ -29,7 +29,7 @@ interface SidebarProps {
   isLoading: boolean;
 }
 const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) => {
-  console.log(active);
+  // console.log(active);
   const items = [
     {
       key: 'sickco-ai',
