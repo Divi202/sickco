@@ -52,12 +52,12 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex items-center justify-center px-4 py-6 gap-2">
-        <span
+        {/* <span
           className="grid h-10 w-10 place-items-center rounded-2xl bg-primary/20 text-primary"
           aria-label="SickCo"
         >
           <HeartPulse className="h-5 w-5" aria-hidden />
-        </span>
+        </span> */}
         <div className="flex items-center gap-2">
           <span className="text-base font-semibold">
             <span>Sick</span>
@@ -104,9 +104,9 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
                     <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </div>
                 </div>
-                {isActive && (
+                {/* {isActive && (
                   <MessageSquare className="h-4 w-4 text-muted-foreground" aria-hidden />
-                )}
+                )} */}
               </div>
             </Link>
           );
