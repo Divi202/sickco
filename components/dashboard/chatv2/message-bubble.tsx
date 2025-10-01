@@ -38,7 +38,6 @@ export default function MessageBubble({
         <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
       )}
       <div
-        ref={messagesEndRef} // Attach the ref here
       >
         {/* Conversation turns */}
         {conversation.map((turn) => (
@@ -78,6 +77,7 @@ export default function MessageBubble({
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
     </>
   );

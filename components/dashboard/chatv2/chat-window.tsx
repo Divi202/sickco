@@ -22,7 +22,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [conversation]);
 
