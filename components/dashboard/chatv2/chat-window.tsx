@@ -7,6 +7,8 @@ import axios from 'axios';
 import { ChatProps, UserMessages, ConversationTurn } from '@/types/dashboard.types';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
 import ChatHeader from './chat-header';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CircleCheck } from 'lucide-react';
 
 const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
@@ -199,9 +201,10 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
 
       {/* Chat Cleared Confirmation - WIP */}
       {showClearConfirmation && (
-        <div className="mx-4 md:mx-6 mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center text-sm font-medium">
-          ✅ Chat history cleared successfully!
-        </div>
+        <Alert variant="default">
+          <CircleCheck></CircleCheck>
+          <AlertTitle>Chat history cleared successfully!</AlertTitle>
+        </Alert>
       )}
 
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
