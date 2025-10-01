@@ -59,6 +59,7 @@ export function Hero() {
     if (!user) {
       // User is not logged in, show login prompt
       setShowLoginPrompt(true);
+      setIsLoading(false);
       return;
     }
 
