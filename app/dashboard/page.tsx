@@ -1,5 +1,12 @@
 'use client';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
 import ChatWindow from '@/components/dashboard/chatv2/chat-window';
@@ -69,7 +76,11 @@ export default function DashboardPage() {
               <Menu className="h-4 w-4" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 p-0">
+          <SheetContent side="left" className="w-72 p-0" aria-describedby={undefined}>
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation menu</SheetTitle>
+              <SheetDescription>Site sections and account actions</SheetDescription>
+            </SheetHeader>
             <Sidebar
               user={user}
               onLogout={handleLogout}
