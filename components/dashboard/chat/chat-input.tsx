@@ -50,38 +50,38 @@ export default function ChatInput({
 
   return (
     <div className="relative w-3/4 ">
-      <div className="flex items-center gap-2 border rounded-lg bg-muted/20 p-2 pl-3 shadow-sm">
-        <Textarea
-          ref={textareaRef}
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          rows={1}
-          placeholder="Ask a follow-up question or describe new symptoms..."
-          className={`h-12 max-h-28 w-full resize-none border-0  p-0 leading-6 focus-visible:ring-0 ${
-            showEmptyInputWarning ? 'border-red-500/70 animate-pulse' : 'border-slate-600/50'
-          }`}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSendClick(e);
-            }
-          }}
-        />
-        <Button
-          onClick={handleSendClick}
-          disabled={!newMessage.trim() || isLoading}
-          className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isLoading ? (
-            <LoaderCircle className="h-4 w-4"></LoaderCircle>
-          ) : (
-            <>
-              <ArrowUp className="h-4 w-4" />
-              <span className="sr-only">Send Message</span>
-            </>
-          )}
-        </Button>
-      </div>
+    <div className="flex items-end gap-2 border rounded-lg bg-muted/20 p-2 pl-3 shadow-sm focus-within:ring-2 focus-within:ring-ring">
+      <Textarea
+        ref={textareaRef}
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        rows={1}
+        placeholder="Ask a follow-up question or describe new symptoms..."
+        className={`h-12 max-h-28 w-full resize-none border-0 p-0 leading-6 bg-transparent dark:bg-transparent shadow-none focus-visible:ring-0 focus:ring-0 focus:outline-none ${
+          showEmptyInputWarning ? 'ring-2 ring-red-500/70' : ''
+        }`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendClick(e);
+          }
+        }}
+      />
+      <Button
+        onClick={handleSendClick}
+        disabled={!newMessage.trim() || isLoading}
+        className="rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isLoading ? (
+          <LoaderCircle className="h-4 w-4"></LoaderCircle>
+        ) : (
+          <>
+            <ArrowUp className="h-4 w-4" />
+            <span className="sr-only">Send Message</span>
+          </>
+        )}
+      </Button>
     </div>
+  </div>
   );
 }

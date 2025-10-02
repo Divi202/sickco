@@ -43,7 +43,7 @@ export default function MessageBubble({
             <div className="flex justify-end mb-4">
               {/* Message content*/}
               {turn.userMessage && (
-                <div className="max-w-[80%]  rounded-tr-sm rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
+                <div className="max-w-[80%] rounded-tr-sm rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
                   <div className="leading-relaxed">{turn.userMessage && turn.userMessage.text}</div>
                 </div>
               )}{' '}
@@ -63,7 +63,7 @@ export default function MessageBubble({
               <span className="text-sm mb-2 ml-2">Sickco</span>
               {/* message content*/}
               {turn.aiResponse && (
-                <div className="max-w-[80%] bg-card rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
+                <div className="max-w-[80%] bg-card border rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
                   <div className="leading-relaxed">
                     {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
                   </div>

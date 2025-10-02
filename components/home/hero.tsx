@@ -134,7 +134,7 @@ export function Hero() {
 
       <div className="mx-auto mt-8 w-full max-w-3xl">
         {/* Chat input card */}
-        <div className="relative rounded-xl border bg-card p-3 text-card-foreground shadow-sm md:p-4">
+        <div className="relative rounded-xl border bg-card p-3 text-card-foreground shadow-sm md:p-4 focus-within:ring-2 focus-within:ring-ring">
           {/* For accessibility, keep a visible placeholder and an sr-only label */}
           <label htmlFor="symptom" className="sr-only">
             Describe your symptom or health condition
@@ -145,7 +145,7 @@ export function Hero() {
             onChange={(e) => setUserInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Describe your symptom or health condition..."
-            className="min-h-28 resize-none border-0 bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0 "
+            className="min-h-28 resize-none border-0 bg-transparent dark:bg-transparent p-0 shadow-none focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
           <Button
             size="sm"
