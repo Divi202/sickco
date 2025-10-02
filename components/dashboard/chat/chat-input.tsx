@@ -31,6 +31,7 @@ export default function ChatInput({
   }, [newMessage]);
 
   const handleSendClick = (e?: React.FormEvent) => {
+    if (isLoading) return;
     if (!newMessage.trim()) {
       setShowEmptyInputWarning(true);
       setTimeout(() => {
