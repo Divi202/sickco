@@ -93,8 +93,8 @@ export default function LoginPromptModal({
               <div className="text-center mb-8">
                 <h2 className="text-2xl font-bold text-foreground mb-3">Login Required</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  To use SickCo's AI-powered health companion, you need to create an account or sign
-                  in to your existing account.
+                  To use SickCo's AI-powered sickness companion, you need to create an account or
+                  login to your existing account.
                 </p>
               </div>
 
@@ -104,7 +104,7 @@ export default function LoginPromptModal({
                   onClick={onLoginClick}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 transition-all duration-200"
                 >
-                  Sign In to Your Account
+                  Log In to Your Account
                 </Button>
 
                 <Button
@@ -117,10 +117,10 @@ export default function LoginPromptModal({
               </div>
 
               {/* Additional Info - Updated border and text colors */}
-              <div className="mt-6 pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground text-center">
+              <div className="mt-6 pt-4  border-border">
+                {/* <p className="text-xs text-muted-foreground text-center">
                   Your health data is secure and private. We never share your information.
-                </p>
+                </p> */}
               </div>
             </motion.div>
           </motion.div>
