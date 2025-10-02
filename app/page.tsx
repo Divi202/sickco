@@ -1,13 +1,8 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import SiteFooter from '@/components/home/footer';
 import Navbar from '@/components/home/navbar';
-
-// Dynamically import Hero to ensure it's only rendered on client
-const Hero = dynamic(() => import('@/components/home/hero'), {
-  ssr: false,
-});
+import Hero from '@/components/home/hero';
 
 /**
  * Home Page Component

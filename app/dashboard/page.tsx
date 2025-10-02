@@ -1,6 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import {
   Sheet,
   SheetContent,
@@ -16,17 +15,9 @@ import { usePathname, useSearchParams } from 'next/navigation'; // Import useSea
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
-
-// Dynamically import components to ensure proper client-side rendering
-const ChatWindow = dynamic(() => import('@/components/dashboard/chatv2/chat-window'), {
-  ssr: false,
-});
-const DietPlan = dynamic(() => import('@/components/dashboard/chatv2/diet-plans'), {
-  ssr: false,
-});
-const Sidebar = dynamic(() => import('@/components/dashboard/sidebar'), {
-  ssr: false,
-});
+import ChatWindow from '@/components/dashboard/chatv2/chat-window';
+import DietPlan from '@/components/dashboard/chatv2/diet-plans';
+import Sidebar from '@/components/dashboard/sidebar';
 
 export default function DashboardPage() {
   const searchParams = useSearchParams(); // Initialize useSearchParams
