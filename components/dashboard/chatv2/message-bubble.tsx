@@ -17,15 +17,15 @@ export default function MessageBubble({
       {isHistoryLoading && conversation.length === 0 && (
         <div>
           {/* Skeleton message bubbles */}
-          {[1, 2, 3, 4].map((index) => (
+          {[1, 2, 3].map((index) => (
             <div key={index} className="animate-pulse mt-4">
               <div className="flex justify-start">
                 <div className="flex items-start gap-3 max-w-md">
-                  <div className="w-8 h-8 rounded-full bg-foreground/50" />
-                  <div className="bg-foreground/50 rounded-xl p-4 space-y-2">
-                    <div className="h-4 bg-foreground/70 rounded w-48" />
-                    <div className="h-4 bg-foreground/70 rounded w-32" />
-                    <div className="h-4 bg-foreground/70 rounded w-24" />
+                  <div className="w-8 h-8 rounded-full bg-slate-600/50" />
+                  <div className="bg-slate-700/50 rounded-xl p-4 space-y-2">
+                    <div className="h-4 bg-slate-600/50 rounded w-48" />
+                    <div className="h-4 bg-slate-600/50 rounded w-32" />
+                    <div className="h-4 bg-slate-600/50 rounded w-24" />
                   </div>
                 </div>
               </div>
@@ -33,73 +33,44 @@ export default function MessageBubble({
           ))}
         </div>
       )}
-      {/* Welcome back message */}
+      {/* Welcome back message - WIP */}
       {!isHistoryLoading && conversation.length === 0 && (
         <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
       )}
-      <div>
+      <div
+      >
         {/* Conversation turns */}
         {conversation.map((turn) => (
           <div key={turn.id} className={isClearingChat ? 'animate-pulse opacity-50' : ''}>
             {/* User Message */}
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end">
               {/* Message content*/}
               {turn.userMessage && (
                 <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
                   <div className="leading-relaxed">{turn.userMessage && turn.userMessage.text}</div>
                 </div>
               )}{' '}
-              <Avatar className="h-6 w-6 ml-2">
+              <Avatar className="h-6 w-6">
                 <AvatarImage src="/diverse-user-avatars.png" alt="You" />
                 <AvatarFallback className="text-[10px]">You</AvatarFallback>
               </Avatar>
             </div>
 
-            {/* Typing indicator bubble */}
-            {turn.isLoadingAI && (
-              <div className="flex justify-start mt-4">
-                <div className="flex items-start gap-3 max-w-md">
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
-                    <div className="flex items-center gap-1">
-                      {/* <span className="text-foreground text-sm mr-2">Sickco is typing</span> */}
-                      <div className="flex gap-1">
-                        <div
-                          className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '0ms' }}
-                        />
-                        <div
-                          className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '150ms' }}
-                        />
-                        <div
-                          className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '300ms' }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* AI Response or Loading/Error State - WIP*/}
+            {/* Typing indicator bubble  - WIP*/}
 
-            {/* AI Error */}
-            {turn.errorAI && (
-              <div className="mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-center">
-                {turn.errorAI}
-              </div>
-            )}
-
-            {/* SickCo Message */}
-            <div className="flex justify-start mb-4">
-              <Avatar className="h-6 w-6 mr-2">
+            {/* SickCo Message  */}
+            <div className="flex justify-start">
+              <Avatar className="h-6 w-6">
                 <AvatarImage src="/assistant-avatar.png" alt="Sickco AI" />
                 <AvatarFallback className="text-[10px]">SC</AvatarFallback>
               </Avatar>
-              {/* message content*/}
+              {/* // message content*/}
               {turn.aiResponse && (
-                <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm bg-muted/30 text-foreground">
+                <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm  bg-muted/30 text-foreground">
                   <div className="leading-relaxed">
-                    {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
+                    {' '}
+                    {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}{' '}
                   </div>
                 </div>
               )}
