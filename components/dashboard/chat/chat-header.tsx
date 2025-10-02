@@ -7,7 +7,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ onClearChat, isLoading }) => (
 
     <div className="flex flex-col ">
       <h1 className="text-xl font-semibold">Sickco AI</h1>
-      <p className="text-sm text-muted-foreground">Your personal health companion</p>
+      <p className="text-sm text-muted-foreground">Your personal sickness companion</p>
     </div>
     {/* Clear chat button  */}
     <ClearChatBtn onClearChat={onClearChat} isLoading={isLoading} />

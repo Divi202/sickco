@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
     {
       key: 'sickco-ai',
       label: 'Sickco AI',
-      desc: 'Your personal health companion',
+      desc: 'Your personal sickness companion',
       icon: Bot,
       href: '/dashboard?section=sickco-ai',
       comingSoon: false,
