@@ -7,7 +7,7 @@ import axios from 'axios';
 import { ChatProps, UserMessages, ConversationTurn } from '@/types/dashboard.types';
 import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
 import ChatHeader from './chat-header';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertTitle } from '@/components/ui/alert';
 import { CircleCheck } from 'lucide-react';
 
 const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
