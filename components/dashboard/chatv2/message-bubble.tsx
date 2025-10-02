@@ -1,8 +1,6 @@
-import { cn } from '@/lib/utils';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ChatMessagesProps } from '@/types/dashboard.types';
 import WelcomeMessage from '../chat/WelcomeMessage';
-import AIResponse from '../chat/AIResponse';
+import AIResponse from '../chatv2/ai-response';
 
 export default function MessageBubble({
   conversation,
@@ -65,7 +63,7 @@ export default function MessageBubble({
               <span className="text-sm mb-2 ml-2">Sickco</span>
               {/* message content*/}
               {turn.aiResponse && (
-                <div className="max-w-[80%] rounded-2xl px-4 py-3 text-sm shadow-sm bg-muted/30 text-foreground">
+                <div className="max-w-[80%] flex-1 bg-card rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
                   <div className="leading-relaxed">
                     {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
                   </div>
@@ -75,7 +73,7 @@ export default function MessageBubble({
 
             {/* Typing indicator bubble */}
             {turn.isLoadingAI && (
-              <div className="flex justify-start">
+              <div className="flex justify-start mt-4">
                 <div className="flex items-start gap-3 max-w-md">
                   <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
                     <div className="flex items-center gap-1">
