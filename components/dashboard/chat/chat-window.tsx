@@ -77,7 +77,6 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const handleClearChat = async () => {
     // MODIFIED: Made async
     try {
-      setIsLoading(true);
       // Start clearing animation
       setIsClearingChat(true);
 
@@ -107,7 +106,6 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
       console.error('Failed to clear chat history:', error);
       setIsClearingChat(false);
       // Optionally, display an error message to the user
-      setIsLoading(false);
     }
   };
 
@@ -197,7 +195,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   return (
     <div className="flex h-screen flex-col">
       {/*  Chat Header - Handles the chat header and mobile menu button */}
-      <ChatHeader onClearChat={handleClearChat} isLoading={isLoading} />
+      <ChatHeader onClearChat={handleClearChat} isLoading={isClearingChat} />
 
       {/* Chat Cleared Confirmation - WIP */}
       {showClearConfirmation && (
