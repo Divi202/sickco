@@ -1,8 +1,23 @@
-import { cn } from '@/lib/utils';
+import type React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { ChatMessagesProps } from '@/types/dashboard.types';
-import WelcomeMessage from '../chat/WelcomeMessage';
-import AIResponse from '../chat/AIResponse';
+import WelcomeMessage from './welcome-message';
+import AIResponse from './ai-response';
+
+type ConversationTurn = {
+  id: string;
+  userMessage?: { text: string };
+  aiResponse?: string;
+  isLoadingAI?: boolean;
+  errorAI?: string;
+};
+
+type ChatMessagesProps = {
+  conversation: ConversationTurn[];
+  messagesEndRef: React.RefObject<HTMLDivElement>;
+  isHistoryLoading?: boolean;
+  isClearingChat?: boolean;
+  wasCleared?: boolean;
+};
 
 export default function MessageBubble({
   conversation,
@@ -59,9 +74,31 @@ export default function MessageBubble({
             {turn.isLoadingAI && (
               <div className="flex justify-start mt-4">
                 <div className="flex items-start gap-3 max-w-md">
+                  <div className="flex flex-col items-start">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="text-primary"
+                      >
+                        <path d="M12 8V4H8" />
+                        <rect width="16" height="12" x="4" y="8" rx="2" />
+                        <path d="M2 14h2" />
+                        <path d="M20 14h2" />
+                        <path d="M15 13v2" />
+                        <path d="M9 13v2" />
+                      </svg>
+                    </div>
+                    <span className="text-xs text-muted-foreground mt-1 font-medium">SickCo</span>
+                  </div>
+
                   <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
                     <div className="flex items-center gap-1">
-                      {/* <span className="text-foreground text-sm mr-2">Sickco is typing</span> */}
+                      <span className="text-foreground text-sm mr-2">Sickco is typing</span>
                       <div className="flex gap-1">
                         <div
                           className="w-2 h-2 bg-primary rounded-full animate-bounce"
