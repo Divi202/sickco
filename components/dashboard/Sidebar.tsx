@@ -40,6 +40,11 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
     },
   ] as const;
 
+  // Extract username from the email
+  const email = user?.email ?? '';
+  const username = email ? email.split('@')[0] : 'user';
+  const displayName = username.replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex items-center justify-center px-4 py-6 gap-2">
@@ -107,16 +112,13 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
       <div className="mt-auto border-t px-4 py-4">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9">
+            <Avatar className="h-9 w-9 border">
               {/* Replace with real user photo when available */}
               <AvatarImage src="/user-avatar-placeholder.jpg" alt="User photo" />
-              <AvatarFallback>JD</AvatarFallback>
+              <AvatarFallback>{user?.email ? user.email[0].toUpperCase() : 'U'}</AvatarFallback>
             </Avatar>
             <div className="leading-tight">
-              <div className="text-sm font-medium">
-                {' '}
-                {user?.email ? user.email[0].toUpperCase() : 'U'}
-              </div>
+              <div className="text-sm font-medium"> {displayName}</div>
               <div className="text-xs text-muted-foreground">{user?.email}</div>
             </div>
           </div>
@@ -125,10 +127,10 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
-                className="rounded-full p-2 hover:bg-muted/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="rounded-full p-2 hover:bg-muted/30 hover:outline focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label="Open profile menu"
               >
-                <EllipsisVertical className="h-5 w-5" aria-hidden />
+                <EllipsisVertical className="h-5 w-5 " aria-hidden />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="center" className="w-40">
