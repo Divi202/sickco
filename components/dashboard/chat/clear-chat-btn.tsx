@@ -22,11 +22,9 @@ export default function ClearChatBtn({ onClearChat, isLoading }: ClearChatBtnPro
       {isLoading ? (
         <LoaderCircle className="h-4 w-4"></LoaderCircle>
       ) : (
-        <>
-          <Trash2 className="w-4 h-4" aria-hidden="true" />
-          <span className="hidden sm:inline">Clear Chats</span>
-        </>
+        <Trash2 className="w-4 h-4" aria-hidden="true" />
       )}
+      <div className="hidden sm:inline">Clear Chats</div>
     </Button>
   );
 }
