@@ -15,8 +15,8 @@ import { usePathname, useSearchParams } from 'next/navigation'; // Import useSea
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
-import ChatWindow from '@/components/dashboard/chatv2/chat-window';
-import DietPlan from '@/components/dashboard/chatv2/diet-plans';
+import ChatWindow from '@/components/dashboard/chat/chat-window';
+import DietPlan from '@/components/dashboard/chat/diet-plans';
 import Sidebar from '@/components/dashboard/sidebar';
 
 export default function DashboardPage() {

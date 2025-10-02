@@ -1,6 +1,6 @@
 import { ChatMessagesProps } from '@/types/dashboard.types';
-import WelcomeMessage from '../chat/WelcomeMessage';
-import AIResponse from '../chatv2/ai-response';
+import WelcomeMessage from './welcome-message';
+import AIResponse from './ai-response';
 
 export default function MessageBubble({
   conversation,

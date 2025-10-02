@@ -1,5 +1,5 @@
 import { ChatHeaderProps } from '@/types/dashboard.types';
-import ClearChatBtn from '@/components/dashboard/chat/ClearChatBtn';
+import ClearChatBtn from '@/components/dashboard/chat/clear-chat-btn';
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ onClearChat, isLoading }) => (
   <div className="flex justify-between items-center px-4 py-4 border-b border-border">

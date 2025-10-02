@@ -1,19 +1,16 @@
-// components/dashboard/Chat.tsx
-/**
- * Chat Component - Handles all chat functionality including messages and input
- * Props: onToggleMobileMenu
- */
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import ChatHeader from './chat/ChatHeader';
-import ChatMessages from './chat/ChatMessages';
-import ChatInput from './chat/ChatInput';
-import axios from 'axios';
-import { ChatProps, UserMessages, ConversationTurn } from '../../types/dashboard.types';
-import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
-import { motion } from 'framer-motion';
 
-const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
+import { useState, useEffect, useRef } from 'react';
+import MessageBubble from '@/components/dashboard/chat/message-bubble';
+import ChatInput from './chat-input';
+import axios from 'axios';
+import { ChatProps, UserMessages, ConversationTurn } from '@/types/dashboard.types';
+import { SickCoAIResponseDTO } from '@/modules/ai/ai.schema'; // NEW: Import SickCoAIResponseDTO
+import ChatHeader from './chat-header';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { CircleCheck } from 'lucide-react';
+
+const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   const [conversation, setConversation] = useState<ConversationTurn[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,11 +20,11 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   const [emptyDueToClear, setEmptyDueToClear] = useState(false); // NEW
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
+  // console.log('chat window: message received from the homepage', initialMessage);
   // Effect to scroll to the bottom of the chat whenever messages change
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [conversation]);
 
@@ -50,18 +47,19 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
           isLoadingAI: false,
           errorAI: undefined,
         }));
+
         setConversation(formattedHistory);
+
         // If history has messages, ensure cleared flag is off
         setEmptyDueToClear(formattedHistory.length === 0 ? emptyDueToClear : false);
-        // Handle initial message from homepage navigation
-        const initialMessageConsumed = sessionStorage.getItem('initialMessageConsumed');
-        if (initialMessage && !initialMessageConsumed) {
-          // Pre-fill the input with the initial message for user to edit/send
+
+        //Handle message received form the homepage
+        if (initialMessage?.trim()) {
           setNewMessage(initialMessage);
-          // Mark as consumed so it doesn't reappear on refresh
-          sessionStorage.setItem('initialMessageConsumed', 'true');
+          // Optionally track the last message if you still want to avoid duplicates across refreshes:
+          sessionStorage.setItem('lastInitialMessage', initialMessage);
         } else {
-          // Ensure input is empty if no initial message or already consumed
+          // Only clear if there isn't a new initial message or user refreseh the page
           setNewMessage('');
         }
       } catch (error) {
@@ -73,34 +71,43 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
     };
 
     loadChatHistory();
-  }, []); // Run only once on mount
+  }, [initialMessage]); // Run only once on mount
 
   // Handle clearing chat
   const handleClearChat = async () => {
     // MODIFIED: Made async
     try {
+      setIsLoading(true);
       // Start clearing animation
       setIsClearingChat(true);
 
       // Wait for animation to complete before clearing
       setTimeout(async () => {
-        await axios.post('/api/v1/chat/clear');
-        setConversation([]); // Clear local state only after successful API call
-        // Remove the consumed flag so new initial messages can be processed
-        sessionStorage.removeItem('initialMessageConsumed');
-        setIsClearingChat(false);
-        // Show cleared empty-state
-        setEmptyDueToClear(true);
-        // Show confirmation message
-        setShowClearConfirmation(true);
-        setTimeout(() => {
-          setShowClearConfirmation(false);
-        }, 3000);
+        try {
+          await axios.post('/api/v1/chat/clear');
+          setConversation([]); // Clear local state only after successful API call
+
+          setIsClearingChat(false);
+          // Show cleared empty-state
+          setEmptyDueToClear(true);
+          // Show confirmation message
+          setShowClearConfirmation(true);
+          setTimeout(() => {
+            setShowClearConfirmation(false);
+          }, 3000);
+        } catch (error) {
+          console.error('Failed to clear chat history:', error);
+          setIsClearingChat(false);
+          // Optionally, display an error message to the user
+        } finally {
+          setIsLoading(false); // Move this inside the setTimeout callback
+        }
       }, 500); // Wait for fade out animation
     } catch (error) {
       console.error('Failed to clear chat history:', error);
       setIsClearingChat(false);
       // Optionally, display an error message to the user
+      setIsLoading(false);
     }
   };
 
@@ -149,8 +156,8 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
 
       const result = response.data;
 
-      console.log('AI Response:', result);
-      console.log('sicko reposne id', result.id);
+      // console.log('AI Response:', result);
+      // console.log('sicko reposne id', result.id);
 
       // Update the conversation turn with AI response and actual ID
       setConversation((prev) =>
@@ -188,39 +195,40 @@ const Chat: React.FC<ChatProps> = ({ onToggleMobileMenu, initialMessage }) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-w-0">
-      {/* Chat Header - Handles the chat header and mobile menu button*/}
-      <ChatHeader onToggleMobileMenu={onToggleMobileMenu} onClearChat={handleClearChat} />
+    <div className="flex h-screen flex-col">
+      {/*  Chat Header - Handles the chat header and mobile menu button */}
+      <ChatHeader onClearChat={handleClearChat} isLoading={isLoading} />
 
-      {/* Chat Cleared Confirmation */}
+      {/* Chat Cleared Confirmation - WIP */}
       {showClearConfirmation && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="mx-4 md:mx-6 mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center text-sm font-medium"
-        >
-          ✅ Chat history cleared successfully!
-        </motion.div>
+        <Alert variant="default">
+          <CircleCheck></CircleCheck>
+          <AlertTitle>Chat history cleared successfully!</AlertTitle>
+        </Alert>
       )}
 
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
-      <ChatMessages
-        conversation={conversation}
-        messagesEndRef={messagesEndRef}
-        isHistoryLoading={isHistoryLoading}
-        isClearingChat={isClearingChat}
-        wasCleared={emptyDueToClear}
-      />
+      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
+        <MessageBubble
+          conversation={conversation}
+          messagesEndRef={messagesEndRef}
+          isHistoryLoading={isHistoryLoading}
+          isClearingChat={isClearingChat}
+          wasCleared={emptyDueToClear}
+        />
+      </div>
 
       {/* Chat Input - Handles the message input and send button.*/}
-      <ChatInput
-        newMessage={newMessage}
-        setNewMessage={setNewMessage}
-        handleSendMessage={handleSendMessage}
-        isLoading={isLoading}
-      />
+      <div className="sticky bottom-0 flex justify-center bg-background px-4 py-4">
+        <ChatInput
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          handleSendMessage={handleSendMessage}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 };
-export default Chat;
+
+export default ChatWindow;

@@ -3,15 +3,7 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import {
-  Bot,
-  Salad,
-  MessageSquare,
-  EllipsisVertical,
-  HeartPulse,
-  LogOut,
-  LoaderCircle,
-} from 'lucide-react';
+import { Bot, Salad, EllipsisVertical, LogOut, LoaderCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -19,7 +11,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '../ui/button';
 
 // Define the props type
 interface SidebarProps {
