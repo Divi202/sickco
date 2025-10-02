@@ -100,7 +100,7 @@ export default function MessageBubble({
 
             {/* AI Error */}
             {turn.errorAI && (
-              <div className="mt-4 p-4 text-sm bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-center">
+              <div className="mt-4 p-4 text-sm mb-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-center">
                 {turn.errorAI}
               </div>
             )}
