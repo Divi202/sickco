@@ -4,6 +4,7 @@ import fs from 'fs';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { log } from '@/lib/log';
 import { ExternalApiError } from '@/lib/errors';
+
 /**
  * Large Language Model (LLM) Client
  *
@@ -29,10 +30,9 @@ import { ExternalApiError } from '@/lib/errors';
  * Currently supports health symptom analysis through OpenRouter.
  */
 export const llmClient = {
-  // Main fucntion to generate SickCo AI response
+  // Main function to generate SickCo AI response
   async generateAiResponse(request: SickCoAIRequestDTO): Promise<LLMResponseDTO> {
     const openRouterApiKey = process.env.OPENROUTER_API_KEY;
-    // const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sickco-app.com';
 
     if (!openRouterApiKey) {
       throw new ExternalApiError(
@@ -46,67 +46,110 @@ export const llmClient = {
       apiKey: openRouterApiKey,
     });
 
-    // Systme prompt to set the context for the conversation
-    // Read the markdown file
+    // System prompt to set the context for the conversation
     const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
 
     if (!systemPrompt) {
       throw new ExternalApiError('System prompt file not found or is empty.');
     }
 
+    // Field-specific validator
+    function isValidContent(
+      text: string,
+      field: 'information' | 'empathy' | 'followUpQuestion' | 'disclaimer',
+    ) {
+      if (!text) return false;
+      const trimmed = text.trim();
+
+      // Check for only dots or repeated punctuation
+      const dotsPattern = /^[.\s]+$/;
+      if (dotsPattern.test(trimmed)) return false;
+
+      // Length check
+      if (trimmed.length < 10) return false;
+
+      // Generic AI reasoning check (skip disclaimer)
+      if (field !== 'disclaimer') {
+        const reasoningPatterns = [
+          /as an ai/i,
+          /i will/i,
+          /my response/i,
+          /step \d+/i,
+          /let's/i,
+          /first,/i,
+        ];
+        if (reasoningPatterns.some((regex) => regex.test(trimmed))) return false;
+      }
+
+      return true;
+    }
+
     try {
       log.info('LLM Client: Requesting response from AI');
 
-      // Make API call to OpenRouter using OpenAI SDK
-      const chatCompletion = await openai.chat.completions.create({
-        model: 'openai/gpt-oss-120b', // Free model from OpenRouter
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt,
-          },
-          {
-            role: 'user',
-            content: request.userMessage,
-          },
-        ],
+      let retries = 2;
+      let parsedResponse: LLMResponseDTO | null = null;
 
-        temperature: 0.3, // Balanced creativity vs consistency
-        max_completion_tokens: 800, // Reasonable response length
-        response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
-      });
+      while (retries > 0) {
+        // Make API call to OpenRouter using OpenAI SDK
+        const chatCompletion = await openai.chat.completions.create({
+          model: 'openai/gpt-oss-120b', // Free model from OpenRouter
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: request.userMessage },
+          ],
+          temperature: 0.3, // Balanced creativity vs consistency
+          max_completion_tokens: 800, // Reasonable response length
+          response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
+        });
 
-      // Validate required fields in AI response
-      // if (!aiContent.information || !aiContent.followUpQuestion) {
-      //   throw new Error('AI response missing required fields.');
-      // }
-      // Get the response content
-      // log.debug('Content returned inside chat completion:', chatCompletion);
-      const sickcoResponse = chatCompletion.choices[0].message.content;
+        const sickcoResponse = chatCompletion.choices[0].message.content;
 
-      log.debug('AI response received from LLM');
+        log.debug('AI response received from LLM');
 
-      if (!sickcoResponse) {
-        throw new ExternalApiError('AI response content is null');
+        if (!sickcoResponse) {
+          throw new ExternalApiError('AI response content is null');
+        }
+
+        // Parse JSON
+        try {
+          parsedResponse = JSON.parse(sickcoResponse);
+        } catch (err) {
+          log.warn('AI response JSON parse failed, retrying...');
+          retries--;
+          if (retries > 0) {
+            request.userMessage =
+              'Reminder: Respond with meaningful content in valid JSON only, no placeholders or dots.';
+            continue;
+          } else {
+            throw new ExternalApiError('AI response could not be parsed as JSON.');
+          }
+        }
+
+        // Validate required fields are not empty / meaningless
+        if (
+          parsedResponse &&
+          isValidContent(parsedResponse.information, 'information') &&
+          isValidContent(parsedResponse.followUpQuestion, 'followUpQuestion') &&
+          isValidContent(parsedResponse.empathy, 'empathy') &&
+          isValidContent(parsedResponse.disclaimer, 'disclaimer')
+        ) {
+          // All fields valid
+          break;
+        } else {
+          log.warn('AI response contains invalid or placeholder content, retrying...');
+          retries--;
+          if (retries > 0) {
+            request.userMessage =
+              'Reminder: Respond with meaningful content in valid JSON only, no placeholders or repeated dots.';
+          } else {
+            throw new ExternalApiError('AI response contains invalid or placeholder content.');
+          }
+        }
       }
 
-      // const parsedResponse: LLMResponseDTO = JSON.parse(sickcoResponse);
-
-      let parsedResponse;
-      // Retry once if JSON parsing fails (handles minor formatting issues)
-      try {
-        parsedResponse = JSON.parse(sickcoResponse);
-      } catch (err) {
-        log.debug('Invalid JSON response, retrying...');
-        return await llmClient.generateAiResponse(request); // one retry
-      }
-
-      // You can access specific fields from the parsed JSON
-      // For example, if the response has a 'response' field:
-
-      // handle edge case where LLM respone with refusal (refuse to answer)
       log.info('LLM Client: Successfully Proceeded');
-      return parsedResponse;
+      return parsedResponse!;
     } catch (error: any) {
       throw error;
     }
