@@ -29,23 +29,25 @@ export default function DashboardPage() {
   // which section to show : sickoai ui or diet plan.
   const section = searchParams.get('section');
   const selectedFeature = section ?? 'sickco-ai';
-  // Get the user input send by homepage by query parameter
   const initialSymptoms = searchParams.get('userInput');
+  const [initialSymptomState, setInitialSymptomState] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
     });
-    if (initialSymptoms) {
-      // Remove userInput from the URL after consuming it so it won't reappear on refresh
+
+    // Only set initial symptoms once when component mounts and userInput exists
+    if (initialSymptoms && !initialSymptomState) {
+      setInitialSymptomState(initialSymptoms);
+      // Remove userInput from the URL after storing it in state
       const params = new URLSearchParams(searchParams.toString());
       params.delete('userInput');
       const qs = params.toString();
       router.replace(qs ? `${pathname}?${qs}` : pathname);
     }
-    // It's safe to depend on these; replace won't loop because the param is removed
-  }, [initialSymptoms, searchParams, router, pathname]);
+  }, [initialSymptoms, searchParams, router, pathname, initialSymptomState]);
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -107,7 +109,10 @@ export default function DashboardPage() {
         <section className="max-h-screen">
           {/* chat window by default has sickco-ai section  */}
           {selectedFeature === 'sickco-ai' && (
-            <ChatWindow key={initialSymptoms || 'default'} initialMessage={initialSymptoms || ''} />
+            <ChatWindow
+              key={initialSymptomState || 'default'}
+              initialMessage={initialSymptomState || ''}
+            />
           )}
           {selectedFeature === 'diet-plans' && <DietPlan />}
         </section>

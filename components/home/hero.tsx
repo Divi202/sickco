@@ -76,6 +76,7 @@ export function Hero() {
 
     try {
       // Redirect to dashboard with userInput as a query parameter
+      console.log('What hero section send in params:', userInput);
       router.push(`/dashboard?userInput=${encodeURIComponent(userInput.trim())}&section=sickco-ai`);
     } catch (err: any) {
       console.error('Error navigating:', err);
