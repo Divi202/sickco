@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     if (error instanceof ValidationError) {
       log.error('Validation Error: ', error.message);
       return NextResponse.json(
-        { error: 'Message is too big. (Lenght should be under 2000 words)' },
+        { error: 'M“Your message is too long to process. Please shorten it and try again.”' },
         { status: error.statusCode },
       );
     }
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
       );
     }
     //General fallback error
-    log.error('Unexpected error in chat API'); // error log
+    log.error('Unexpected error in chat API', error); // error log
     return NextResponse.json(
       { error: 'Something went wrong. Please try again later' },
       { status: 500 },

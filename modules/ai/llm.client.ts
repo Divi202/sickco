@@ -71,8 +71,8 @@ export const llmClient = {
           },
         ],
 
-        temperature: 0.7, // Balanced creativity vs consistency
-        max_completion_tokens: 5000, // Reasonable response length
+        temperature: 0.3, // Balanced creativity vs consistency
+        max_completion_tokens: 800, // Reasonable response length
         response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
       });
 
@@ -90,7 +90,16 @@ export const llmClient = {
         throw new ExternalApiError('AI response content is null');
       }
 
-      const parsedResponse = JSON.parse(sickcoResponse);
+      // const parsedResponse: LLMResponseDTO = JSON.parse(sickcoResponse);
+
+      let parsedResponse;
+      // Retry once if JSON parsing fails (handles minor formatting issues)
+      try {
+        parsedResponse = JSON.parse(sickcoResponse);
+      } catch (err) {
+        log.debug('Invalid JSON response, retrying...');
+        return await llmClient.generateAiResponse(request); // one retry
+      }
 
       // You can access specific fields from the parsed JSON
       // For example, if the response has a 'response' field:
