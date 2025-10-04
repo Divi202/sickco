@@ -10,7 +10,7 @@ export default function MessageBubble({
   wasCleared,
 }: ChatMessagesProps) {
   return (
-    <>
+    <div className="flex flex-col items-center">
       {/* Show skeleton loader while loading history-WIP*/}
       {isHistoryLoading && conversation.length === 0 && (
         <div>
@@ -43,7 +43,7 @@ export default function MessageBubble({
             <div className="flex justify-end mb-4">
               {/* Message content*/}
               {turn.userMessage && (
-                <div className="max-w-[80%] rounded-tr-sm rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
+                <div className="rounded-tr-sm rounded-2xl px-4 py-3 text-sm shadow-sm bg-primary text-primary-foreground">
                   <div className="leading-relaxed">{turn.userMessage && turn.userMessage.text}</div>
                 </div>
               )}{' '}
@@ -62,7 +62,7 @@ export default function MessageBubble({
               {/* replace with logo in small size */}
               {/* <span className="text-sm mb-2 ml-2">Sickco</span> */}
               <div className="flex items-center gap-2" aria-label="SickCo logo">
-                <span className="text-sm mb-2 ml-2 font-semibold leading-none">
+                <span className="text-sm mb-2 font-semibold leading-none">
                   <span className="text-foreground">Sick</span>
                   <span className="text-primary">Co</span>
                 </span>
@@ -70,7 +70,7 @@ export default function MessageBubble({
 
               {/* message content*/}
               {turn.aiResponse && (
-                <div className="max-w-[80%] bg-card border rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
+                <div className=" bg-card border rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
                   <div className="leading-relaxed">
                     {turn.aiResponse && <AIResponse aiResponse={turn.aiResponse} />}
                   </div>
@@ -114,6 +114,6 @@ export default function MessageBubble({
         ))}
         <div ref={messagesEndRef} />
       </div>
-    </>
+    </div>
   );
 }
