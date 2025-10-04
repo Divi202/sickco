@@ -308,6 +308,12 @@
     @apply list-decimal list-inside mb-4 pl-4 text-muted-foreground;
   }
 
+    /* Remove bullets for emoji lists */
+  .emoji-list {
+    list-style: none;
+    margin-left: -1rem;
+  }
+
   li {
     @apply mb-2 leading-relaxed;
   }
