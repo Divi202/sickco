@@ -76,41 +76,40 @@ export default function MessageBubble({
                   </div>
                 </div>
               )}
-            </div>
 
-            {/* Typing indicator bubble */}
-            {turn.isLoadingAI && (
-              <div className="flex justify-start mt-4">
-                <div className="flex items-start gap-3 max-w-md">
-                  <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
-                    <div className="flex items-center gap-1">
-                      {/* <span className="text-foreground text-sm mr-2">Sickco is typing</span> */}
-                      <div className="flex gap-1">
-                        <div
-                          className="w-1 h-1 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '0ms' }}
-                        />
-                        <div
-                          className="w-1 h-1 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '150ms' }}
-                        />
-                        <div
-                          className="w-1 h-1 bg-primary rounded-full animate-bounce"
-                          style={{ animationDelay: '300ms' }}
-                        />
+              {/* Typing indicator bubble  */}
+              {turn.isLoadingAI && (
+                <div className="flex justify-start">
+                  <div className="flex items-start gap-3 max-w-md">
+                    <div className="bg-card/80 backdrop-blur-sm border border-border/30 rounded-xl rounded-tl-sm px-4 py-3 shadow-lg">
+                      <div className="flex items-center gap-1">
+                        {/* <span className="text-foreground text-sm mr-2">Sickco is typing</span> */}
+                        <div className="flex gap-1">
+                          <div
+                            className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                            style={{ animationDelay: '0ms' }}
+                          />
+                          <div
+                            className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                            style={{ animationDelay: '150ms' }}
+                          />
+                          <div
+                            className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                            style={{ animationDelay: '300ms' }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* AI Error */}
-            {turn.errorAI && (
-              <div className="mt-4 p-4 text-sm mb-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-center">
-                {turn.errorAI}
-              </div>
-            )}
+              )}
+              {/* AI Error */}
+              {turn.errorAI && (
+                <div className="mt-4 p-4 text-sm mb-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-center">
+                  {turn.errorAI}
+                </div>
+              )}
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />

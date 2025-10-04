@@ -206,7 +206,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
       )}
 
       {/* Chat Messages - Displays the list of messages, loading state, and error state.*/}
-      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
+      <div className="flex-1 space-y-4 overflow-y-auto px-4 py-3">
         <MessageBubble
           conversation={conversation}
           messagesEndRef={messagesEndRef}
