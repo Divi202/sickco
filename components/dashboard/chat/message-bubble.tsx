@@ -60,7 +60,14 @@ export default function MessageBubble({
                 <AvatarFallback className="text-[10px]">SC</AvatarFallback>
               </Avatar> */}
               {/* replace with logo in small size */}
-              <span className="text-sm mb-2 ml-2">Sickco</span>
+              {/* <span className="text-sm mb-2 ml-2">Sickco</span> */}
+              <div className="flex items-center gap-2" aria-label="SickCo logo">
+                <span className="text-sm mb-2 ml-2 font-semibold leading-none">
+                  <span className="text-foreground">Sick</span>
+                  <span className="text-primary">Co</span>
+                </span>
+              </div>
+
               {/* message content*/}
               {turn.aiResponse && (
                 <div className="max-w-[80%] bg-card border rounded-tl-sm p-5 shadow-sm rounded-2xl px-4 py-3 text-sm  text-foreground">
