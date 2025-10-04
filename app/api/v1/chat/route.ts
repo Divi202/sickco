@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 import { log } from '@/lib/log';
 import { requireUser } from '@/lib/auth';
 import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
-import { id } from 'zod/v4/locales';
 
 // Docstring for this file code
 
@@ -105,7 +104,7 @@ export async function POST(request: Request) {
     if (error instanceof ValidationError) {
       log.error('Validation Error: ', error.message);
       return NextResponse.json(
-        { error: 'M“Your message is too long to process. Please shorten it and try again.”' },
+        { error: 'Your message is too long to process. Please shorten it and try again.' },
         { status: error.statusCode },
       );
     }

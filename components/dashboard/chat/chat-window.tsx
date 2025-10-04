@@ -63,7 +63,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
           setNewMessage('');
         }
       } catch (error) {
-        console.error('Failed to load chat history:', error);
+        // console.error('Failed to load chat history:', error);
         // Optionally, display an error message to the user
       } finally {
         setIsHistoryLoading(false);
