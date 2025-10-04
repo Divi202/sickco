@@ -67,7 +67,7 @@ export default function DashboardPage() {
     <main className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Mobile top bar with menu - faluto ka header section in mobile view hanvign hamburger button*/}
 
-      <div className="flex items-center justify-between border-b px-4 py-2 md:hidden flex-shrink-0 h-16">
+      <div className="flex items-center justify-between border-b px-4 md:py-2 md:hidden ">
         <div className="flex items-center gap-2">
           <span className="text-sm md:text-base font-semibold">
             <span>Sick</span>
