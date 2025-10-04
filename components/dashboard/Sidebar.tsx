@@ -153,7 +153,7 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
                   )}
                 </Button> */}
                 {isLoading ? (
-                  <LoaderCircle className="h-4 w-4"></LoaderCircle>
+                  <LoaderCircle className="h-4 w-4 animate-spin"></LoaderCircle>
                 ) : (
                   <div className="flex items-center gap-2">
                     <LogOut className="h-4 w-4 text-destructive"></LogOut>

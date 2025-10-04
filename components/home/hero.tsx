@@ -155,7 +155,7 @@ export function Hero() {
             className="absolute bottom-3 right-3 md:bottom-4 md:right-4 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <LoaderCircle className="h-4 w-4"></LoaderCircle>
+              <LoaderCircle className="h-4 w-4 animate-spin"></LoaderCircle>
             ) : (
               <>
                 <ArrowUp className="h-4 w-4" />

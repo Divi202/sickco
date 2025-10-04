@@ -227,7 +227,7 @@ export default function SignupPage() {
           className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
         >
-          {loading ? <LoaderCircle className="h-4 w-4"></LoaderCircle> : 'Sign Up'}
+          {loading ? <LoaderCircle className="h-4 w-4 animate-spin"></LoaderCircle> : 'Sign Up'}
         </Button>
 
         <div className="text-center">
