@@ -64,15 +64,20 @@ export default function DashboardPage() {
   if (!user) return null;
 
   return (
-    <main className="min-h-[calc(100vh-56px)] bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Mobile top bar with menu - faluto ka header section in mobile view hanvign hamburger button*/}
-      <div className="flex items-center justify-between border-b px-4 py-3 md:hidden">
+   
+<div className="flex items-center justify-between border-b px-4 py-2 md:hidden flex-shrink-0 h-16">
+
         <div className="flex items-center gap-2">
-          <span className="text-base font-semibold">
+          <span className="text-sm md:text-base font-semibold">
             <span>Sick</span>
             <span className="text-primary">Co</span>
           </span>
         </div>
+
+
+        
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="secondary" size="icon" aria-label="Open menu">
@@ -106,7 +111,7 @@ export default function DashboardPage() {
         </aside>
 
         {/* Main content */}
-        <section className="max-h-screen">
+        <section className="flex-1 max-h-screen">
           {/* chat window by default has sickco-ai section  */}
           {selectedFeature === 'sickco-ai' && (
             <ChatWindow

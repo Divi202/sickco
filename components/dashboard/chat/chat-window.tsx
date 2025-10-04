@@ -193,7 +193,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
   };
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-full flex-col">
       {/*  Chat Header - Handles the chat header and mobile menu button */}
       <ChatHeader onClearChat={handleClearChat} isLoading={isClearingChat} />
 
