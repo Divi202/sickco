@@ -68,15 +68,43 @@ export const llmClient = {
       // Length check
       if (trimmed.length < 10) return false;
 
+      // Enhanced instruction leakage detection
+      const instructionPatterns = [
+        /reminder:/i,
+        /thanks for the reminder/i,
+        /i'll make sure/i,
+        /every response/i,
+        /json object/i,
+        /structured output/i,
+        /instructions/i,
+        /system/i,
+        /oops.*typo/i,
+        /i am.*ai/i,
+        /as an ai/i,
+        /my role/i,
+        /i will respond/i,
+        /clean json/i,
+        /warm.*content/i,
+        /got it!/i,
+        /i understand.*rules/i,
+        /i'll stick to/i,
+        /tidy json/i,
+        /every reply/i,
+      ];
+
+      if (instructionPatterns.some((regex) => regex.test(trimmed))) {
+        log.warn(`Instruction leakage detected in ${field}:`, trimmed.substring(0, 100));
+        return false;
+      }
+
       // Generic AI reasoning check (skip disclaimer)
       if (field !== 'disclaimer') {
         const reasoningPatterns = [
-          /as an ai/i,
-          /i will/i,
-          /my response/i,
           /step \d+/i,
           /let's/i,
           /first,/i,
+          /my response will/i,
+          /i need to/i,
         ];
         if (reasoningPatterns.some((regex) => regex.test(trimmed))) return false;
       }
@@ -87,65 +115,43 @@ export const llmClient = {
     try {
       log.info('LLM Client: Requesting response from AI');
 
-      let retries = 2;
+      // Make API call to OpenRouter using OpenAI SDK
+      const chatCompletion = await openai.chat.completions.create({
+        model: 'openai/gpt-oss-120b', // Free model from OpenRouter
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: request.userMessage },
+        ],
+        temperature: 0.3, // Balanced creativity vs consistency
+        max_completion_tokens: 800, // Reasonable response length
+        response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
+      });
+
+      const sickcoResponse = chatCompletion.choices[0].message.content;
+
+      log.debug('AI response received from LLM');
+
+      if (!sickcoResponse) {
+        throw new ExternalApiError('AI response content is null');
+      }
+
       let parsedResponse: LLMResponseDTO | null = null;
+      // Parse JSON
+      try {
+        parsedResponse = JSON.parse(sickcoResponse);
+      } catch (err) {
+        throw new ExternalApiError('AI response could not be parsed as JSON.');
+      }
 
-      while (retries > 0) {
-        // Make API call to OpenRouter using OpenAI SDK
-        const chatCompletion = await openai.chat.completions.create({
-          model: 'openai/gpt-oss-120b', // Free model from OpenRouter
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: request.userMessage },
-          ],
-          temperature: 0.3, // Balanced creativity vs consistency
-          max_completion_tokens: 800, // Reasonable response length
-          response_format: zodResponseFormat(LLMResponseDTO, 'sickco_response'),
-        });
-
-        const sickcoResponse = chatCompletion.choices[0].message.content;
-
-        log.debug('AI response received from LLM');
-
-        if (!sickcoResponse) {
-          throw new ExternalApiError('AI response content is null');
-        }
-
-        // Parse JSON
-        try {
-          parsedResponse = JSON.parse(sickcoResponse);
-        } catch (err) {
-          log.warn('AI response JSON parse failed, retrying...');
-          retries--;
-          if (retries > 0) {
-            request.userMessage =
-              'Reminder: Respond with meaningful content in valid JSON only, no placeholders or dots.';
-            continue;
-          } else {
-            throw new ExternalApiError('AI response could not be parsed as JSON.');
-          }
-        }
-
-        // Validate required fields are not empty / meaningless
-        if (
-          parsedResponse &&
-          isValidContent(parsedResponse.information, 'information') &&
-          isValidContent(parsedResponse.followUpQuestion, 'followUpQuestion') &&
-          isValidContent(parsedResponse.empathy, 'empathy') &&
-          isValidContent(parsedResponse.disclaimer, 'disclaimer')
-        ) {
-          // All fields valid
-          break;
-        } else {
-          log.warn('AI response contains invalid or placeholder content, retrying...');
-          retries--;
-          if (retries > 0) {
-            request.userMessage =
-              'Reminder: Respond with meaningful content in valid JSON only, no placeholders or repeated dots.';
-          } else {
-            throw new ExternalApiError('AI response contains invalid or placeholder content.');
-          }
-        }
+      // Validate content
+      if (
+        !parsedResponse ||
+        !isValidContent(parsedResponse.information, 'information') ||
+        !isValidContent(parsedResponse.followUpQuestion, 'followUpQuestion') ||
+        !isValidContent(parsedResponse.empathy, 'empathy') ||
+        !isValidContent(parsedResponse.disclaimer, 'disclaimer')
+      ) {
+        throw new ExternalApiError('AI response contains invalid content.');
       }
 
       log.info('LLM Client: Successfully Proceeded');
