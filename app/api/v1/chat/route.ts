@@ -95,7 +95,10 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again later' },
+        { status: 401 },
+      );
     }
 
     // Validation error
