@@ -23,7 +23,14 @@ export async function POST(request: Request) {
     const authResponse = await usersService.signup(validationResult.data);
 
     log.info('Auth API: Signup successful');
-    return NextResponse.json(authResponse, { status: 201 });
+    return NextResponse.json(
+      {
+        message: 'Please check your email to verify your account before logging in.',
+        requiresEmailVerification: true, // Add this flag
+        authResponse,
+      },
+      { status: 201 },
+    );
   } catch (error: any) {
     // Validation error
     if (error instanceof ValidationError) {
@@ -36,7 +43,7 @@ export async function POST(request: Request) {
 
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      log.error('Auth API: Registration Error in signup');
+      log.error('Auth API: Registration Error in signup', error);
       return NextResponse.json(
         { error: 'Registration failed. Email may already be in use.' },
         { status: 400 },
