@@ -49,6 +49,10 @@ export default function SignupPage() {
       const result = await axios.post('/api/v1/auth/signup', {
         email: data.email,
         password: data.password,
+        options: {
+          // ✅ Add this line to control where the email confirmation redirects
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/verify-email`,
+        },
       });
 
       // Check if email verification is required
