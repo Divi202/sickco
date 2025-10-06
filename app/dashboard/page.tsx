@@ -31,12 +31,31 @@ export default function DashboardPage() {
   const selectedFeature = section ?? 'sickco-ai';
   const initialSymptoms = searchParams.get('userInput');
   const [initialSymptomState, setInitialSymptomState] = useState<string | null>(null);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [verificationLoading, setVerificationLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+
+    const checkUserAndVerification = async () => {
+      try {
+        // Get user data
+        const { data: userData } = await supabase.auth.getUser();
+        setUser(userData.user);
+
+        // Check verification status
+        if (userData.user) {
+          const response = await axios.get('/api/v1/auth/verify');
+          setIsVerified(response.data.isVerified);
+        }
+      } catch (error) {
+        console.error('Error checking verification:', error);
+      } finally {
+        setVerificationLoading(false);
+      }
+    };
+
+    checkUserAndVerification();
 
     // Only set initial symptoms once when component mounts and userInput exists
     if (initialSymptoms && !initialSymptomState) {
@@ -62,6 +81,48 @@ export default function DashboardPage() {
   };
 
   if (!user) return null;
+
+  // Show loading state while checking verification
+  if (verificationLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // Redirect or show verification required message
+  if (!isVerified) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <h1 className="text-xl font-semibold">Email Verification Required</h1>
+        <p className="text-muted-foreground">
+          Please check you inbox to verify your email address to access the dashboard.
+        </p>
+        {/* Resend the verification email btn */}
+        {/* <Button
+          onClick={async () => {
+            try {
+              await axios.post('/api/v1/auth/resend-verification');
+              alert('Verification email sent!');
+            } catch (error) {
+              console.error('Error sending verification email:', error);
+              alert('Failed to send verification email');
+            }
+          }}
+        >
+          Resend Verification Email
+        </Button> */}
+        {/* Back to home or signup page  */}
+        <div className="flex gap-4">
+          <Button variant="outline" onClick={() => router.push('/')}>
+            Back to Home
+          </Button>
+          <Button onClick={() => router.push('/signup')}>Sign Up</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground flex flex-col">
