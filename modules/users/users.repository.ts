@@ -34,6 +34,10 @@ export const usersRepository = {
     const { data, error } = await supabase.auth.signUp({
       email: userData.email,
       password: userData.password,
+      options: {
+        // ✅ Add this line to control where the email confirmation redirects
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/v1/verify`,
+      },
     });
 
     if (error) {
