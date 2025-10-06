@@ -43,10 +43,9 @@ export default function DashboardPage() {
         const { data: userData } = await supabase.auth.getUser();
         setUser(userData.user);
 
-        // Check verification status
+        // Check verification status directly from user metadata
         if (userData.user) {
-          const response = await axios.get('/api/v1/auth/verify');
-          setIsVerified(response.data.isVerified);
+          setIsVerified(!!userData.user.email_confirmed_at);
         }
       } catch (error) {
         console.error('Error checking verification:', error);
