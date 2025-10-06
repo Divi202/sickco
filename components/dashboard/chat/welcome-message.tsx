@@ -10,7 +10,7 @@ const WelcomeMessage = ({ variant = 'default' }: { variant?: WelcomeVariant }) =
     animate={{ opacity: 1, y: 0 }}
     className="text-center p-6 bg-card border border-border rounded-xl shadow-sm"
   >
-    <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center border border-border">
+    <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex  items-center justify-center border border-border">
       <svg
         width="32"
         height="32"

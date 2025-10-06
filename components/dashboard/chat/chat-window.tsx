@@ -199,7 +199,7 @@ const ChatWindow: React.FC<ChatProps> = ({ initialMessage }) => {
 
       {/* Chat Cleared Confirmation - WIP */}
       {showClearConfirmation && (
-        <Alert variant="default" className="mx-4 mt-4 w-auto">
+        <Alert variant="default" className="w-full mx-4 mt-4 w-auto">
           <CircleCheck className="w-4 h-4"></CircleCheck>
           <AlertTitle>Chat history cleared successfully!</AlertTitle>
         </Alert>

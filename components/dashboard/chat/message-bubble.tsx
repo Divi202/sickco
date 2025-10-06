@@ -10,10 +10,11 @@ export default function MessageBubble({
   wasCleared,
 }: ChatMessagesProps) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       {/* Show skeleton loader while loading history-WIP*/}
+      {/*  */}
       {isHistoryLoading && conversation.length === 0 && (
-        <div>
+        <div className="w-full">
           {/* Skeleton message bubbles */}
           {[1, 2, 3, 4].map((index) => (
             <div key={index} className="animate-pulse mt-4">
@@ -33,7 +34,9 @@ export default function MessageBubble({
       )}
       {/* Welcome back message */}
       {!isHistoryLoading && conversation.length === 0 && (
-        <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
+        <div className="w-full ">
+          <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
+        </div>
       )}
       <div>
         {/* Conversation turns */}
