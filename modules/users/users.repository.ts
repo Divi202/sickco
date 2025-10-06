@@ -36,7 +36,7 @@ export const usersRepository = {
       password: userData.password,
       options: {
         // ✅ Add this line to control where the email confirmation redirects
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/auth/v1/verify`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/v1/auth/verify`,
       },
     });
 
