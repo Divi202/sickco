@@ -138,6 +138,9 @@ export default function LoginPage() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // const searchParams = useSearchParams();
+  // // Pre-fill email from query
+  // const emailFromQuery = searchParams.get('email') || '';
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
