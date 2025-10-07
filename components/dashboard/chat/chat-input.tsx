@@ -50,9 +50,11 @@ export default function ChatInput({
   };
 
   return (
-    <div className="relative w-full max-w-3xl">
-      <div className="flex items-end gap-2 border rounded-lg bg-muted/20 p-1.5 md:p-2 pl-2 md:pl-3 shadow-sm focus-within:ring-2 
-      focus-within:ring-ring">
+    <div className="relative w-full max-w-5xl">
+      <div
+        className="flex items-end gap-2 border rounded-lg bg-muted/20 p-1.5 md:p-2 pl-2 md:pl-3 shadow-sm focus-within:ring-2 
+      focus-within:ring-ring"
+      >
         <Textarea
           ref={textareaRef}
           value={newMessage}

@@ -10,7 +10,7 @@ export default function MessageBubble({
   wasCleared,
 }: ChatMessagesProps) {
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center">
       {/* Show skeleton loader while loading history-WIP*/}
       {/*  */}
       {isHistoryLoading && conversation.length === 0 && (
@@ -38,7 +38,7 @@ export default function MessageBubble({
           <WelcomeMessage variant={wasCleared ? 'cleared' : 'default'} />
         </div>
       )}
-      <div>
+      <div className="w-full max-w-5xl ">
         {/* Conversation turns */}
         {conversation.map((turn) => (
           <div key={turn.id} className={isClearingChat ? 'animate-pulse opacity-50' : ''}>
