@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     log.info('Auth API: Signup successful');
     return NextResponse.json(
       {
-        message: 'Please check your email to verify your account before logging in.',
+        message: ' We’ve sent a verification link to your email address.',
         requiresEmailVerification: true, // Add this flag
         authResponse,
       },

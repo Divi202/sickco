@@ -99,13 +99,14 @@ export const llmClient = {
 
       // Generic AI reasoning check (skip disclaimer)
       if (field !== 'disclaimer') {
-        const reasoningPatterns = [
-          /step \d+/i,
-          /let's/i,
-          /first,/i,
-          /my response will/i,
-          /i need to/i,
-        ];
+        // const reasoningPatterns = [
+        //   /step \d+/i,
+        //   /let's/i,
+        //   /first,/i,
+        //   /my response will/i,
+        //   /i need to/i,
+        // ];
+        const reasoningPatterns = [/step \d+/i, /my response will/i, /i need to/i];
         if (reasoningPatterns.some((regex) => regex.test(trimmed))) return false;
       }
 
