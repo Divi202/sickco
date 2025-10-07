@@ -12,7 +12,7 @@ export interface ConversationTurn {
 
 //Chat component types
 export interface ChatProps {
-  onToggleMobileMenu: () => void;
+  // onToggleMobileMenu: () => void;
   initialMessage?: string; // Add initialMessage prop
 }
 
@@ -24,7 +24,8 @@ export interface UserMessages {
 
 // ChatHeader component types
 export interface ChatHeaderProps {
-  onToggleMobileMenu: () => void;
+  // onToggleMobileMenu: () => void;
+  isLoading: boolean;
   onClearChat: () => void;
 }
 
@@ -42,6 +43,7 @@ export interface ChatMessagesProps {
   messagesEndRef: RefObject<HTMLDivElement | null>;
   isHistoryLoading: boolean;
   isClearingChat: boolean;
+  wasCleared?: boolean; // optional to avoid breaking usage
 }
 
 // AIResponse component types

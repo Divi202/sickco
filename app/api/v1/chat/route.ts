@@ -77,6 +77,13 @@ export async function POST(request: Request) {
       { userMessage },
       user.id, // MODIFIED: Pass user.id to the service
     );
+    // const aiResponse = {
+    //   id: 'id_demo_1234',
+    //   information: ' This is demo information',
+    //   followUpQuestion: 'This is demo follow up question?',
+    //   empathy: 'This is demo empathy',
+    //   disclaimer: 'This is demo disclaimer',
+    // };
 
     if (!aiResponse) {
       throw new ExternalApiError('Chat Route: AI response is null');
@@ -87,14 +94,17 @@ export async function POST(request: Request) {
   } catch (error: any) {
     // External API error (Supabase auth errors)
     if (error instanceof ExternalApiError) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'Something went wrong. Please try again later' },
+        { status: 401 },
+      );
     }
 
     // Validation error
     if (error instanceof ValidationError) {
       log.error('Validation Error: ', error.message);
       return NextResponse.json(
-        { error: 'Message is too big. (Lenght should be under 2000 words)' },
+        { error: 'Your message is too long to process. Please shorten it and try again.' },
         { status: error.statusCode },
       );
     }
@@ -116,7 +126,7 @@ export async function POST(request: Request) {
       );
     }
     //General fallback error
-    log.error('Unexpected error in chat API'); // error log
+    log.error('Unexpected error in chat API', error); // error log
     return NextResponse.json(
       { error: 'Something went wrong. Please try again later' },
       { status: 500 },
