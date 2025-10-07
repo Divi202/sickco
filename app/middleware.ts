@@ -8,6 +8,7 @@ const PROTECTED = [
   /^\/api\/v1\/auth\/logout/,
   /^\/api\/v1\/chat\/history/, // NEW: Add chat history API route
   /^\/api\/v1\/chat\/clear/, // NEW: Add clear chat API route
+  /^\/verify-email/, //
 ];
 
 export async function middleware(req: NextRequest) {
