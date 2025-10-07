@@ -127,12 +127,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { LoaderCircle } from 'lucide-react';
-
-const loginSchema = z.object({
-  email: z.string().email('Enter a valid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
-type LoginFormData = z.infer<typeof loginSchema>;
+import { LoginFormData, loginSchema } from '@/types/login.types';
 
 export default function LoginPage() {
   const router = useRouter();

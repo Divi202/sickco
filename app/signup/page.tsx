@@ -10,19 +10,7 @@ import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { LoaderCircle } from 'lucide-react';
 import { VerificationMessage } from '@/components/dashboard/user/verification-message';
-
-const signupSchema = z
-  .object({
-    email: z.string().email('Enter a valid email'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string().min(8, 'Confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type SignupFormData = z.infer<typeof signupSchema>;
+import { SignupFormData, signupSchema } from '@/types/signup.types';
 
 export default function SignupPage() {
   const router = useRouter();
