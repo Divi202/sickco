@@ -55,7 +55,12 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       {showVerification ? (
-        <VerificationMessage message={verificationMessage} />
+        // <VerificationMessage message={verificationMessage} />
+        <main className="min-h-screen w-full bg-background">
+          <div className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center px-4 py-10">
+            <VerificationMessage message={verificationMessage} />
+          </div>
+        </main>
       ) : (
         <Form {...form}>
           <form
