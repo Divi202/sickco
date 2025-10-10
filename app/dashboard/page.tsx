@@ -17,7 +17,7 @@ import axios from 'axios';
 import { createClient } from '@/lib/supabase/client';
 import ChatWindow from '@/components/dashboard/chat/chat-window';
 import DietPlan from '@/components/dashboard/chat/diet-plans';
-import Sidebar from '@/components/dashboard/sidebar';
+import Sidebar from '@/components/dashboard/Sidebar';
 
 export default function DashboardPage() {
   const searchParams = useSearchParams(); // Initialize useSearchParams
