@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ active, user, onLogout, isLoading }) 
   // Extract username from the email
   const email = user?.email ?? '';
   const username = email ? email.split('@')[0] : 'user';
-  const displayName = username.replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const displayName = username.replace(/[._-]+/g, ' ').replace(/\b\w/g, (c : String) => c.toUpperCase());
 
   return (
     <div className="flex min-h-screen flex-col">
