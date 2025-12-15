@@ -84,11 +84,11 @@ This approach keeps the codebase maintainable while avoiding premature microserv
 
 ## Screenshots
 
-Home Page - Light Mode
-<img width="1920" height="870" alt="Home_Page_Light" src="https://github.com/user-attachments/assets/d2e7e39d-d785-4c7f-bc1d-f5b7ca3bbd32" />
-
 Home Page - Dark Mode
 <img width="1920" height="870" alt="Home_Page_Dark" src="https://github.com/user-attachments/assets/2ddd9c88-e1a6-413d-b603-3512baf93506" />
+
+Home Page - Light Mode
+<img width="1920" height="870" alt="Home_Page_Light" src="https://github.com/user-attachments/assets/d2e7e39d-d785-4c7f-bc1d-f5b7ca3bbd32" />
 
 Login Page
 <img width="1920" height="868" alt="Login_Page" src="https://github.com/user-attachments/assets/20dcf690-c8bd-45c9-b019-f0d87f60d559" />
