@@ -35,6 +35,12 @@ The project is designed with a modular architecture and production-style pattern
 - Welcome message and empty states
 - Graceful error handling and retries
 
+### Theme & Accessibility
+- Light and Dark mode support
+- Theme persistence across sessions
+- Designed for readability and reduced eye strain
+- Consistent theming across all app states
+
 ### Data & Observability
 - Chat history stored in **Supabase Database**
 - Custom logging for debugging and monitoring
@@ -78,73 +84,10 @@ This approach keeps the codebase maintainable while avoiding premature microserv
 
 ## Screenshots
 
-> *(Add screenshots here to showcase the UI and flows)*
+> *(Add screenshots here)*
 
 ```text
-Login / Signup
-Chat Dashboard
-Chat History
+Light Mode – Chat Dashboard
+Dark Mode – Chat Dashboard
+Authentication Flow
 Error & Empty States
-
-```````
-Getting Started
-Prerequisites
-
-Node.js (v16+)
-
-npm / yarn / pnpm
-
-Supabase project credentials
-
-OpenRouter API key
-
-Installation
-git clone https://github.com/Divi202/sickco.git
-cd sickco
-npm install
-
-Environment Variables
-
-Create a .env.local file and add:
-
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-OPENROUTER_API_KEY=your_openrouter_api_key
-
-Run Locally
-npm run dev
-
-
-Open http://localhost:3000
- to view the app.
-
-Design Considerations
-
-Focused on real-world UX rather than demo flows
-
-Defensive programming for async operations
-
-Emphasis on clarity, reliability, and user trust
-
-QA-driven mindset to handle edge cases and failures
-
-Disclaimer
-
-Sickco AI is for informational purposes only.
-It does not provide medical advice, diagnosis, or treatment.
-Always consult a qualified healthcare professional for medical concerns.
-
-Future Improvements
-
-Conversation categorization
-
-Exportable chat history
-
-Improved accessibility support
-
-Usage analytics and rate limiting
-
-Author
-
-Built by Divi202
-GitHub: https://github.com/Divi202
