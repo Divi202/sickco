@@ -84,10 +84,22 @@ This approach keeps the codebase maintainable while avoiding premature microserv
 
 ## Screenshots
 
-> *(Add screenshots here)*
+Home Page - Light Mode
+<img width="1920" height="870" alt="Home_Page_Light" src="https://github.com/user-attachments/assets/d2e7e39d-d785-4c7f-bc1d-f5b7ca3bbd32" />
 
-```text
-Light Mode – Chat Dashboard
-Dark Mode – Chat Dashboard
-Authentication Flow
-Error & Empty States
+Home Page - Dark Mode
+<img width="1920" height="870" alt="Home_Page_Dark" src="https://github.com/user-attachments/assets/2ddd9c88-e1a6-413d-b603-3512baf93506" />
+
+Login Page
+<img width="1920" height="868" alt="Login_Page" src="https://github.com/user-attachments/assets/20dcf690-c8bd-45c9-b019-f0d87f60d559" />
+
+Signup Page
+
+Dashboard
+<img width="1920" height="871" alt="Dashboard_01" src="https://github.com/user-attachments/assets/e60bcdd2-6cba-4e3b-8cdb-9857908f15c4" />
+<img width="1920" height="869" alt="Dashboard_02" src="https://github.com/user-attachments/assets/c8da2876-2923-4b5d-9f9e-1bb8261f7ccd" />
+<img width="1920" height="868" alt="Clearchat" src="https://github.com/user-attachments/assets/739a9f34-a27c-4ba9-b6a5-836d83db2e4e" />
+<img width="1920" height="873" alt="Dashboard_03" src="https://github.com/user-attachments/assets/3eda4150-6c96-4407-a07b-05a0ed6e557a" />
+
+
+
