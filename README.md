@@ -4,7 +4,6 @@ Sickco AI is a web application that allows users to create an account and intera
 The app focuses on reliability, thoughtful UX, and real-world application behavior such as authentication, persistent data, async handling, and observability.
 
 👉 Live App: https://sickco.vercel.app  
-👉 Repository: https://github.com/Divi202/sickco
 
 ---
 
