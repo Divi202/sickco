@@ -9,7 +9,7 @@
 
 ## Test Accounts
 
-- **Test Account 1**: testuser@sickco.com / TestPassword123
+- **Test Account 1**: testuser3@sickco.com / TestPassword123
 - **Test Account 2**: testuser2@sickco.com / TestPassword123
 
 ---

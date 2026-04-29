@@ -4,7 +4,7 @@ import { log } from '@/lib/log';
 import { requireUser } from '@/lib/auth';
 import { chatService } from '@/modules/chat/chat.service';
 import { ExternalApiError } from '@/lib/errors';
-
+export const runtime = 'nodejs';
 /**
  * Clear Chat History API Route
  *

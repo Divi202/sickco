@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { log } from '@/lib/log';
 import { requireUser } from '@/lib/auth';
 import { DbError, ExternalApiError, ValidationError } from '@/lib/errors';
-
+export const runtime = 'nodejs';
 // Docstring for this file code
 
 /**
