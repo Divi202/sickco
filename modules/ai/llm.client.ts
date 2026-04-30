@@ -4,6 +4,7 @@ import fs from 'fs';
 import { zodResponseFormat } from 'openai/helpers/zod';
 import { log } from '@/lib/log';
 import { ExternalApiError } from '@/lib/errors';
+import { SystemPrompt } from '@/modules/ai/prompts/system.prompt';
 
 /**
  * Large Language Model (LLM) Client
@@ -47,9 +48,9 @@ export const llmClient = {
     });
 
     // System prompt to set the context for the conversation
-    const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
+    // const systemPrompt = fs.readFileSync('modules/ai/prompts/system.prompt.md', 'utf8');
 
-    if (!systemPrompt) {
+    if (!SystemPrompt) {
       throw new ExternalApiError('System prompt file not found or is empty.');
     }
 
@@ -120,7 +121,7 @@ export const llmClient = {
       const chatCompletion = await openai.chat.completions.create({
         model: 'openai/gpt-oss-120b', // Free model from OpenRouter
         messages: [
-          { role: 'system', content: systemPrompt },
+          { role: 'system', content: SystemPrompt },
           { role: 'user', content: request.userMessage },
         ],
         temperature: 0.3, // Balanced creativity vs consistency
